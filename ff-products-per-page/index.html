@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products per Page</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <link rel="import" href="styles.html">
+</head>
+<body>
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
+                  version="7.1"
+                  channel="bergfreunde-co-uk"
+                  default-query="trousers"
+                  search-immediate>
+</ff-communication>
+
+<input is="ff-searchbox"/>
+
+<div>
+    <!-- Show the posible values in a simple dropwdown -->
+    <div>
+        <p>A products-per-page view as a dropdown:</p>
+        <ff-products-per-page-dropdown></ff-products-per-page-dropdown>
+    </div>
+    <br>
+    <div>
+        <p>A second products-per-page view as a dropdown with show-selected="true".
+            This time the selected value is present in the dropdown list:</p>
+        <!-- When show-selected="true" is set then the selected value is visible in the dropdown list.-->
+        <ff-products-per-page-dropdown show-selected="true">
+            <ff-products-per-page-item>
+                <div style="color: blue; font-weight: bold">{{value}}&nbsp;Produkte</div>
+            </ff-products-per-page-item>
+        </ff-products-per-page-dropdown>
+
+        <p>You can decide if the dropdown collapses on a blur event. Default is 'false':</p>
+        <ff-products-per-page-dropdown
+                collapse-onblur="true"></ff-products-per-page-dropdown>
+    </div>
+</div>
+<br>
+
+<!-- Or dispaly the products per page as a list-->
+<div>
+    <p>An example of a list view for the products-per-page:</p>
+    <ff-products-per-page-list></ff-products-per-page-list>
+</div>
+
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <div>
+            <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
+                {{record.Title}}
+            </a>
+            <div>Price: <strong>{{record.Price}} €</strong></div>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>
