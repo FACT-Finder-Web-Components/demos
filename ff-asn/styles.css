@@ -1,0 +1,215 @@
+body {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.margin {
+    margin-bottom: 30px;
+    max-width: 300px;
+}
+
+#demo-header {
+    margin-top: 25px;
+}
+
+#asn-section{
+    float: left;
+}
+
+ff-asn-group {
+    border: 1px solid #c7e4ec;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    width: 220px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background-color: #f6f6f6;
+    height: auto;
+}
+
+ff-asn-group-slider {
+    border: 1px solid #c7e4ec;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    width: 220px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background-color: #f6f6f6;
+    height: auto;
+}
+
+.sliderBtn {
+    cursor: pointer;
+    position: absolute;
+    margin-left: -0.5em;
+    top: -0.2em;
+    border-radius: 5px;
+    background: #0b97c4;
+    width: 15px;
+    height: 15px;
+}
+
+ff-slider {
+    --slidebar-mixin: {
+        background-color: #00bfa5;
+    }
+}
+
+ff-asn-group-slider [data-container="groupCaption"] {
+    cursor: pointer;
+}
+
+ff-asn-group-element {
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial;
+    border-radius: 5px;
+    padding: 10px 5px;
+    color: #5c5c5c;
+    background-color: #f6f6f6;
+    border-bottom: 1px solid #ededed;
+}
+
+div[data-selected] span.filterName:hover {
+    text-decoration: underline;
+}
+
+div[data-unselected] span.filterName:hover {
+    text-decoration: underline;
+}
+
+.filterCheckboxUnselected {
+    background-image: url("../../resources/images/sprite-sf85bcdc069.png");
+    background-repeat: no-repeat;
+    background-position: 0 -68px;
+    height: 12px;
+    width: 12px;
+    display: inline-block;
+    margin-right: 6px;
+    position: relative;
+    top: 1px;
+}
+
+.filterCheckboxSelected {
+    background-image: url("../../resources/images/sprite-sf85bcdc069.png");
+    background-repeat: no-repeat;
+    background-position: -13px -41px;
+    height: 12px;
+    width: 12px;
+    content: '';
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+[data-container^="show"] span.text {
+    display: inline-block;
+    color: #5c5c5c;
+    padding: 8px 0 8px 15px;
+}
+
+[data-container="showMore"] {
+    transition: 400ms;
+}
+
+[data-container="hiddenLinks"] {
+    transition: 400ms;
+}
+
+[data-container="removeFilter"] {
+    font-size: 80%;
+    color: #5c5c5c;
+    padding: 7px 0 0 15px;
+    cursor: pointer;
+}
+
+.groupCaption {
+    padding: 0px 0px 0px 12px;
+    color: #666;
+    position: relative;
+    background-color: #ebebeb;
+    height: 25px !important;
+    border-bottom-radius: 7px;
+    line-height: 25px;
+    vertical-align: middle;
+}
+
+.filterArrowRight {
+    background-position: 0 -22px;
+    height: 7px;
+    width: 4px;
+    display: inline-block;
+    bottom: 1px;
+    position: relative;
+    background-image: url("../../resources/images/sprite-sf85bcdc069.png");
+    background-repeat: no-repeat;
+}
+
+.filterArrowDown {
+    background-position: -17px -22px;
+    height: 9px;
+    width: 15px;
+    background-image: url("../../resources/images/sprite-sf85bcdc069.png");
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    display: block;
+}
+
+.clusterLevel1 {
+    margin-left: 10px;
+}
+
+.clusterLevel2 {
+    margin-left: 20px;
+}
+
+.cursor {
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.record-list-container {
+    background-color: rgba(20, 50, 40, 0.2);
+    border-top: 1px solid lightblue;
+}
+
+ff-record-list {
+    margin-left: 15px;
+    width: 540px;
+    float: left;
+}
+
+ff-record {
+    width: 160px;
+    min-height: 250px;
+    overflow: hidden;
+    margin: 5px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+ff-record img {
+    width: 180px;
+    height: 180px;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+}
+
+.bctContainer {
+    margin: 10px 0 10px 10px;
+}
+
+ff-breadcrumb-trail {
+    margin-left: 10px;
+}

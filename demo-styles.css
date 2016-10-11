@@ -1,0 +1,40 @@
+input[is='ff-searchbox'] {
+    height: 30px;
+    width: 300px;
+    background-color: #EEEEEE;
+    border-radius: 5px;
+    padding-left: 10px;
+    outline: none;
+    margin-bottom: 15px;
+}
+
+[is="ff-searchbutton"], button {
+    cursor: pointer;
+    display: inline-block;
+    border: none;
+    color: #EDEDED;
+    border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    font-family: Verdana;
+    width: auto;
+    height: auto;
+    font-size: 16px;
+    padding: 10px 40px;
+    box-shadow: inset 0 1px 0 0 #FFF6CE, inset 0 -1px 0 0 #E3C852, inset 0 0 0 1px #FCE88D, 0 2px 4px 0 #D4D4D4;
+    -moz-box-shadow: inset 0 1px 0 0 #FFF6CE, inset 0 -1px 0 0 #E3C852, inset 0 0 0 1px #FCE88D, 0 2px 4px 0 #D4D4D4;
+    -webkit-box-shadow: inset 0 1px 0 0 #FFF6CE, inset 0 -1px 0 0 #E3C852, inset 0 0 0 1px #FCE88D, 0 2px 4px 0 #D4D4D4;
+    text-shadow: 0 1px 0 #FFFFFF;
+    background-image: linear-gradient(to top, #006299, #006299);
+    background-color: #006299;
+    border-radius: 6px;
+}
+
+[is="ff-searchbutton"]:hover, button:hover {
+    border: none;
+    color: #EDEDED;
+    box-shadow: inset 0 1px 0 0 #007BBF, inset 0 -1px 0 0 #007BBF, inset 0 0 0 1px #007BBF;
+    -moz-box-shadow: inset 0 1px 0 0 #007BBF, inset 0 -1px 0 0 #007BBF, inset 0 0 0 1px #007BBF;
+    -webkit-box-shadow: inset 0 1px 0 0 #007BBF, inset 0 -1px 0 0 #007BBF, inset 0 0 0 1px #007BBF;
+    background-color: #007BBF;
+}

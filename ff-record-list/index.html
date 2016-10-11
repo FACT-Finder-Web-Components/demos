@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record List</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body unresolved>
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
+                  version="7.1"
+                  default-query="bagpack"
+                  channel="bergfreunde-co-uk"
+                  search-immediate>
+</ff-communication>
+
+<input is="ff-searchbox"/>
+<button is="ff-searchbutton">Search</button>
+
+<ff-record-list>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <div>
+            <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
+                {{record.Title}}
+            </a>
+            <div>Price: <strong>{{record.Price}} €</strong></div>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>
