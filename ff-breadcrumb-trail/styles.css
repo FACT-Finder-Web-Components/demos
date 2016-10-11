@@ -1,0 +1,21 @@
+.demo {
+margin-bottom: 15px;
+}
+
+[unresolved] {
+opacity: 0;
+}
+
+
+.searchItem {
+color: red;
+cursor: crosshair;
+}
+
+.filterItem {
+color: blue;;
+}
+
+.advisorItem {
+color: green;
+}

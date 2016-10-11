@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Breadcrumb Trail Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body unresolved>
+<!-- Configure the connection to the FF-Search backend and a default query-->
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
+                  version="7.1"
+                  channel="bergfreunde-co-uk"
+                  default-query="jacken"
+                  add-params="filterGender=Female"
+                  search-immediate>
+</ff-communication>
+<input is="ff-searchbox" label="Search...">
+
+<div id="demo1" class="demo">
+    <b>Example 1:</b> You are searching for
+    <ff-breadcrumb-trail></ff-breadcrumb-trail>
+</div>
+
+<div id="demo2" class="demo"><b>Example 2:</b> You are searching for
+    <ff-breadcrumb-trail>
+        <span data-separator>+</span>
+    </ff-breadcrumb-trail>
+</div>
+
+<div id="demo3" class="demo"><b>Example 3:</b> You are searching for
+    <ff-breadcrumb-trail>
+        <!-- The search item is the content of the search query-->
+        <ff-breadcrumb-trail-item type="search">
+            <span class="searchItem">{{text}}</span>
+        </ff-breadcrumb-trail-item>
+
+        <!-- Filter items are set by the URL or over the ASN-->
+        <ff-breadcrumb-trail-item type="filter">
+            <span class="filterItem"><strong>{{text}}</strong></span>
+        </ff-breadcrumb-trail-item>
+
+        <!-- Advisor items are included in the breadcrumb when an advisor-campaign is selected-->
+        <ff-breadcrumb-trail-item type="advisor">
+            <div class="advisorItem">{{text}}</div>
+        </ff-breadcrumb-trail-item>
+    </ff-breadcrumb-trail>
+</div>
+</body>
+</html>
