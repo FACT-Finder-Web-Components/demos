@@ -1,0 +1,34 @@
+ff-campaign-advisor {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 760px;
+    background-color: #00d4b4;
+    display: flex;
+    flex-flow: column;
+}
+
+ff-campaign-advisor-question {
+    margin: auto;
+}
+
+.answers {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+ff-campaign-advisor-answer {
+    margin: 5px;
+    cursor: pointer;
+}
+
+ff-campaign-advisor-answer h2 {
+    text-align: center;
+}
+
+ff-campaign-feedbacktext {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
