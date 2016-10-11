@@ -11,4 +11,4 @@ This demo is demonstrating the usage of FACT-Finder Web Components
 6. Run `node open.js folder-name` to open the specific demo
 
 ##Trouble Shooting
-If you encounter `_Error: listen EADDRINUSE :::9999_` the port 9999 is already in use. Change the port variable in start.js to fit your system.
+If you encounter `_Error: listen EADDRINUSE :::9999_` the port 9999 is already in use. Change the port variable in port.js to fit your system.
