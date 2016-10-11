@@ -1,0 +1,23 @@
+ff-single-word-search h1 {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+ff-single-word-search ff-single-word-search-record:first-of-type {
+    margin-top: 15px !important;
+}
+
+ff-single-word-search-record {
+    margin-top: 45px;
+}
+
+ff-single-word-search-record h1 {
+    color: #35a9e1;
+    font-size: 1.8em;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+ff-single-word-search-record h1:hover {
+    text-decoration: underline;
+}

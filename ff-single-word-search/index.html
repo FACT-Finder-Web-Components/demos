@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Word Search Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body>
+<!-- Configure the connection to the FF-Search backend and a default query-->
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
+                  version="7.1"
+                  channel="bergfreunde-co-uk"
+                  default-query="davidoff crocs purpur"
+                  search-immediate>
+</ff-communication>
+
+
+<header>
+    <input is="ff-searchbox" placeholder="Search...">
+    <button is="ff-searchbutton">Search</button>
+</header>
+
+<ff-single-word-search unresolved>
+    <h1>
+        <span id="singleWordSearchCaption">For parts of your search the following products could be found:</span>
+    </h1>
+
+    <ff-single-word-search-record>
+        <h1 data-search="singleWord">{{word}} ({{recordCount}}) </h1>
+        <ff-record-list>
+            <ff-record>
+                <img data-image="{{record.ImageName}}">
+                <div>
+                    <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
+                        {{record.Title}}
+                    </a>
+                    <div>Price: <strong>{{record.Price}} €</strong></div>
+                </div>
+            </ff-record>
+        </ff-record-list>
+    </ff-single-word-search-record>
+</ff-single-word-search>
+</body>
+</html>
