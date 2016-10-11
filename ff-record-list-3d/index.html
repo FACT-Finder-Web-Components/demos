@@ -58,7 +58,7 @@
                 // get the record list from the source attribute of the event callback.
                 var ffRecordListElement = event.currentTarget;
                 // get the record data from the record list.
-                var records = ffRecordListElement.querySelectorAll("ff-record");
+                var records = Polymer.dom(ffRecordListElement).querySelectorAll("ff-record");
 
                 records.forEach(function (record) {
                     setTimeout(function () {
