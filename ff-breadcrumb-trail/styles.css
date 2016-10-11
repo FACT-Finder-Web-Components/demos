@@ -2,19 +2,16 @@
     margin-bottom: 15px;
 }
 
-[unresolved] {
-    opacity: 0;
-}
-
-.searchItem {
+ff-breadcrumb-trail-item[type="search"] {
     color: red;
     cursor: crosshair;
 }
 
-.filterItem {
-    color: blue;;
+ff-breadcrumb-trail-item[type="filter"] {
+    color: blue;
+    font-weight: bold;
 }
 
-.advisorItem {
+ff-breadcrumb-trail-item[type="advisor"] {
     color: green;
 }

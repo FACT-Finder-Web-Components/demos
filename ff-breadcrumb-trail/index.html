@@ -24,32 +24,32 @@
 </ff-communication>
 <input is="ff-searchbox" label="Search...">
 
-<div id="demo1" class="demo">
+<div class="demo">
     <b>Example 1:</b> You are searching for
     <ff-breadcrumb-trail></ff-breadcrumb-trail>
 </div>
 
-<div id="demo2" class="demo"><b>Example 2:</b> You are searching for
+<div class="demo"><b>Example 2:</b> You are searching for
     <ff-breadcrumb-trail>
         <span data-separator>+</span>
     </ff-breadcrumb-trail>
 </div>
 
-<div id="demo3" class="demo"><b>Example 3:</b> You are searching for
+<div class="demo"><b>Example 3:</b> You are searching for
     <ff-breadcrumb-trail>
         <!-- The search item is the content of the search query-->
         <ff-breadcrumb-trail-item type="search">
-            <span class="searchItem">{{text}}</span>
+            <span>{{text}}</span>
         </ff-breadcrumb-trail-item>
 
         <!-- Filter items are set by the URL or over the ASN-->
         <ff-breadcrumb-trail-item type="filter">
-            <span class="filterItem"><strong>{{text}}</strong></span>
+            <span>{{text}}</span>
         </ff-breadcrumb-trail-item>
 
         <!-- Advisor items are included in the breadcrumb when an advisor-campaign is selected-->
         <ff-breadcrumb-trail-item type="advisor">
-            <div class="advisorItem">{{text}}</div>
+            <span>{{text}}</span>
         </ff-breadcrumb-trail-item>
     </ff-breadcrumb-trail>
 </div>
