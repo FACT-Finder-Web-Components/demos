@@ -1,13 +1,6 @@
-body {
-    width: 760px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 ff-record-list {
     margin-left: auto;
     margin-right: auto;
-    /*width: 760px;*/
     padding: 20px 0px;
 }
 
