@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sortbox Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <link rel="import" href="styles.html">
+
+    <script>
+        function toggleSortbox(cssSelector) {
+            document.querySelector(cssSelector).toggle();
+        }
+    </script>
+</head>
+<body>
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
+                  version="7.1"
+                  channel="bergfreunde-co-uk"
+                  default-query="trousers"
+                  search-immediate>
+</ff-communication>
+
+<input type="text" is="ff-searchbox"/>
+<button is="ff-searchbutton">Search</button>
+
+<div style="display: flex;flex-wrap: wrap;justify-content: space-around">
+    <div class="sortboxContainer">
+        <ff-sortbox id="sortbox2"></ff-sortbox>
+        <div> This sortbox defaults to the standard layout and does not collapse onblur.</div>
+    </div>
+
+    <div class="sortboxContainer">
+        <ff-sortbox id="sortbox1" collapse-onblur="true">
+            <!--
+            key "default.template" is a pseudo key used to specify a default template for all sortbox items
+            -->
+            <ff-sortbox-item key="default.template">
+                <span style="font-size: 15px">Default Style: {{description}}</span>
+            </ff-sortbox-item>
+
+            <!--
+            this key is related to data returned by FACT-Finder its always FIELDNAME.ORDER
+            except for relevance its "null.desc"
+            -->
+            <ff-sortbox-item key="Price.asc">
+                <span style="font-size: 18px">Overridden for: {{description}}</span>
+            </ff-sortbox-item>
+
+            <!--override relevance layout -->
+            <ff-sortbox-item key="null.desc">
+                Relevance
+            </ff-sortbox-item>
+        </ff-sortbox>
+        <div> This sortbox will collapse if you click somewhere else on the site.</div>
+    </div>
+
+    <div class="sortboxContainer">
+        <div class="sortBoxCaption" onclick="toggleSortbox('#sortbox3');">
+            Custom Caption Sorting:
+        </div>
+        <ff-sortbox show-selected="true" show-selected-first="true" id="sortbox3"></ff-sortbox>
+        <div> This sortbox always shows the selected item at position 1 in the dropdown.</div>
+    </div>
+
+    <div class="sortboxContainer">
+        <div class="sortBoxCaption" onclick="toggleSortbox('#sortbox4');">
+            Sort by...
+        </div>
+        <ff-sortbox show-selected="true" id="sortbox4"></ff-sortbox>
+        <div>This sortbox always keeps the order of items in its dropdown.</div>
+    </div>
+</div>
+
+<ff-record-list>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <div>
+            <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
+                {{record.Title}}
+            </a>
+            <div>Price: <strong>{{record.Price}} €</strong></div>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>
