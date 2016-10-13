@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+
+        document.addEventListener("ffReady", function () {
+            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+                if (result.timedOut) {
+                    alert("Search timeout! Try again later");
+                }
+            }, this);
+        });
+        var suggestState = false;
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body>
+<h2>Template 1</h2>
+<div class="example-seperator"></div>
+
+<div class="example">
+    <script>
+        function setTemplate1() {
+            var template1 = document.querySelector("#demoTemplate1");
+            template1.data = {test: "This is my Test Data"};
+        }
+    </script>
+    <p>Setting simple data into a template:</p>
+    <button onclick="setTemplate1()">Set simple Data</button>
+    <ff-template id="demoTemplate1">
+        {{test}}
+    </ff-template>
+</div>
+
+
+<h2>Template 2</h2>
+
+<div class="example">
+    <script>
+        function setTemplate2() {
+            var tmp = document.querySelector("#demoTemplate2");
+            tmp.data = {
+                product: {
+                    name: "Super awsome Product",
+                    description: "This Product is super awsome! Go buy it!",
+                    info: {
+                        rating: 5,
+                        price: 100,
+                        currency: "€"
+                    }
+                }
+            };
+        }
+    </script>
+    <p>Setting complex data into a template:</p>
+    <button onclick="setTemplate2()">Set complex Data</button>
+    <ff-template id="demoTemplate2">
+        <h2>Name: {{product.name}}</h2>
+        <p>{{product.description}}</p>
+        <strong>{{product.info.price}} {{product.info.currency}}</strong>
+        <p>Rating: {{product.info.rating}}/5</p>
+
+    </ff-template>
+
+</div>
+
+<h2>Template 3</h2>
+<div class="example-seperator"></div>
+
+<div class="example">
+    <script>
+        function setTemplate3() {
+            var tmp = document.querySelector("#demoTemplate3");
+            tmp.data = {
+                product: {
+                    name: "Super awsome Product",
+                    description: "This Product is super awsome! Go buy it!",
+                    info: {
+                        rating: 5,
+                        price: 100,
+                        currency: "€"
+                    },
+                    image: "<img src='' width='200' height='200'>"
+                }
+            };
+        }
+    </script>
+    <p>Render HTML with a Template</p>
+    <button onclick="setTemplate3()">Set HTML Data</button>
+    <ff-template id="demoTemplate3">
+        <h2>Name: {{product.name}}</h2>
+        <p>{{product.description}}</p>
+        <strong>{{product.info.price}} {{product.info.currency}}</strong>
+        <p>Rating: {{product.info.rating}}/5</p>
+        <!-- This prints the value of product.image as string-->
+        {{product.image}}
+        <!-- This renders the value of product.image as HTML-->
+        {{{product.image}}}
+    </ff-template>
+</div>
+
+<h2>Template 4</h2>
+<div class="example-seperator"></div>
+
+<div class="example">
+
+    <ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
+                      version="7.1"
+                      default-query="tasche"
+                      channel="bergfreunde-de"
+                      search-immediate>
+    </ff-communication>
+    <p>Access the values from the search result</p>
+    <input is="ff-searchbox">
+    <button is="ff-searchbutton">Search</button>
+
+    <ff-template id="demoTemplate4" scope="result">
+        <h2>Search Result:</h2>
+        <p>resultCount: {{resultCount}}</p>
+        <p>searchTime: {{searchTime}}</p>
+    </ff-template>
+</div>
+</body>
+</html>
