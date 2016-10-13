@@ -4,7 +4,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
-    overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 [unresolved] {
