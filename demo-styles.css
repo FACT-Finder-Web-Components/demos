@@ -1,8 +1,9 @@
 body {
-    width: 800px;
+    width: 780px;
+    margin-top: 0;
     margin-left: auto;
     margin-right: auto;
-    padding: 0px 10px 10px 10px;
+    padding: 10px;
     overflow-x: scroll;
 }
 
@@ -19,7 +20,6 @@ ff-record-list {
 ff-record {
     padding: 15px 1.5% 0 1.5%;
     width: 28%;
-    /*min-height: 250px;*/
     overflow: hidden;
     margin: 5px;
     cursor: pointer;
