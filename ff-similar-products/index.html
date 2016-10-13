@@ -80,7 +80,7 @@
 </ff-similar-products>
 
 <ff-record-list unresolved>
-    <ff-record>
+    <ff-record onclick="setSimilarProductId(this)">
         <img data-image="{{record.ImageName}}">
         <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
             {{record.Title}}
