@@ -70,29 +70,25 @@
 
 <ff-recommendation unresolved max-results="4">
     <div class="recommendationHeader">Recommendations</div>
-    <ff-record-list>
-        <ff-record>
-            <img data-image="{{record.ImageName}}">
-            <div>
-                <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
-                    {{record.Title}}
-                </a>
-                <div>Price: <strong>{{record.Price}} €</strong></div>
-            </div>
-        </ff-record>
-    </ff-record-list>
-</ff-recommendation>
-
-<h2>Search result</h2>
-<ff-record-list unresolved>
-    <ff-record onclick="setRecommendationProduct(this)">
-        <img data-image="{{record.ImageName}}">
-        <div>
+    <ff-record-list unresolved>
+        <ff-record style="max-width: 20%">
+            <img style="width: 170px;height: 170px" data-image="{{record.ImageName}}">
             <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
                 {{record.Title}}
             </a>
-            <div>Price: <strong>{{record.Price}} €</strong></div>
-        </div>
+
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span></div>
+        </ff-record>
+    </ff-record-list>
+</ff-recommendation>
+<ff-record-list unresolved>
+    <ff-record  onclick="setRecommendationProduct(this)">
+        <img data-image="{{record.ImageName}}">
+        <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
+            {{record.Title}}
+        </a>
+
+        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span></div>
     </ff-record>
 </ff-record-list>
 </body>
