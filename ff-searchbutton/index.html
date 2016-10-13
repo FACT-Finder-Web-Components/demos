@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Search Button</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+
+        document.addEventListener("ffReady", function () {
+            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+                if (result.timedOut) {
+                    alert("Search timeout! Try again later");
+                }
+            }, this);
+        });
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body>
+
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
+                  version="7.1"
+                  channel="bergfreunde-de">
+</ff-communication>
+    <input is="ff-searchbox" placeholder="Search..."/>
+    <button is="ff-searchbutton">Search</button>
+    <div>
+        You are searching for:
+        <ff-breadcrumb-trail></ff-breadcrumb-trail>
+    </div>
+</body>
+</html>
