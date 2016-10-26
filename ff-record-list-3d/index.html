@@ -96,7 +96,8 @@
                     {{record.Rating}}<br/></div>
                 <img data-image="{{record.ImageName}}">
                 <div class="record">
-                    <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">
+                    <a href="https://www.bergfreunde.de/{{record.Deeplink}}" onclick="return false;"
+                       data-redirect="https://www.bergfreunde.de/{{record.Deeplink}}" data-redirect-target="_blank">
                         {{record.Title}}
                     </a>
                     <div>Price: <strong>{{record.Price}} €</strong></div>
