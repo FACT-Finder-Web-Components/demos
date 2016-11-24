@@ -57,17 +57,15 @@
 
 <ff-campaign-advisor unresolved not="Advisor Schuhe">
     <ff-campaign-advisor-question>
-        <span><h1>{{text}}</h1></span>
+        <span><h1 data-question>{{text}}</h1></span>
         <!--OR when HTML-->
         <!--{{{text}}}-->
+        <div class="answers">
+            <ff-campaign-advisor-answer>
+                {{{text}}}
+            </ff-campaign-advisor-answer>
+        </div>
     </ff-campaign-advisor-question>
-
-    <div class="answers">
-        <ff-campaign-advisor-answer>
-            {{{text}}}
-        </ff-campaign-advisor-answer>
-    </div>
-
 </ff-campaign-advisor>
 
 <!-- For the campaign 'Schuhe' use this advisor-->
@@ -93,20 +91,19 @@
     </style>
 
     <ff-campaign-advisor-question>
-        <span><h1>{{text}}</h1></span>
+        <span><h1 data-question>{{text}}</h1></span>
+        <div class="shoes-answers-box">
+            <!--
+                In this campaign the values defined for an campaign answer are just plain text. So you don't need
+                to render it as HTML and can style it here.
+            -->
+            <ff-campaign-advisor-answer>
+                <div class="shoes-answers">
+                    {{text}}
+                </div>
+            </ff-campaign-advisor-answer>
+        </div>
     </ff-campaign-advisor-question>
-
-    <div class="shoes-answers-box">
-        <!--
-            In this campaign the values defined for an campaign answer are just plain text. So you don't need
-            to render it as HTML and can style it here.
-        -->
-        <ff-campaign-advisor-answer>
-            <div class="shoes-answers">
-                {{text}}
-            </div>
-        </ff-campaign-advisor-answer>
-    </div>
 </ff-campaign-advisor>
 
 
