@@ -10,7 +10,7 @@
     "Demo"
   ],
   "dependencies": {
-    "ff-web-components": "https://github.com/FACT-Finder/ff-web-components.git#1.0.12"
+    "ff-web-components": "ssh://git@git.omikron.net:7999/ffweb/fact-finder-custom-elements.git#feature/FFWEB-56-ff-navigation-flyout"
   },
   "license": "FACT-Finder",
   "homepage": "http://web-components.fact-finder.de/",

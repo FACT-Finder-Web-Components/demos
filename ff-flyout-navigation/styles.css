@@ -1,0 +1,51 @@
+/*Basics*/
+body {
+    font-family: 'Oswald', sans-serif;
+    line-height: 2em;
+    margin: 0px;
+}
+
+.demo-record-list {
+    float: left;
+}
+
+/* ff-flyout-navigation styles*/
+
+ff-flyout-navigation[layout="vertical"] {
+    width: 250px;
+}
+
+.my-item {
+    background-color: white;
+    padding: 5px;
+    width: 200px;
+}
+
+@media screen and (max-width: 425px) {
+    .my-item {
+        width: 100%;
+    }
+
+    ff-flyout-navigation {
+        width: 100%;
+    }
+}
+
+.my-header {
+    background-color: #EFEFEF;
+    padding: 5px;
+    width: 100%;
+    white-space: nowrap;
+}
+
+[has-subelements] > .my-item {
+    background-color: lightgray;
+}
+
+.search-icon {
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-top: 10px;
+    margin-right: 5px;
+}
