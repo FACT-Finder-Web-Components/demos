@@ -42,8 +42,8 @@
 </head>
 <body>
 <!-- basic communication configuration-->
-<ff-communication url="http://web-components.fact-finder.de/FACT-Finder7.1-Demoshop"
-                  version="7.1"
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
                   default-query="trousers"
                   channel="bergfreunde-co-uk"
                   search-immediate>
@@ -81,15 +81,15 @@
 </ff-similar-products>
 
 <ff-record-list unresolved>
-    <ff-record>
-        <img data-image="{{record.ImageName}}">
-        <a href="https://www.bergfreunde.de/{{record.Deeplink}}" onclick="return false;"
-           data-redirect="https://www.bergfreunde.de/{{record.Deeplink}}" data-redirect-target="_blank">
-            {{record.Title}}
-        </a>
+    <ff-record onclick="setSimilarProductId(this)">
+            <img data-image="{{record.ImageName}}">
+            <a href="https://www.bergfreunde.de/{{record.Deeplink}}" onclick="return false;"
+               data-redirect="https://www.bergfreunde.de/{{record.Deeplink}}" data-redirect-target="_blank">
+                {{record.Title}}
+            </a>
 
-        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-        </div>
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            </div>
     </ff-record>
 </ff-record-list>
 </body>

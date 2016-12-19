@@ -76,7 +76,7 @@ ff-suggest-item[type="productName"] img {
 }
 
 .product-availabilitytext {
-    background-color: lightgreen;
+    background-color: darkgray;
     border-radius: 3px;
 }
 
