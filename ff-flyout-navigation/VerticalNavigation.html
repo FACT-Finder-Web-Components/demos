@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-navigation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shadow';
+
+        var checkwindowWidth = function () {
+            var navigation = document.querySelector("ff-flyout-navigation");
+            if (window.innerWidth < 600) {
+                navigation.setAttribute("mobile", "true");
+                navigation.setAttribute("flyout", "false");
+//                navigation.setAttribute("layout","vertical");
+            } else {
+                navigation.setAttribute("mobile", "false");
+                navigation.setAttribute("flyout", "true");
+//                navigation.setAttribute("layout", "horizontal");
+            }
+        };
+
+        window.addEventListener("resize", function (evt) {
+            checkwindowWidth();
+        });
+
+        document.addEventListener("WebComponentsReady", function (evt) {
+            checkwindowWidth();
+        });
+
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+
+</head>
+<body>
+
+<style is="custom-style">
+    ff-flyout-navigation{
+        float: left;
+    }
+    ff-record-list{
+        width: 630px;
+        float: left;
+    }
+</style>
+
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk"
+                  search-immediate="true">
+</ff-communication>
+
+<header>
+    <input is="ff-searchbox" placeholder="Search...">
+</header>
+
+<ff-flyout-navigation layout="vertical"
+                      mobile="false"
+                      flyout="true"
+                      fetch-initial="true"
+                      first-fetch="2"
+                      fetch-size="1"
+                      max-fetch="10"
+                      fetch-time="500">
+
+    <div slot="menu"> Navigation</div>
+
+    <ff-flyout-navigation-item>
+        <div slot="content" class="my-item">{{name}}</div>
+        <img slot="mobile-link" class="search-icon" src="search-icon.png">
+    </ff-flyout-navigation-item>
+
+    <ff-flyout-navigation-item type="header">
+        <div slot="content" class="my-header">{{name}}</div>
+    </ff-flyout-navigation-item>
+
+</ff-flyout-navigation>
+
+<ff-record-list id="test-list" subscribe="true" class="demo-record-list">
+    <ff-record>
+        <img data-image={{record.ImageName}}
+             data-image-onerror="../img_not_found.gif"
+             data-redirect="https://www.bergfreunde.de{{record.Deeplink}}"
+             data-redirect-target="_self">
+
+        <div data-track="productClick">
+            <span id="title"
+                  data-redirect="https://www.bergfreunde.de{{record.Deeplink}}">
+                {{record.Title}}
+            </span>
+
+            <div>Price: <strong>{{record.Price}} €</strong></div>
+
+            <a data-redirect="https://www.bergfreunde.de{{record.Deeplink}}"
+               data-redirect-target="_self"
+               href="https://www.bergfreunde.de{{record.Deeplink}}"
+               onclick="return false;">
+
+                <span data-track="productClick">
+                Go to Shop page
+                </span>
+            </a>
+        </div>
+    </ff-record>
+</ff-record-list>
+
+</body>
+</html>
