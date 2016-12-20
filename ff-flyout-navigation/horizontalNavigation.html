@@ -39,8 +39,8 @@
 <body>
 
 <style is="custom-style">
-    ff-flyout-navigation-item{
-        --container-mixin:{
+    ff-flyout-navigation-item {
+        --container-mixin: {
             box-shadow: 0px 0px 5px #888888;
         }
     }
@@ -68,8 +68,10 @@
     <div slot="menu"> Navigation</div>
 
     <ff-flyout-navigation-item>
-        <div slot="content" class="my-item">{{name}}</div>
-        <img slot="mobile-link" class="search-icon" src="search-icon.png">
+        <div slot="content" class="my-item">
+            <img data-search class="search-icon" src="search-icon.png">
+            {{name}}
+        </div>
     </ff-flyout-navigation-item>
 
     <ff-flyout-navigation-item type="header">
