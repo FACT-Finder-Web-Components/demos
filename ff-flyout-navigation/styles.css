@@ -34,9 +34,9 @@ ff-flyout-navigation[mobile="true"] > .my-item {
 }
 
 [has-subelements] > .my-item  {
-    /*font-weight: bold !important;*/
-    /*background-color: lightblue;*/
-    text-decoration: underline;
+    background-color: white;
+    color: #00b0ff;
+    font-weight: bold;
 }
 
 .ff-navigation-link {
