@@ -11,7 +11,7 @@
         Polymer.dom = 'shadow';
 
         var checkwindowWidth = function () {
-            var navigation = document.querySelector("ff-flyout-navigation");
+            var navigation = document.querySelector("ff-navigation");
             if (window.innerWidth < 600) {
                 navigation.setAttribute("mobile", "true");
                 navigation.setAttribute("flyout", "false");
@@ -33,13 +33,13 @@
 
     </script>
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build.html">
 
 </head>
 <body>
 
 <style is="custom-style">
-    ff-flyout-navigation-item {
+    ff-navigation-item {
         --container-mixin: {
             box-shadow: 0px 0px 5px #888888;
         }
@@ -57,7 +57,7 @@
     <p>Resize the window width to under 600px see the ff-navigation in mobile mode</p>
 </header>
 
-<ff-flyout-navigation layout="horizontal"
+<ff-navigation layout="horizontal"
                       mobile="false"
                       flyout="true"
                       fetch-initial="true"
@@ -68,18 +68,18 @@
 
     <div slot="menu" class="my-header" style="font-weight: bold"> Navigation</div>
 
-    <ff-flyout-navigation-item>
+    <ff-navigation-item>
         <div slot="content" class="my-item">
             <img data-search class="search-icon" src="search-icon.png">
             {{name}}
         </div>
-    </ff-flyout-navigation-item>
+    </ff-navigation-item>
 
-    <ff-flyout-navigation-item type="header">
+    <ff-navigation-item type="header">
         <div slot="content" class="my-header">{{name}}</div>
-    </ff-flyout-navigation-item>
+    </ff-navigation-item>
 
-</ff-flyout-navigation>
+</ff-navigation>
 
 <ff-record-list unresolved>
     <ff-record>
