@@ -1,0 +1,71 @@
+/*Basics*/
+body {
+    font-family: 'Oswald', sans-serif;
+    line-height: 2em;
+    margin: 0px;
+}
+
+ff-navigation[layout="vertical"][mobile="false"] {
+    width: 150px;
+    margin-right: 30px;
+    float: left;
+}
+
+.my-item {
+    padding: 5px;
+    width: 200px;
+    font-weight: normal;
+}
+
+.my-item:not(:last-child){
+    border-top: dashed 1px lightblue;
+}
+
+ff-navigation[mobile="true"] > .my-item {
+    width: 100%;
+}
+
+.my-header {
+    color:white;
+    background-color: #00b0ff;
+    padding: 5px;
+    width: 100%;
+}
+
+[has-subelements] > .my-item  {
+    background-color: white;
+    color: #00b0ff;
+    font-weight: bold;
+}
+
+.ff-navigation-link {
+    display: none;
+}
+
+ff-navigation-item[flyout="false"][has-subelements] > .ff-navigation-link {
+    display: inline-block;
+}
+
+.search-icon {
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+[cluster-level="1"][mobile="true"] {
+    padding-left: 10px;
+}
+
+[cluster-level="2"][mobile="true"] {
+    padding-left: 20px;
+}
+
+[cluster-level="3"][mobile="true"] {
+    padding-left: 30px;
+}
+
+[slot="menu"] {
+    cursor: pointer;
+}
