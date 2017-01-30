@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pushed Products Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                      version="7.2"
+                      channel="bergfreunde-co-uk">
+    </ff-communication>
+
+    <p>This landing page doesn't require a search and immediately displays the requested campaign.<br>The campaign
+    consists of a feedback text and some pushed products</p>
+
+    <ff-campaign-landing-page id="test" page-id="home"></ff-campaign-landing-page>
+
+    <ff-campaign-feedbacktext label="above searchbar">
+        <h2>This is the feedback text:</h2>
+        {{{text}}}
+    </ff-campaign-feedbacktext>
+
+    <h2>Followed by the pushed products:</h2>
+
+    <ff-campaign-pushed-products>
+        <span id="productCampaignCaption">Product Campaign</span>
+        <ff-record-list unresolved>
+            <ff-record style="max-width: 20%">
+                <img style="width: 170px; height: 170px" data-image="{{record.ImageName}}">
+                <a href="https://www.bergfreunde.de/{{record.Deeplink}}" onclick="return false;"
+                   data-redirect="https://www.bergfreunde.de/{{record.Deeplink}}" data-redirect-target="_blank">
+                    {{record.Title}}
+                </a>
+
+                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                </div>
+            </ff-record>
+        </ff-record-list>
+    </ff-campaign-pushed-products>
+</body>
+</html>
