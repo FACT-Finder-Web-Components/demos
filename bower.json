@@ -10,7 +10,7 @@
     "Demo"
   ],
   "dependencies": {
-    "ff-web-components": "ssh://git@git.omikron.net:7999/ffweb/fact-finder-custom-elements.git#1.1"
+    "ff-web-components": "ssh://git@git.omikron.net:7999/ffweb/fact-finder-custom-elements.git#release/1.1"
   },
   "license": "FACT-Finder",
   "homepage": "http://web-components.fact-finder.de/",
