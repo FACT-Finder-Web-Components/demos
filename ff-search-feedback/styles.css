@@ -19,7 +19,7 @@ main {
     padding: 20px;
     color: white;
     font-weight: bold;
-    background-color: #006299;
+    background-color: #007BBF;
     top: 30%;
 }
 [slot="content"] {
@@ -28,7 +28,7 @@ main {
     min-width: 180px;
     font-weight: bold;
     text-align: left;
-    background-color: #006299;
+    background-color: #007BBF;
 }
 
 .rotated-text {
