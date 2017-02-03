@@ -1,0 +1,15 @@
+ff-campaign-pushed-products {
+    border: 2px solid #006299;
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#productCampaignCaption {
+    background-color: #006299;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+}
