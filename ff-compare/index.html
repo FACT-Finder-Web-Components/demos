@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-compare demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <!--load boilerplate at the start-->
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+
+        function resetCompare() {
+            var records = document.querySelectorAll("#selectList > .selected");
+            records.forEach(function (rec) {
+                rec.classList.remove("selected");
+            });
+            document.querySelector("#selectList").style.display = 'inline-block';
+            document.querySelector("#compareList").style.display = 'none';
+        }
+
+        var doCompare = function () {
+            var ids = [];
+            var records = document.querySelectorAll("#selectList > .selected");
+            records.forEach(function (rec) {
+                var r = Polymer.dom(rec);
+                ids.push(r.node.recordData.id);
+            });
+            var compareElement = document.querySelector("#compareList");
+            //FYI: this would work if the ff-compare has the 'auto-compare' attribute set to true, default is false
+            // compareElement.recordIds = ids;
+            compareElement.compareRecords(ids);
+            document.querySelector("#selectList").style.display = 'none';
+            document.querySelector("#compareList").style.display = 'inline-block';
+        };
+
+        var toggleCompareRecord = function (rec) {
+            rec.classList.toggle("selected");
+        }
+
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!--boiler plate end-->
+
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/ff-communication/ff-communication.html">
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/ff-compare/ff-compare.html">
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/ff-record-list/ff-record-list.html">
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/ff-searchbox/ff-searchbox.html">
+
+
+</head>
+<body>
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk"
+                  default-query="jacke"
+                  search-immediate>
+</ff-communication>
+
+<input is="ff-searchbox" use-suggest="false">
+<ff-record-list id="selectList">
+    <p>
+    <h2>Select Records to compare</h2>
+    <button onclick="doCompare()">Compare</button>
+    </p>
+    <ff-record onclick="toggleCompareRecord(this)">
+        <img data-image={{record.ImageName}} data-image-onerror="../img_not_found.gif">
+        <div>
+            <!--<a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect">-->
+            {{record.Title}}
+            <!--</a>-->
+            <div>Price: <strong>{{record.Price}} €</strong></div>
+        </div>
+    </ff-record>
+</ff-record-list>
+<style>
+    .ff-compare-diff {
+        color: red;
+        border: 1px solid red;
+    }
+
+    .ff-compare-same {
+        color: green;
+    }
+
+    .selected {
+        /*background: red;*/
+        border: 1px solid black;
+    }
+
+    .comparedRecord {
+        margin: 10px 0px;
+        padding: 0px;
+        border-left: 1px solid;
+    }
+
+    .comparedRecord:first-of-type {
+        border: none;
+    }
+</style>
+
+<ff-compare max-results="5" id="compareList" style="display: none">
+    <div>
+        <h2>Compared Records</h2>
+        <p>(compared by the Field "Manufacturer")</p>
+        <button onclick="resetCompare()">Reste Compare</button>
+    </div>
+    <ff-record-list class="compareList">
+        <ff-record class="comparedRecord">
+            <a href="https://www.bergfreunde.de/{{record.Deeplink}}" data-action="redirect"
+               style="background: lightgray">
+                {{record.Title}}
+            </a>
+            <img data-image={{record.ImageName}} data-image-onerror="../img_not_found.gif">
+
+            <div>
+                <div data-attribute="Price" style="background: lightgray">
+                    Price: <strong>{{record.Price}} €</strong>
+                </div>
+                <div data-attribute="Manufacturer">Manufacturer:{{record.Manufacturer}}</div>
+                <div data-attribute="RatingNotRounded" style="background: lightgray">
+                    Rating:{{record.RatingNotRounded}}
+                </div>
+            </div>
+        </ff-record>
+    </ff-record-list>
+</ff-compare>
+
+</body>
+</html>
