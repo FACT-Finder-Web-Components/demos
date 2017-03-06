@@ -1,0 +1,26 @@
+.content {
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-width: 980px;
+    margin: 0 auto;
+    border: 2px solid #006299;
+}
+
+h3 {
+    width: 90%;
+}
+
+hr {
+    color: #d8d9da;
+    background: #d8d9da;
+    height: 1px;
+    border: none;
+    width: 90%;
+}
