@@ -3,7 +3,7 @@
 
 
 FACT-Finder Web Components Demo
-----
+===============================
 This demo is demonstrating the usage of FACT-Finder Web Components
 
 ## Installation
