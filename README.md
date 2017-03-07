@@ -1,3 +1,7 @@
+<span style="color: red">This Repository is deprecated and only exists for historical reasons. Please use our [new repository](https://github.com/FACT-Finder-Web-Components).</span>
+=======
+
+
 FACT-Finder Web Components Demo
 ===============================
 This demo is demonstrating the usage of FACT-Finder Web Components

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tag Cloud Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                      version="7.2"
+                      channel="bergfreunde-co-uk">
+    </ff-communication>
+
+    <input is="ff-searchbox" placeholder="Please use the tag cloud below to search."/>
+    <button is="ff-searchbutton" >Search</button>
+
+    <div class="content">
+        <h3>Please enter a search term or have a look at the results of the most searched terms.</h3>
+
+        <hr>
+
+        <ff-tag-cloud id="tc" min-font-size="10" max-font-size="40" word-count="60" unit="px"></ff-tag-cloud>
+
+        <ff-record-list unresolved>
+            <ff-record>
+                <img data-image="{{record.ImageName}}">
+                <a href="https://www.bergfreunde.de/{{record.Deeplink}}" onclick="return false;"
+                   data-redirect="https://www.bergfreunde.de/{{record.Deeplink}}" data-redirect-target="_blank">
+                    {{record.Title}}
+                </a>
+
+                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                </div>
+            </ff-record>
+        </ff-record-list>
+    </div>
+</body>
+</html>
