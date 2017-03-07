@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-campaign-shopping-cart</title>
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!--<link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">-->
+    <link rel="import" href="../bower_components/ff-web-components/dist/ff-communication/ff-communication.html">
+    <link rel="import" href="../bower_components/ff-web-components/dist/ff-record-list/ff-record-list.html">
+    <link rel="import" href="../bower_components/ff-web-components/dist/ff-searchbox/ff-searchbox.html">
+    <link rel="import" href="../bower_components/ff-web-components/dist/ff-searchbutton/ff-searchbutton.html">
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/ff-campaign-pushed-products/ff-campaign-pushed-products.html">
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/ff-campaign-shopping-cart/ff-campaign-shopping-cart.html">
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/ff-campaign-feedbacktext/ff-campaign-feedbacktext.html">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../demo-styles.css">
+</head>
+<body>
+
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk">
+</ff-communication>
+
+<ff-campaign-shopping-cart record-id="318-0125-0111"></ff-campaign-shopping-cart>
+
+<input is="ff-searchbox" label="Search...">
+<button is="ff-searchbutton">Search</button>
+
+
+<ff-campaign-pushed-products is-shopping-cart-campaign>
+    <span id="shoppingCartCampaignCaption">
+        <ff-campaign-feedbacktext is-shopping-cart-campaign label="above searchbar">{{{text}}} + Shopping Cart Pushed Products</ff-campaign-feedbacktext>
+    </span>
+    <ff-record-list unresolved>
+        <ff-record style="max-width: 20%">
+            <img style="width: 170px; height: 170px" data-image="{{record.ImageName}}">
+            <a href="https://www.bergfreunde.de/{{record.Deeplink}}" onclick="return false;"
+               data-redirect="https://www.bergfreunde.de/{{record.Deeplink}}" data-redirect-target="_blank">
+                {{record.Title}}
+            </a>
+
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            </div>
+        </ff-record>
+    </ff-record-list>
+</ff-campaign-pushed-products>
+
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <a href="https://www.bergfreunde.de/{{record.Deeplink}}" onclick="return false;"
+           data-redirect="https://www.bergfreunde.de/{{record.Deeplink}}" data-redirect-target="_blank">
+            {{record.Title}}
+        </a>
+
+        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        </div>
+    </ff-record>
+</ff-record-list>
+
+</body>
+</html>
