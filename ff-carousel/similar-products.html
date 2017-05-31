@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ff-carousel + recommendation demo</title>
-    <!--<link rel="stylesheet" href="../demo-styles.css">-->
+    <title>ff-carousel + similar-products demo</title>
 
     <script>
         var Polymer = Polymer || {};
@@ -13,17 +12,15 @@
             factfinder.communication.sp[btoa("Tracking.ff")] = true;
 
             factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
-                var recommendationElement = document.querySelector("ff-recommendation");
-//                recommendationElement.recordId = "d44c3c7b5e52f7a6b27041c1e789e954";
-                var reco = document.querySelector("#recomendationRecord");
-
+                var similarProductsElement = document.querySelector("ff-similar-products");
+                var example = document.querySelector("#exampleSelection");
                 if (result.resultStatus === "nothingFound") {
                     //reset recommendation
-                    recommendationElement.recordId = "";
-                } else if (result.resultStatus === "resultsFound") {
+                    similarProductsElement.recordId = "";
+                } else {
                     var record = result.records[0];
-                    recommendationElement.recordId = record.id;
-                    reco.recordData = record;
+                    similarProductsElement.recordId = record.id;
+                    example.recordData = record;
                 }
 
             });
@@ -36,24 +33,18 @@
 <body>
 
 <style is="custom-style">
-    #recomendationRecord {
-        border: 1px dashed;
-        padding: 10px;
+
+    ff-similar-products {
+        border: 2px solid orangered;
+        margin-bottom: 15px;
     }
 
-    ff-recommendation {
-        border: 2px solid #006299;
-    }
-
-    .recommendationHeader {
-        background-color: #006299;
+    .similarProductsHeader {
+        background-color: orangered;
         color: white;
         width: 150px;
         padding: 10px;
         font-weight: bold;
-    }
-
-    ff-record-list {
     }
 
     ff-record {
@@ -122,13 +113,14 @@
 </ff-communication>
 
 <h3>Search</h3>
-<p>Just search for some items. The first product in the search result will be used as base to recommend other products
-    with the recommendation service.</p>
+<p>
+    Just search for some items. The first product in the search result will be used as base suggest similar products.
+</p>
 <input is="ff-searchbox"/>
 <button is="ff-searchbutton">Search</button>
 
 <h3>Selected Record</h3>
-<ff-record id="recomendationRecord">
+<ff-record id="exampleSelection">
     <a href="https://www.bergfreunde.de{{record.Deeplink}}">
         <img data-image={{record.ImageName}}
              data-image-onerror="../img_not_found.gif"
@@ -147,9 +139,11 @@
     </div>
 </ff-record>
 
-<h3>Recommendations for Selected Record</h3>
-<ff-recommendation unresolved>
-    <div class="recommendationHeader">Recommendations</div>
+<h3>Similar Products for Selected Record</h3>
+<ff-similar-products max-results="4" unresolved>
+    <div class="similarProductsHeader">
+        Similar Products
+    </div>
     <ff-record-list id="test-list">
         <ff-carousel infinite="true" show-legend="true" per-slide="3">
             <img src="arrow-left.png" data-prev>"prev"</img>
@@ -174,7 +168,7 @@
             </ff-record>
         </ff-carousel>
     </ff-record-list>
-</ff-recommendation>
+</ff-similar-products>
 
 </body>
 </html>
