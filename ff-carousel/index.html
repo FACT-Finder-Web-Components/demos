@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-carousel demo</title>
+    <!--<link rel="stylesheet" href="../demo-styles.css">-->
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+        document.addEventListener("ffReady", function (evt) {
+            factfinder.communication.sp[btoa("Search.ff")] = true;
+            factfinder.communication.sp[btoa("Tracking.ff")] = true;
+        });
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body>
+
+<style is="custom-style">
+
+    ff-record-list {
+        width: 1000px;
+        border: 1px solid lightblue;
+        padding: 10px;
+    }
+
+    ff-record {
+        width: 215px;
+        min-height: 150px;
+    }
+
+    ff-record > img {
+        text-align: center;
+        width: 150px;
+        height: 150px;
+    }
+
+    ff-carousel {
+        --ff-carousel-legend: {
+            margin-top: 20px;
+        };
+        --ff-carousel-plane: {
+            padding-top: 10px;
+        };
+        position: relative;
+    }
+
+    ff-record-list:hover [data-next], ff-record-list:hover [data-prev] {
+        opacity: 0.7;
+    }
+
+    [data-prev], [data-next] {
+        position: absolute;
+        height: 100px;
+        width: 100px;
+        z-index: 2;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    [data-next] {
+        top: 90px;
+        right: -30px;
+    }
+
+    [data-prev] {
+        top: 90px;
+        left: -30px;
+    }
+
+    .price {
+        text-align: center;
+        color: orange;
+    }
+
+    .manufacturer {
+        text-align: center;
+    }
+
+    .title {
+        height: 40px;
+    }
+</style>
+
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-de"
+                  ignore-page="true"
+                  search-immediate>
+</ff-communication>
+
+
+<ff-record-list id="test-list">
+    <ff-carousel infinite="true" show-legend="true" per-slide="4">
+        <img src="arrow-left.png" data-prev>"prev"</img>
+        <img src="arrow-right.png" data-next>"next"</img>
+        <ff-record slot="items">
+            <a href="https://www.bergfreunde.de{{record.Deeplink}}">
+                <img data-image={{record.ImageName}}
+                     data-image-onerror="../img_not_found.gif"
+                     data-redirect="https://www.bergfreunde.de{{record.Deeplink}}"
+                     data-redirect-target="_self">
+            </a>
+
+            <div>
+                <div class="manufacturer"><b>{{record.Manufacturer}}</b></div>
+                <div class="title">
+                    <a data-track href="https://www.bergfreunde.de{{record.Deeplink}}">
+                        {{record.Title}}
+                    </a>
+                </div>
+                <div class="price"> € <strong>{{record.Price}}</strong></div>
+            </div>
+        </ff-record>
+    </ff-carousel>
+</ff-record-list>
+
+</body>
+</html>
