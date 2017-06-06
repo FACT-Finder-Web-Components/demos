@@ -33,6 +33,18 @@
             border: 1px solid black;
             color: white;
         }
+
+        [data-container="suggestions"] {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .productsContainer {
+            display: flex;
+            flex-direction: row;
+            border-left: 1px solid #eee;
+            flex-wrap: wrap
+        }
     </style>
 </head>
 <body>
@@ -41,7 +53,7 @@
                   channel="bergfreunde-co-uk">
 </ff-communication>
 
-Type "wa"
+Type "wa" and use arrow key up/down: <br>
 <input id="searchbox" is="ff-searchbox" hidesuggest-onblur="true" placeholder="Suche"/>
 
 <ff-onfocus-suggest id="suggest">
@@ -50,7 +62,7 @@ Type "wa"
             <div>{{{name}}}</div>
         </ff-suggest-item>
     </section>
-    <section data-container="suggestions" style="display: flex;flex-direction: column">
+    <section data-container="suggestions">
         <div style="display: flex;flex-direction: row">
             <div data-container="category">
                 <h2>Categories</h2>
@@ -68,7 +80,7 @@ Type "wa"
 
         <div data-container="productName">
             <h2>Products</h2>
-            <div style="display: flex;flex-direction: row;border-left: 1px solid #eee;flex-wrap: wrap">
+            <div class="productsContainer">
                 <ff-suggest-item type="productName">
                     <img data-image="product">
                     <div class="product-center">
