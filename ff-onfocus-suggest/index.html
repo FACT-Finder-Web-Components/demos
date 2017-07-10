@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-onfocus-suggest</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="import"
+          href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+
+    <style is="custom-style">
+        ff-onfocus-suggest {
+            --suggest-container-wrapper: {
+                border-top: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+                border-right: 1px solid #eee;
+            };
+
+            --suggest-container: {
+                min-height: 460px;
+            };
+        }
+
+        [data-container="suggestions"] .ff-highlight-suggest-item {
+            background-color: #2b81af;
+            border: 1px solid black;
+            color: white;
+        }
+
+        [data-container="suggestions"] {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .productsContainer {
+            display: flex;
+            flex-direction: row;
+            border-left: 1px solid #eee;
+            flex-wrap: wrap
+        }
+    </style>
+</head>
+<body>
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk">
+</ff-communication>
+
+Type "wa" and use arrow key up/down: <br>
+<input id="searchbox" is="ff-searchbox" hidesuggest-onblur="true" placeholder="Suche"/>
+
+<ff-onfocus-suggest id="suggest">
+    <section data-container="onfocus">
+        <ff-suggest-item type="searchTerm">
+            <div>{{{name}}}</div>
+        </ff-suggest-item>
+    </section>
+    <section data-container="suggestions">
+        <div style="display: flex;flex-direction: row">
+            <div data-container="category">
+                <h2>Categories</h2>
+                <ff-suggest-item type="category">
+                    <div>{{{name}}}</div>
+                </ff-suggest-item>
+            </div>
+            <div data-container="brand">
+                <h2>Brands</h2>
+                <ff-suggest-item type="brand">
+                    <div>{{{name}}}</div>
+                </ff-suggest-item>
+            </div>
+        </div>
+
+        <div data-container="productName">
+            <h2>Products</h2>
+            <div class="productsContainer">
+                <ff-suggest-item type="productName">
+                    <img data-image="product">
+                    <div class="product-center">
+                        <div class="product-name">{{{name}}}</div>
+                        <div>Rating</div>
+                    </div>
+                    <!-- Price and availability-->
+                    <div class="product-right">
+                        <!--<div class="product-price">{{attributes.Price}}€</div>-->
+                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                    </div>
+                </ff-suggest-item>
+            </div>
+        </div>
+    </section>
+</ff-onfocus-suggest>
+</body>
+</html>
