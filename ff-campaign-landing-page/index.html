@@ -14,15 +14,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
-                      version="7.2"
-                      channel="bergfreunde-co-uk">
-    </ff-communication>
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk"></ff-communication>
 
     <p>This landing page doesn't require a search and immediately displays the requested campaign.<br>The campaign
     consists of a feedback text and some pushed products</p>
-
-    <ff-campaign-landing-page id="test" page-id="home"></ff-campaign-landing-page>
 
     <ff-campaign-feedbacktext label="above searchbar">
         <h2>This is the feedback text:</h2>
@@ -46,5 +43,8 @@
             </ff-record>
         </ff-record-list>
     </ff-campaign-pushed-products>
+
+    <!-- Add the request at the bottom of the page -->
+    <ff-campaign-landing-page id="test" page-id="home"></ff-campaign-landing-page>
 </body>
 </html>

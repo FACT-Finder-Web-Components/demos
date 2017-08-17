@@ -13,17 +13,13 @@
     <link rel="stylesheet" href="../demo-styles.css">
 </head>
 <body>
-
 <ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
                   version="7.2"
                   channel="bergfreunde-co-uk">
 </ff-communication>
 
-<ff-campaign-product record-id="318-0125-0111"></ff-campaign-product>
-
 <input is="ff-searchbox" label="Search...">
 <button is="ff-searchbutton">Search</button>
-
 
 <ff-campaign-pushed-products is-product-campaign>
     <span id="shoppingCartCampaignCaption">
@@ -56,5 +52,9 @@
     </ff-record>
 </ff-record-list>
 
+
+
+<!-- Add the request at the bottom of the page -->
+<ff-campaign-product record-id="318-0125-0111"></ff-campaign-product>
 </body>
 </html>
