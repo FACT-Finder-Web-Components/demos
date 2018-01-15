@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirect Demo</title>
+    <link rel="stylesheet" href="../ff-suggest/styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <link rel="import" href="../ff-suggest/mixin-styles.html">
+    <link rel="stylesheet" href="../demo-styles.css">
+</head>
+<body>
+<!-- basic connection configuration-->
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk">
+</ff-communication>
+
+<h1>Page without the Product Visualization but with Suggest etc.</h1>
+<p>
+    This page will redirect to a Page implemented with Web Components an will trigger a search for the value in the
+    input Field.
+</p>
+<input type="text" is="ff-searchbox" id="searchbox" placeholder="Search...">
+<button type="submit">Search</button>
+
+<ff-suggest layout="list">
+    <section id="searchContainer" class="searchTermContainer">
+        <div data-container="searchTerm">
+            <p class="containerCaption">Suchvorschläge</p>
+            <ff-suggest-item type="searchTerm">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="category">
+            <p class="containerCaption">Kategorievorschläge</p>
+            <ff-suggest-item type="category">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="brand">
+            <p class="containerCaption">Marken</p>
+            <ff-suggest-item type="brand">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+    </section>
+
+    <section id="productContainer" class="productsContainer">
+        <div data-container="productName">
+            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <div>
+                <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
+                    <img data-image>
+                    <div class="product-center">
+                        <div class="product-name">{{{name}}}</div>
+                        <div>Shipping</div>
+                        <div>Rating</div>
+                    </div>
+                    <!-- Price and availability-->
+                    <div class="product-right">
+                        <div class="product-price">{{attributes.Price}}€</div>
+                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                    </div>
+                </ff-suggest-item>
+            </div>
+        </div>
+    </section>
+</ff-suggest>
+
+<script>
+    document.querySelector("input").addEventListener("before-search", function (event) {
+        event.preventDefault();
+        window.location = "search.html?query=" + event.srcElement.value;
+    });
+
+    document.querySelector("ff-suggest").addEventListener("suggest-item-clicked", function (event) {
+        if (event.detail.type === "searchTerm" || event.detail.type === "category") {
+            var searchParams = event.detail.suggestion.searchParams.split("?")[1];
+            searchParams += "&querFromSuggest=true";
+            searchParams += "&userInput=" + factfinder.communication.globalElementValues.currentFFSearchBoxValue;
+            event.srcElement.ffPreventDefault = true;
+            window.location = "search.html?" + searchParams;
+        }
+    });
+</script>
+</body>
+</html>
