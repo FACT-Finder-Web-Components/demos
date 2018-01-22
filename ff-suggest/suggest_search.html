@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record List</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="suggestToSearch.js"></script>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <link rel="import" href="mixin-styles.html">
+</head>
+<body>
+<h1>Use the seach API for product suggestions</h1>
+<!-- Configure the connection to the FF-Search backend and a default query-->
+<ff-communication url="http://web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  default-query="trou"
+                  use-url-parameter="false"
+                  channel="bergfreunde-co-uk"
+                  search-immediate>
+</ff-communication>
+
+<input is="ff-searchbox"/>
+<button is="ff-searchbutton">Search</button>
+
+<ff-suggest layout="list">
+    <section id="searchContainer" class="searchTermContainer">
+        <div data-container="searchTerm">
+            <p class="containerCaption">Suchvorschläge</p>
+            <ff-suggest-item type="searchTerm">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="category">
+            <p class="containerCaption">Kategorievorschläge</p>
+            <ff-suggest-item type="category">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="brand">
+            <p class="containerCaption">Marken</p>
+            <ff-suggest-item type="brand">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+    </section>
+
+    <section id="productContainer" class="productsContainer">
+        <div data-container="productName">
+            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <div>
+                <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
+                    <img data-image>
+                    <div class="product-center">
+                        <div class="product-name">{{{name}}}</div>
+                        <div>Shipping</div>
+                        <div>Rating</div>
+                    </div>
+                    <!-- Price and availability-->
+                    <div class="product-right">
+                        <div class="product-price">{{attributes.price}}€</div>
+                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                    </div>
+                </ff-suggest-item>
+            </div>
+        </div>
+    </section>
+</ff-suggest>
+</body>
+</html>
