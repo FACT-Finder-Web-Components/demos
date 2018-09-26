@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ASN Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body>
+<ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk"
+                  use-url-parameter="false"
+                  parameter-whitelist="query,filterCategoryROOT"
+                  add-params="filterCategoryROOT=Outdoor%20clothing"
+                  default-query="trousers"
+                  search-immediate>
+</ff-communication>
+
+<header>
+    <input is="ff-searchbox">
+    <div class="bctContainer">
+        You are searching for:
+        <ff-breadcrumb-trail></ff-breadcrumb-trail>
+    </div>
+</header>
+<main>
+    <ff-asn align="vertical" unresolved>
+        <!--use this as a default template for all groups-->
+        <ff-asn-group for-group="all" class="cursor">
+            <ff-asn-group-element>
+                <div data-selected>
+                    <input type="checkbox" checked>
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+                <div data-unselected>
+                    <input type="checkbox">
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+            </ff-asn-group-element>
+            <div data-container="groupCaption" class="groupCaption">
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+
+
+            <div opened data-container="detailedLinks">
+                <!--we'll show all links which should be displayed immediately aside this element-->
+                <div data-content="detailedLinks"></div>
+
+                <!--use this container for automatically showing the hiddenLinks container on tap-->
+                <div data-container="showMore">
+
+                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                    <span class="text">Show More</span>
+                </div>
+
+                <div class="marginBottom"></div>
+            </div>
+
+            <div data-container="hiddenLinks">
+                <!--we'll hide all links which should NOT be displayed immediately aside this element-->
+                <div data-content="hiddenLinks"></div>
+
+                <!--use this container for automatically hiding the hiddenLinks container on tap-->
+                <div data-container="showLess">
+
+                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                    <span class="text">Show Less</span>
+                </div>
+                <div class="marginBottom"></div>
+            </div>
+        </ff-asn-group>
+
+        <!--style all groups with filter style TREE-->
+        <ff-asn-group filter-style="TREE" opened class="cursor">
+            <ff-asn-group-element>
+                <div data-selected>
+                    &nbsp;&nbsp;<span class="filterName"><b>{{element.name}}</b></span>
+                </div>
+                <div data-unselected>
+                    &nbsp;<span class="filterArrowRight"></span>&nbsp;<span
+                        class="filterName">{{element.name}}</span>
+                </div>
+            </ff-asn-group-element>
+            <div data-container="groupCaption" class="groupCaption">
+                {{group.name}} <span class="filterArrowDown">&nbsp;</span>
+            </div>
+            <div opened data-container="detailedLinks">
+                <div data-content="detailedLinks"></div>
+                <div class="marginBottom"></div>
+            </div>
+        </ff-asn-group>
+
+        <!--style slider groups-->
+        <ff-asn-group-slider>
+            <div data-container="groupCaption" class="groupCaption">
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+            <div data-container="removeFilter">Remove Filter</div>
+            <ff-slider-control submit-on-input="true">
+                <input data-control='1'
+                       style="position: absolute; width: 60px;left: 15px;top:12px;">
+                <input
+                        data-control='2' style="position: absolute; width: 60px;right: 15px;top:12px;">
+
+                <ff-slider current-min-value="0" style="width: 150px;margin-top: 30px;">
+                    <div data-slider="1" class="sliderBtn"></div>
+                    <div data-slider="2" class="sliderBtn"></div>
+                </ff-slider>
+            </ff-slider-control>
+        </ff-asn-group-slider>
+    </ff-asn>
+
+    <ff-record-list unresolved>
+        <ff-record>
+            <img data-image="{{record.ImageName}}">
+            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                {{record.Title}}
+            </a>
+
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}}</span>
+            </div>
+        </ff-record>
+    </ff-record-list>
+</main>
+</body>
+</html>

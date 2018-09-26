@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paging Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var Polymer = Polymer || {};
+        Polymer.dom = 'shady';
+
+        const channel1 = "bergfreunde-co-uk";
+        const channel2 = "bergfreunde-de";
+        const topicName = "searchChannel2";
+        document.addEventListener("ffReady", function () {
+            factfinder.communication.ResultDispatcher.subscribe(topicName, function (response) {
+                const searchResult = response.searchResult;
+                const paging = searchResult.paging;
+                paging.pageLinks.forEach(function (link) {
+                    link.number = "" + link.number;
+                });
+
+                document.querySelector("#pagingCustom").paging = searchResult.paging;
+                document.querySelector("#customRecordList").records = searchResult.records;
+            });
+
+            factfinder.communication.FFCommunicationEventAggregator.addBeforeDispatchingCallback(function (event) {
+                if (event.type === "search" && event.channel === channel1) {
+                    //zweite suche
+                    let eventChannel2 = {
+                        ...event
+                    };
+                    eventChannel2.channel = channel2;
+                    eventChannel2.topics = function () {
+                        return ["searchChannel2"];
+                    };
+                    factfinder.communication.FFCommunicationEventAggregator.addFFEvent(eventChannel2)
+                } else if (event.type === "paging" && typeof event.number === "string") {
+                    //Suchrequest aus dem Datenfluss entfernen
+                    event.channel = channel2;
+                    event.type = "search";
+                    event.page = event.number;
+                    event.query = event.query;
+                    delete event.number;
+                    event.topics = function () {
+                        return ["searchChannel2"];
+                    };
+                }
+            });
+        });
+
+        document.addEventListener("WebComponentsReady", function () {
+            //HTML Element aus dem Datenfluss entfernen
+            document.querySelector("#pagingCustom").detached();
+        });
+    </script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+</head>
+<body>
+<!-- basic connection configuration-->
+<ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk"
+                  add-params="productsPerPage=3"
+                  search-immediate="true">
+</ff-communication>
+<div>
+    <div id="demo-header" style="display: flex;justify-content: center;align-items: center">
+        <input is="ff-searchbox"/>
+        <div style="padding: 10px">
+            <h2>Normale Suche</h2>
+            <ff-paging id="pagingNormal">
+                <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
+            </ff-paging>
+        </div>
+        <div style="padding: 10px">
+            <h2>Custom Topic Paging</h2>
+            <ff-paging id="pagingCustom">
+                <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
+            </ff-paging>
+        </div>
+    </div>
+
+    <h2>Normale Suche</h2>
+    <ff-record-list unresolved>
+        <ff-record>
+            <img data-image="{{record.ImageName}}">
+            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                {{record.Title}}
+            </a>
+
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            </div>
+        </ff-record>
+    </ff-record-list>
+
+    <h2>Custom Topic Records</h2>
+    <ff-record-list id="customRecordList" subscribe="false" unresolved>
+        <ff-record>
+            <img data-image="{{record.ImageName}}">
+            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                {{record.Title}}
+            </a>
+
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            </div>
+        </ff-record>
+    </ff-record-list>
+</div>
+</body>
+</html>
