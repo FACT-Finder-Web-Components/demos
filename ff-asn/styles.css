@@ -60,11 +60,11 @@ ff-asn-group-element {
     border-bottom: 1px solid #ededed;
 }
 
-div[data-selected] span.filterName:hover {
+div[slot="selected"] span.filterName:hover {
     text-decoration: underline;
 }
 
-div[data-unselected] span.filterName:hover {
+div[slot="unselected"] span.filterName:hover {
     text-decoration: underline;
 }
 

@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>ASN Demo</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="styles.css">
 
-    <script>
-        var Polymer = Polymer || {};
-        Polymer.dom = 'shady';
-    </script>
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
+    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 </head>
 <body>
 <ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
@@ -22,7 +19,13 @@
 </ff-communication>
 
 <header>
-    <input is="ff-searchbox">
+    <ff-searchbox>
+        <input />
+    </ff-searchbox>
+    <ff-searchbutton>
+        <button>Search</button>
+    </ff-searchbutton>
+
     <div class="bctContainer">
         You are searching for:
         <ff-breadcrumb-trail></ff-breadcrumb-trail>
@@ -33,16 +36,16 @@
         <!--use this as a default template for all groups-->
         <ff-asn-group for-group="all" class="cursor">
             <ff-asn-group-element>
-                <div data-selected>
+                <div slot="selected">
                     <input type="checkbox" checked>
                     <span class="filterName">{{element.name}}</span>
                 </div>
-                <div data-unselected>
+                <div slot="unselected">
                     <input type="checkbox">
                     <span class="filterName">{{element.name}}</span>
                 </div>
             </ff-asn-group-element>
-            <div data-container="groupCaption" class="groupCaption">
+            <div slot="groupCaption" class="groupCaption">
                 {{group.name}}<span class="filterArrowDown">&nbsp;</span>
             </div>
 
@@ -78,15 +81,14 @@
         <!--style all groups with filter style TREE-->
         <ff-asn-group filter-style="TREE" opened class="cursor">
             <ff-asn-group-element>
-                <div data-selected>
+                <div slot="selected">
                     &nbsp;&nbsp;<span class="filterName"><b>{{element.name}}</b></span>
                 </div>
-                <div data-unselected>
-                    &nbsp;<span class="filterArrowRight"></span>&nbsp;<span
-                        class="filterName">{{element.name}}</span>
+                <div slot="unselected">
+                    &nbsp;<span class="filterArrowRight"></span>&nbsp;<span class="filterName">{{element.name}}</span>
                 </div>
             </ff-asn-group-element>
-            <div data-container="groupCaption" class="groupCaption">
+            <div slot="groupCaption" class="groupCaption">
                 {{group.name}} <span class="filterArrowDown">&nbsp;</span>
             </div>
             <div opened data-container="detailedLinks">
@@ -97,7 +99,7 @@
 
         <!--style slider groups-->
         <ff-asn-group-slider>
-            <div data-container="groupCaption" class="groupCaption">
+            <div slot="groupCaption" class="groupCaption">
                 {{group.name}}<span class="filterArrowDown">&nbsp;</span>
             </div>
             <div data-container="removeFilter">Remove Filter</div>
@@ -108,8 +110,8 @@
                         data-control='2' style="position: absolute; width: 60px;right: 15px;top:12px;">
 
                 <ff-slider current-min-value="0" style="width: 150px;margin-top: 30px;">
-                    <div data-slider="1" class="sliderBtn"></div>
-                    <div data-slider="2" class="sliderBtn"></div>
+                    <div slot="slider1" id="slider1" class="sliderBtn"></div>
+                    <div slot="slider2" id="slider2" class="sliderBtn"></div>
                 </ff-slider>
             </ff-slider-control>
         </ff-asn-group-slider>
