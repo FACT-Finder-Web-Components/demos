@@ -60,7 +60,7 @@ ff-record a, ff-record a:visited, ff-record a:active {
     display: block;
 }
 
-input[is='ff-searchbox'] {
+ff-searchbox input {
     height: 32px;
     width: 300px;
     background-color: #EEEEEE;
@@ -72,7 +72,7 @@ input[is='ff-searchbox'] {
     color: #3c3c3b;
 }
 
-[is="ff-searchbutton"], button {
+button {
     cursor: pointer;
     display: inline-block;
     border: none;
@@ -94,7 +94,7 @@ input[is='ff-searchbox'] {
     border-radius: 6px;
 }
 
-[is="ff-searchbutton"]:hover, button:hover {
+button:hover {
     border: none;
     color: #EDEDED;
     box-shadow: inset 0 1px 0 0 #007BBF, inset 0 -1px 0 0 #007BBF, inset 0 0 0 1px #007BBF;
