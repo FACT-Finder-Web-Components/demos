@@ -19,8 +19,8 @@
             var ids = [];
             var records = document.querySelectorAll("#selectList > .selected");
             records.forEach(function (rec) {
-                var r = Polymer.dom(rec);
-                ids.push(r.node.recordData.id);
+                var r = rec;
+                ids.push(r.recordData.id);
             });
             var compareElement = document.querySelector("#compareList");
             //FYI: this would work if the ff-compare has the 'auto-compare' attribute set to true, default is false
@@ -48,7 +48,7 @@
 </ff-communication>
 
 <input is="ff-searchbox" use-suggest="false">
-<ff-record-list id="selectList">
+<ff-record-list id="selectList" unresolved>
     <p>
     <h2>Select Records to compare</h2>
     <button onclick="doCompare()">Compare</button>
@@ -89,7 +89,7 @@
     }
 </style>
 
-<ff-compare max-results="5" id="compareList" style="display: none">
+<ff-compare max-results="5" id="compareList" style="display: none" unresolved>
     <div>
         <h2>Compared Records</h2>
         <p>(compared by the Field "Manufacturer")</p>
