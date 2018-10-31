@@ -10,97 +10,100 @@
 </head>
 <body>
 
-<style is="custom-style">
-    #recomendationRecord {
-        border: 1px dashed;
-        padding: 10px;
-    }
+<custom-style>
+    <style>
+        #recomendationRecord {
+            border: 1px dashed;
+            padding: 10px;
+        }
 
-    ff-recommendation {
-        border: 2px solid #006299;
-    }
+        ff-recommendation {
+            border: 2px solid #006299;
+        }
 
-    .recommendationHeader {
-        background-color: #006299;
-        color: white;
-        width: 150px;
-        padding: 10px;
-        font-weight: bold;
-    }
+        .recommendationHeader {
+            background-color: #006299;
+            color: white;
+            width: 150px;
+            padding: 10px;
+            font-weight: bold;
+        }
 
-    ff-similar-products {
-        border: 2px solid orangered;
-        margin: 15px 0;
-    }
+        ff-similar-products {
+            border: 2px solid orangered;
+            margin: 15px 0;
+        }
 
-    .similarProductsHeader {
-        background-color: orangered;
-        color: white;
-        width: 150px;
-        padding: 10px;
-        font-weight: bold;
-    }
+        .similarProductsHeader {
+            background-color: orangered;
+            color: white;
+            width: 150px;
+            padding: 10px;
+            font-weight: bold;
+        }
 
-    ff-record-list {
-    }
+        ff-record-list {
+        }
 
-    ff-record {
-        width: 215px;
-        min-height: 150px;
-    }
+        ff-record {
+            width: 215px;
+            min-height: 150px;
+        }
 
-    ff-record > img {
-        text-align: center;
-        width: 150px;
-        height: 150px;
-    }
+        ff-record > img {
+            text-align: center;
+            width: 150px;
+            height: 150px;
+        }
 
-    ff-carousel {
-        --ff-carousel-legend: {
-            margin-top: 20px;
-        };
-        --ff-carousel-plane: {
-            padding-top: 10px;
-        };
-        position: relative;
-    }
+        ff-carousel {
+            --ff-carousel-legend: {
+                margin-top: 20px;
+            };
+            --ff-carousel-plane: {
+                padding-top: 10px;
+            };
+            position: relative;
+        }
 
-    ff-record-list:hover [data-next], ff-record-list:hover [data-prev] {
-        opacity: 0.7;
-    }
+        ff-record-list:hover [data-next], ff-record-list:hover [data-prev] {
+            opacity: 0.7;
+        }
 
-    [data-prev], [data-next] {
-        position: absolute;
-        height: 100px;
-        width: 100px;
-        z-index: 2;
-        opacity: 0;
-        cursor: pointer;
-    }
+        [data-prev], [data-next] {
+            position: absolute;
+            height: 100px;
+            width: 100px;
+            z-index: 2;
+            opacity: 0;
+            cursor: pointer;
+        }
 
-    [data-next] {
-        top: 90px;
-        right: -10px;
-    }
+        [data-next] {
+            top: 90px;
+            right: -10px;
+        }
 
-    [data-prev] {
-        top: 90px;
-        left: -10px;
-    }
+        [data-prev] {
+            top: 90px;
+            left: -10px;
+        }
 
-    .price {
-        text-align: center;
-        color: orange;
-    }
+        .price {
+            text-align: center;
+            color: orange;
+        }
 
-    .manufacturer {
-        text-align: center;
-    }
+        .manufacturer {
+            text-align: center;
+        }
 
-    .title {
-        height: 40px;
-    }
-</style>
+        .title {
+            height: 40px;
+        }
+    </style>
+</custom-style>
+
 <ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
                   version="7.2"
                   channel="bergfreunde-co-uk"
