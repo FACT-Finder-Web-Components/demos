@@ -10,9 +10,6 @@
     <script src="jquery.hover3d.js"></script>
 
     <script>
-        var Polymer = Polymer || {};
-        Polymer.dom = 'shady';
-
         function applyEffect(record) {
             if (record.style.display !== "none") {
                 var id = record.recordData.id;
@@ -69,9 +66,11 @@
         }
     </script>
 
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html"
-          onload="applyHover()">
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <!--//TODO apply hover-->
+
     <link rel="import" href="styles.html">
 
 </head>
