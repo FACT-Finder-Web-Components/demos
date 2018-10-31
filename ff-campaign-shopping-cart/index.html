@@ -15,11 +15,11 @@
 <ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
                   version="7.2"
                   channel="bergfreunde-co-uk"></ff-communication>
-<input is="ff-searchbox" label="Search...">
-<button is="ff-searchbutton">Search</button>
 
+<ff-searchbox><input label="Search..."></ff-searchbox>
+<ff-searchbutton><button>Search</button></ff-searchbutton>
 
-<ff-campaign-pushed-products is-shopping-cart-campaign>
+<ff-campaign-pushed-products is-shopping-cart-campaign unresolved>
     <span id="shoppingCartCampaignCaption">
         <ff-campaign-feedbacktext is-shopping-cart-campaign label="above searchbar">{{{text}}} + Shopping Cart Pushed Products</ff-campaign-feedbacktext>
     </span>
