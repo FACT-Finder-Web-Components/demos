@@ -50,10 +50,13 @@
                   channel="bergfreunde-co-uk">
 </ff-communication>
 
-<input placeholder="Search..."
-       value="trou"
-       oninput="raiseSuggestEvent(this)"
-       onblur="hideSuggest()"/>
+<ff-searchbox>
+    <input placeholder="Search..."
+           value="trou"
+           oninput="raiseSuggestEvent(this)"
+           onblur="hideSuggest()"/>
+</ff-searchbox>
+
 
 <ff-suggest layout="list">
     <section id="searchContainer" class="searchTermContainer">
