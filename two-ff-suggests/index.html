@@ -75,15 +75,15 @@
                   search-immediate>
 </ff-communication>
 
-<input id="searchbox1"
-       is="ff-searchbox"
-       label="Search..."
-       suggest-onfocus="false"/>
+<ff-searchbox suggest-onfocus="false">
+    <input id="searchbox1"
+           label="Search..."/>
+</ff-searchbox>
 
-<input id="searchbox2"
-       is="ff-searchbox"
-       label="Search..."
-       suggest-onfocus="false"/>
+<ff-searchbox suggest-onfocus="false">
+    <input id="searchbox2"
+           label="Search..."/>
+</ff-searchbox>
 
 <ff-suggest unresolved id="suggest1" layout="list">
     <!-- You can define diferent elements wich are displayed in the Suggestbox-->
