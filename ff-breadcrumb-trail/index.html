@@ -10,7 +10,7 @@
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
 </head>
-<body unresolved>
+<body>
 <!-- Configure the connection to the FF-Search backend and a default query-->
 <ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
                   version="7.2"
@@ -19,11 +19,14 @@
                   add-params="filterGender=Female"
                   search-immediate>
 </ff-communication>
-<input is="ff-searchbox" label="Search...">
+<ff-searchbox><input label="Search..."></ff-searchbox>
 
 <div class="demo">
     <b>Example 1:</b> You are searching for
-    <ff-breadcrumb-trail></ff-breadcrumb-trail>
+    <ff-breadcrumb-trail>
+        <!--//TODO we currently have to put this item here cause an error is thrown otherwise-->
+        <ff-breadcrum-trail-item type="search">{{{text}}}</ff-breadcrum-trail-item>
+    </ff-breadcrumb-trail>
 </div>
 
 <div class="demo"><b>Example 2:</b> You are searching for
