@@ -65,9 +65,15 @@
             </div>
         </ff-search-feedback>
 
-        <input is="ff-searchbox" />
+        <ff-searchbox>
+            <input />
+        </ff-searchbox>
+
         <button onclick="showFeedback(event)">Show feedback button</button>
-        <button is="ff-searchbutton" >Search</button>
+        <ff-searchbutton>
+            <button>Search</button>
+        </ff-searchbutton>
+
         <ff-record-list unresolved>
             <ff-record>
                 <img data-image="{{record.ImageName}}">
