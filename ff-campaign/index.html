@@ -23,8 +23,10 @@
         });
 
         function searchFor(query) {
-            var searchBox = document.querySelector("input[is='ff-searchbox']");
-            searchBox.value = query;
+            var searchBox = document.querySelector("ff-searchbox");
+            //TODO this is quite inconvenient, should be imnproved somehow
+            var input = document.querySelector("ff-searchbox input");
+            input.value = query;
             searchBox.search();
         }
     </script>
@@ -44,7 +46,11 @@
 <ff-searchbox>
     <input  label="Search...">
 </ff-searchbox>
-<button is="ff-searchbutton">Search</button>
+
+<ff-searchbutton>
+    <button>Search</button>
+</ff-searchbutton>
+
 <br>
 <button onclick="searchFor('jacket')">Search for 'jacket'</button>
 <button onclick="searchFor('shoe')">Search for 'Shoe'</button>
