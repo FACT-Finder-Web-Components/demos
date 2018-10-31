@@ -35,13 +35,15 @@
 </head>
 <body>
 
-<style is="custom-style">
-    ff-navigation-item {
-        --container-mixin: {
-            box-shadow: 0px 0px 5px #888888;
+<custom-style>
+    <style>
+        ff-navigation-item {
+            --container-mixin: {
+                box-shadow: 0px 0px 5px #888888;
+            }
         }
-    }
-</style>
+    </style>
+</custom-style>
 
 <ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
                   version="7.2"
@@ -55,13 +57,13 @@
 </header>
 
 <ff-navigation layout="horizontal"
-                      mobile="false"
-                      flyout="true"
-                      fetch-initial="true"
-                      first-fetch="2"
-                      fetch-size="1"
-                      max-fetch="10"
-                      fetch-time="500">
+               mobile="false"
+               flyout="true"
+               fetch-initial="true"
+               first-fetch="2"
+               fetch-size="1"
+               max-fetch="10"
+               fetch-time="500">
 
     <div slot="menu" class="my-header" style="font-weight: bold"> Navigation</div>
 
