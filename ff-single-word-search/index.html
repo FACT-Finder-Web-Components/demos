@@ -21,8 +21,12 @@
 
 
 <header>
-    <input is="ff-searchbox" placeholder="Search...">
-    <button is="ff-searchbutton">Search</button>
+    <ff-searchbox>
+        <input placeholder="Search..."/>
+    </ff-searchbox>
+    <ff-searchbutton>
+        <button>Search</button>
+    </ff-searchbutton>
 </header>
 
 <ff-single-word-search unresolved>
@@ -40,7 +44,8 @@
                     {{record.Title}}
                 </a>
 
-                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span></div>
+                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                </div>
             </ff-record>
         </ff-record-list>
     </ff-single-word-search-record>
