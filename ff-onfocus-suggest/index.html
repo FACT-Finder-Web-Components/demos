@@ -10,37 +10,39 @@
 
     <link rel="stylesheet" href="styles.css">
 
-    <style is="custom-style">
-        ff-onfocus-suggest {
-            --suggest-container-wrapper: {
-                border-top: 1px solid #eee;
-                border-bottom: 1px solid #eee;
-                border-right: 1px solid #eee;
-            };
+    <custom-style>
+        <style>
+            ff-onfocus-suggest {
+                --suggest-container-wrapper: {
+                    border-top: 1px solid #eee;
+                    border-bottom: 1px solid #eee;
+                    border-right: 1px solid #eee;
+                };
 
-            --suggest-container: {
-                min-height: 460px;
-            };
-        }
+                --suggest-container: {
+                    min-height: 460px;
+                };
+            }
 
-        [data-container="suggestions"] .ff-highlight-suggest-item {
-            background-color: #2b81af;
-            border: 1px solid black;
-            color: white;
-        }
+            [data-container="suggestions"] .ff-highlight-suggest-item {
+                background-color: #2b81af;
+                border: 1px solid black;
+                color: white;
+            }
 
-        [data-container="suggestions"] {
-            display: flex;
-            flex-direction: column;
-        }
+            [data-container="suggestions"] {
+                display: flex;
+                flex-direction: column;
+            }
 
-        .productsContainer {
-            display: flex;
-            flex-direction: row;
-            border-left: 1px solid #eee;
-            flex-wrap: wrap
-        }
-    </style>
+            .productsContainer {
+                display: flex;
+                flex-direction: row;
+                border-left: 1px solid #eee;
+                flex-wrap: wrap
+            }
+        </style>
+    </custom-style>
 </head>
 <body>
 <ff-communication url="http://search-web-components.fact-finder.de/FACT-Finder-7.2"
@@ -49,9 +51,11 @@
 </ff-communication>
 
 Type "wa" and use arrow key up/down: <br>
-<input id="searchbox" is="ff-searchbox" hidesuggest-onblur="true" placeholder="Suche"/>
+<ff-searchbox hidesuggest-onblur="true">
+    <input id="searchbox" placeholder="Suche"/>
+</ff-searchbox>
 
-<ff-onfocus-suggest id="suggest">
+<ff-onfocus-suggest id="suggest" unresolved>
     <section data-container="onfocus">
         <ff-suggest-item type="searchTerm">
             <div>{{{name}}}</div>
@@ -77,7 +81,7 @@ Type "wa" and use arrow key up/down: <br>
             <h2>Products</h2>
             <div class="productsContainer">
                 <ff-suggest-item type="productName">
-                    <img data-image="product">
+                    <img data-image="{{image}}">
                     <div class="product-center">
                         <div class="product-name">{{{name}}}</div>
                         <div>Rating</div>
