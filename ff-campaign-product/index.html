@@ -17,10 +17,10 @@
                   channel="bergfreunde-co-uk">
 </ff-communication>
 
-<input is="ff-searchbox" label="Search...">
-<button is="ff-searchbutton">Search</button>
+<ff-searchbox><input label="Search..."></ff-searchbox>
+<ff-searchbutton><button>Search</button></ff-searchbutton>
 
-<ff-campaign-pushed-products is-product-campaign>
+<ff-campaign-pushed-products is-product-campaign unresolved>
     <span id="shoppingCartCampaignCaption">
         <ff-campaign-feedbacktext is-product-campaign label="above searchbar">{{{text}}} + Pushed Products</ff-campaign-feedbacktext>
     </span>
