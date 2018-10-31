@@ -9,28 +9,30 @@
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
 
-    <style is="custom-style">
-        ff-paging-dropdown {
-            border: 1px solid grey;
-            cursor: pointer;
-
-            --dropdown-item-container: {
+    <custom-style>
+        <style>
+            ff-paging-dropdown {
                 border: 1px solid grey;
-                margin-left: -1px;
-            };
-        }
+                cursor: pointer;
 
-        ff-paging-item {
-            --paging-item-cursor-mixin: {
-                text-align: center;
-                padding: 10px;
-            };
-        }
+                --dropdown-item-container: {
+                    border: 1px solid grey;
+                    margin-left: -1px;
+                };
+            }
 
-        ff-paging-item:hover {
-            background-color: lightgray;
-        }
-    </style>
+            ff-paging-item {
+                --paging-item-cursor-mixin: {
+                    text-align: center;
+                    padding: 10px;
+                };
+            }
+
+            ff-paging-item:hover {
+                background-color: lightgray;
+            }
+        </style>
+    </custom-style>
 </head>
 <body>
 <!-- basic connection configuration-->
@@ -43,7 +45,10 @@
 <div>
     <div id="demo-header">
 
-        <input is="ff-searchbox"/>
+        <ff-searchbox>
+            <input />
+        </ff-searchbox>
+
         <div>
             <h2>Paging Dropdown 1</h2>
             <p>This is a simple paging:</p>
