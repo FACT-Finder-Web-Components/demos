@@ -20,11 +20,13 @@
 <div>
     <div id="demo-header">
 
-        <input is="ff-searchbox"/>
+        <ff-searchbox>
+            <input />
+        </ff-searchbox>
         <div>
             <h2>Paging 1</h2>
             <p>This is a simple paging:</p>
-            <ff-paging id="paging1">
+            <ff-paging id="paging1" unresolved>
                 <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
                 <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
                 <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
@@ -41,7 +43,7 @@
             </style>
             <h2>Paging 2</h2>
             <p>This is a paging with 'go to last/next' buttons:</p>
-            <ff-paging class="paging2">
+            <ff-paging class="paging2" unresolved>
                 <ff-paging-set state="currentPage <= 3">
                     <ff-paging-item type="previousLink" style="color:blue">
                         <strong>{{caption}}</strong>
@@ -125,7 +127,7 @@
         <div>
             <h2>Paging 3</h2>
             <p>This is a paging with 'go to start/end' buttons:</p>
-            <ff-paging>
+            <ff-paging unresolved>
                 <ff-paging-set state="currentPage <= 3">
                     <ff-paging-item type="previousLink">{{caption}}</ff-paging-item>
 
@@ -174,7 +176,7 @@
         <div>
             <h2>Paging 4</h2>
             <p>This is a paging with only one paging set:</p>
-            <ff-paging>
+            <ff-paging unresolved>
                 <ff-paging-set state="1<2">
                     <ff-paging-item type="firstLink">{{caption}}</ff-paging-item>
 
