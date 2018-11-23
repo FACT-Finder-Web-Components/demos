@@ -72,6 +72,10 @@ ff-searchbox input {
     color: #3c3c3b;
 }
 
+ff-slider-control {
+    position: relative;
+}
+
 button {
     cursor: pointer;
     display: inline-block;
