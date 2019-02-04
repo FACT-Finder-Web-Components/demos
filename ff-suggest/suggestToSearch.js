@@ -45,7 +45,9 @@ document.addEventListener("ffReady", function () {
             suggestions.push({
                 attributes: {
                     deeplink: product.record[result.fieldRoles.deeplink],
-                    price: product.record[result.fieldRoles.price]
+                    price: product.record[result.fieldRoles.price],
+                    id: product.id,
+                    articleNr: product.id
                 },
                 name: product.record[result.fieldRoles.productName],
                 hitCount: 0,
