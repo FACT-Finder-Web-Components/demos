@@ -18,7 +18,12 @@ document.addEventListener("ffReady", function () {
                      * used below for subscribing
                      */
                     return ["searchToSuggest"];
-                }
+                },
+                /**
+                 * if not needed within suggest, disabling asn and campaign make the search leaner / faster in the FACT-Finder backend
+                 */
+                useAsn: "false",
+                useCampaigns: "false",
             });
 
             /**
