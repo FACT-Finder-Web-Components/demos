@@ -1,3 +1,9 @@
+/**
+ * !!! CAUTION !!!
+ * This will feed a full Search.ff request into the suggest instead of a cheaper Suggest.ff request.
+ * Hence your server will have to deal with more load, which might increase server response time, server cost and license cost.
+ * So we recommend to consult with us before applying this code snippet.
+ * */
 document.addEventListener("ffReady", function () {
     var eventAggregator = factfinder.communication.FFCommunicationEventAggregator;
     var resultDispatcher = factfinder.communication.ResultDispatcher;
