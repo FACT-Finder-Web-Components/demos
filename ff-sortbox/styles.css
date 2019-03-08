@@ -1,0 +1,53 @@
+header {
+    font-weight: bold;
+}
+
+ff-sortbox {
+    border: 1px solid black;
+    min-width: 249px;
+}
+
+ff-sortbox[opened] .ffw-dropdown-container {
+    border: 1px solid grey;
+    margin-left: -1px;
+}
+
+ff-sortbox-item {
+    padding: 10px;
+    min-width: 200px;
+}
+
+ff-sortbox-item.ffw-selected {
+    font-weight: bold;
+    min-width: 200px;
+}
+
+.sortboxContainer {
+    margin-top: 30px;
+    max-width: 40%;
+}
+
+.sortBoxCaption {
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid black;
+    display: inline-block;
+    font-weight: bold;
+}
+
+#sortbox3, #sortbox4 {
+    border: none;
+    display: block;
+    margin-top: -1px;
+    margin-left: 1px;
+}
+
+/*hide the currently selected sortbox item*/
+#sortbox3 ff-sortbox-item.ffw-selected, #sortbox4 ff-sortbox-item.ffw-selected {
+    display: none !important;
+}
+
+#sortbox3 ff-sortbox-item.ffw-showSelected, #sortbox4 ff-sortbox-item.ffw-showSelected {
+    background-color: lightgray;
+}

@@ -1,0 +1,24 @@
+ff-products-per-page-dropdown {
+    border: 1px solid grey;
+}
+
+ff-products-per-page-dropdown .ffw-ppp-dropdown-container {
+    border: 1px solid grey;
+    margin-left: -1px;
+}
+
+ff-products-per-page-dropdown .ffw-showSelected{
+    background-color: lightgray;
+}
+
+ff-products-per-page-item {
+    padding: 10px;
+}
+
+ff-products-per-page-list {
+    border: 1px solid grey;
+}
+
+ff-products-per-page-list .ffw-selected {
+    font-weight: bold;
+}

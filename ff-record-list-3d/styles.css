@@ -1,0 +1,76 @@
+a {
+    color: #000;
+}
+
+ff-record-list {
+    margin-left: auto;
+    margin-right: auto;
+    width: 740px;
+    padding: 0 0 100px 0;
+}
+
+ff-record {
+    width: 160px;
+    min-height: 320px;
+    overflow: hidden;
+    margin: 5px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* hover information BEGIN */
+
+.content {
+    width: 130px;
+    min-height: 320px;
+    position: absolute;
+    z-index: 0;
+}
+
+.hover-in {
+    transition: .1s ease-out;
+}
+
+.hover-out {
+    transition: .1s ease-in;
+}
+
+.hover {
+    position: absolute;
+    border: 1px solid #656565;
+    z-index: 999 !important;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.rating {
+    margin-top: -30px;
+    padding: 5px;
+    background-color: #e1e1e1;
+}
+
+.short-info {
+    position: absolute;
+    width: 150px;
+    padding: 10px;
+}
+
+.info {
+    display: block; /* Fallback for non-webkit */
+    display: -webkit-box;
+    max-width: 400px;
+    max-height: 95px; /* Fallback for non-webkit */
+    margin: 0 auto;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* hover information END */
+ff-record img {
+    width: 150px;
+    height: 150px;
+}

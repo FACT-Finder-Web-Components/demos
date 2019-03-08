@@ -9,7 +9,21 @@
 
 }
 
-ff-suggest-item.ff-highlight-suggest-item {
+ff-suggest .ffw-suggestContainer {
+    max-width: 700px;
+    border: 1px solid #EEEEEE;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 10px 2px rgba(221, 221, 221, 0.7);
+    -moz-box-shadow: 0 0 10px 2px rgba(221, 221, 221, 0.7);
+    box-shadow: 0 0 10px 2px rgba(221, 221, 221, 0.7);
+    padding: 0;
+}
+
+ff-suggest .ffw-suggestContainerWrapper {
+    padding: 2px;
+}
+
+ff-suggest-item.ffw-highlight-suggest-item {
     background-color: lightgray;
 }
 
@@ -80,7 +94,7 @@ ff-suggest-item[type="productName"] img {
     border-radius: 3px;
 }
 
-ff-suggest-item span.query {
+ff-suggest-item span.ffw-query {
     font-weight: bold;
 }
 
