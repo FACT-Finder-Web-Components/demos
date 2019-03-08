@@ -2,7 +2,7 @@
 body {
     font-family: 'Oswald', sans-serif;
     line-height: 2em;
-    margin: 0px;
+    margin: 0;
 }
 
 ff-navigation[layout="vertical"][mobile="false"] {
@@ -38,11 +38,11 @@ ff-navigation[mobile="true"] > .my-item {
     font-weight: bold;
 }
 
-.ff-navigation-link {
+.ffw-navigation-link {
     display: none;
 }
 
-ff-navigation-item[flyout="false"][has-subelements] > .ff-navigation-link {
+ff-navigation-item[flyout="false"][has-subelements] > .ffw-navigation-link {
     display: inline-block;
 }
 

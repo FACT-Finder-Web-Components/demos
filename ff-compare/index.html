@@ -38,6 +38,31 @@
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <style>
+        .ffw-compare-diff {
+            color: red;
+            border: 1px solid red;
+        }
+
+        .ffw-compare-equal {
+            color: green;
+        }
+
+        .selected {
+            /*background: red;*/
+            border: 1px solid black;
+        }
+
+        .comparedRecord {
+            margin: 10px 0;
+            padding: 0;
+            border-left: 1px solid;
+        }
+
+        .comparedRecord:first-of-type {
+            border: none;
+        }
+    </style>
 </head>
 <body>
 <ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.2"
@@ -63,31 +88,6 @@
         </div>
     </ff-record>
 </ff-record-list>
-<style>
-    .ff-compare-diff {
-        color: red;
-        border: 1px solid red;
-    }
-
-    .ff-compare-same {
-        color: green;
-    }
-
-    .selected {
-        /*background: red;*/
-        border: 1px solid black;
-    }
-
-    .comparedRecord {
-        margin: 10px 0px;
-        padding: 0px;
-        border-left: 1px solid;
-    }
-
-    .comparedRecord:first-of-type {
-        border: none;
-    }
-</style>
 
 <ff-compare max-results="5" id="compareList" style="display: none" unresolved>
     <div>

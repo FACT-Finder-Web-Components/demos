@@ -41,10 +41,8 @@ ff-asn-group-slider {
     height: 15px;
 }
 
-ff-slider {
-    --slidebar-mixin: {
-        background-color: #00bfa5;
-    }
+ff-slider .ffw-sliderBar {
+    background-color: #00bfa5;
 }
 
 ff-asn-group-slider [data-container="groupCaption"] {
@@ -115,7 +113,7 @@ div[slot="unselected"] span.filterName:hover {
 }
 
 .groupCaption {
-    padding: 0px 0px 0px 12px;
+    padding: 0 0 0 12px;
     color: #666;
     position: relative;
     background-color: #ebebeb;

@@ -32,15 +32,9 @@
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
-</head>
-<body>
-
-<custom-style>
     <style>
-        ff-navigation-item {
-            --container-mixin: {
-                box-shadow: 0px 0px 5px #888888;
-            }
+        ff-navigation-item .ffw-item-container {
+            box-shadow: 0 0 5px #888888;
         }
 
         ff-record img {
@@ -48,7 +42,8 @@
             height: 150px;
         }
     </style>
-</custom-style>
+</head>
+<body>
 
 <ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.2"
                   version="7.2"
@@ -73,14 +68,14 @@
     <div slot="menu" class="my-header" style="font-weight: bold"> Navigation</div>
 
     <ff-navigation-item>
-        <div slot="content" class="my-item">
+        <div slot="item" class="my-item">
             <img data-search class="search-icon" src="search-icon.png">
             {{name}}
         </div>
     </ff-navigation-item>
 
     <ff-navigation-item type="header">
-        <div slot="content" class="my-header">{{name}}</div>
+        <div slot="item" class="my-header">{{name}}</div>
     </ff-navigation-item>
 
 </ff-navigation>

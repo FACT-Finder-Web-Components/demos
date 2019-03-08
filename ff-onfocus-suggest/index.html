@@ -10,39 +10,35 @@
 
     <link rel="stylesheet" href="styles.css">
 
-    <custom-style>
-        <style>
-            ff-onfocus-suggest {
-                --suggest-container-wrapper: {
-                    border-top: 1px solid #eee;
-                    border-bottom: 1px solid #eee;
-                    border-right: 1px solid #eee;
-                };
+    <style>
+        ff-onfocus-suggest .ffw-suggestContainerWrapper {
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            border-right: 1px solid #eee;
+        }
 
-                --suggest-container: {
-                    min-height: 460px;
-                };
-            }
+        ff-onfocus-suggest .ffw-suggestContainer {
+            min-height: 460px;
+        }
 
-            [data-container="suggestions"] .ff-highlight-suggest-item {
-                background-color: #2b81af;
-                border: 1px solid black;
-                color: white;
-            }
+        [data-container="suggestions"] .ffw-highlight-suggest-item {
+            background-color: #2b81af;
+            border: 1px solid black;
+            color: white;
+        }
 
-            [data-container="suggestions"] {
-                display: flex;
-                flex-direction: column;
-            }
+        [data-container="suggestions"] {
+            display: flex;
+            flex-direction: column;
+        }
 
-            .productsContainer {
-                display: flex;
-                flex-direction: row;
-                border-left: 1px solid #eee;
-                flex-wrap: wrap
-            }
-        </style>
-    </custom-style>
+        .productsContainer {
+            display: flex;
+            flex-direction: row;
+            border-left: 1px solid #eee;
+            flex-wrap: wrap
+        }
+    </style>
 </head>
 <body>
 <ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.2"

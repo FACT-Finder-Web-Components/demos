@@ -9,30 +9,26 @@
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
 
-    <custom-style>
-        <style>
-            ff-paging-dropdown {
-                border: 1px solid grey;
-                cursor: pointer;
+    <style>
+        ff-paging-dropdown {
+            border: 1px solid grey;
+            cursor: pointer;
+        }
 
-                --dropdown-item-container: {
-                    border: 1px solid grey;
-                    margin-left: -1px;
-                };
-            }
+        ff-paging-dropdown .ffw-paging-dropdown-container {
+            border: 1px solid grey;
+            margin-left: -1px;
+        }
 
-            ff-paging-item {
-                --paging-item-cursor-mixin: {
-                    text-align: center;
-                    padding: 10px;
-                };
-            }
+        ff-paging-item .ffw-cursor {
+            text-align: center;
+            padding: 10px;
+        }
 
-            ff-paging-item:hover {
-                background-color: lightgray;
-            }
-        </style>
-    </custom-style>
+        ff-paging-item:hover {
+            background-color: lightgray;
+        }
+    </style>
 </head>
 <body>
 <!-- basic connection configuration-->
