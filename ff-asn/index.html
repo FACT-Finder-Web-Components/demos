@@ -36,6 +36,7 @@
 </header>
 <main>
     <ff-asn align="vertical" unresolved>
+
         <!--use this as a default template for all groups-->
         <ff-asn-group for-group="all" class="cursor">
             <ff-asn-group-element>
@@ -48,36 +49,31 @@
                     <span class="filterName">{{element.name}}</span>
                 </div>
             </ff-asn-group-element>
+
             <div slot="groupCaption" class="groupCaption">
                 {{group.name}}<span class="filterArrowDown">&nbsp;</span>
             </div>
 
-
             <div opened data-container="detailedLinks">
-                <!--we'll show all links which should be displayed immediately aside this element-->
+                <!--all links which should be displayed immediately appear inside this element-->
                 <div data-content="detailedLinks"></div>
+            </div>
 
-                <!--use this container for automatically showing the hiddenLinks container on tap-->
-                <div data-container="showMore">
-
-                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
-                    <span class="text">Show More</span>
-                </div>
-
-                <div class="marginBottom"></div>
+            <!--use this container for automatically showing the hiddenLinks container on tap-->
+            <div data-container="showMore">
+                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                <span class="text">Show More</span>
             </div>
 
             <div data-container="hiddenLinks">
-                <!--we'll hide all links which should NOT be displayed immediately aside this element-->
+                <!--all links which should NOT be displayed immediately appear inside this element-->
                 <div data-content="hiddenLinks"></div>
+            </div>
 
-                <!--use this container for automatically hiding the hiddenLinks container on tap-->
-                <div data-container="showLess">
-
-                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
-                    <span class="text">Show Less</span>
-                </div>
-                <div class="marginBottom"></div>
+            <!--use this container for automatically hiding the hiddenLinks container on tap-->
+            <div data-container="showLess">
+                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                <span class="text">Show Less</span>
             </div>
         </ff-asn-group>
 
@@ -96,7 +92,6 @@
             </div>
             <div opened data-container="detailedLinks">
                 <div data-content="detailedLinks"></div>
-                <div class="marginBottom"></div>
             </div>
         </ff-asn-group>
 
