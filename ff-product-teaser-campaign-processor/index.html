@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-product-teaser-campaign-processor</title>
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        img {
+            width: 100%;
+        }
+
+        ff-record {
+            width: 23%;
+            height: 100%
+        }
+    </style>
+</head>
+<body>
+<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
+                  version="7.3"
+                  channel="bergfreunde-co-uk"
+                  only-search-params
+                  currency-code="EUR"
+                  currency-country-code="en-GB"
+                  search-immediate
+                  default-query="socks">
+    <ff-middleware>
+        <ff-product-teaser-campaign-processor></ff-product-teaser-campaign-processor>
+    </ff-middleware>
+</ff-communication>
+
+<ff-searchbox>
+    <input />
+</ff-searchbox>
+
+<ff-campaign-pushed-products style="border: 1px solid black" unresolved>
+    <ff-record-list subscribe="false">
+        <ff-record add-cart-click>
+            <img data-image
+                 data-image-onerror="defaultSocks.jpg"
+                 data-track="">
+            <div>
+                <span data-track="cartClick" data-track="">
+                    {{record.Title}}
+                </span>
+                <div>Price: <strong>{{record.Price}}</strong></div>
+                <a data-redirect="{{record.Deeplink}}"
+                   data-redirect-target="_blank"
+                   data-anchor="{{record.Deeplink}}">
+                    Shop
+                </a>
+            </div>
+        </ff-record>
+    </ff-record-list>
+</ff-campaign-pushed-products>
+
+<ff-record-list unresolved>
+    <ff-record add-cart-click>
+        <img data-image={{record.ImageName}}
+             data-image-onerror="defaultSocks.jpg"
+             data-track="">
+        <div>
+            <span data-track="cartClick" data-track="">
+                {{record.Title}}
+            </span>
+            <div>Price: <strong>{{record.Price}}</strong></div>
+
+            <a data-redirect="https://www.bergfreunde.de{{record.Deeplink}}"
+               data-redirect-target="_blank"
+               data-anchor="https://www.bergfreunde.de{{record.Deeplink}}">
+                Shop
+            </a>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>
