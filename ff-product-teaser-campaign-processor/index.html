@@ -17,6 +17,14 @@
             width: 23%;
             height: 100%
         }
+
+        ff-campaign-pushed-products {
+            border: 1px solid black;
+        }
+
+        [unresolved] {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -37,7 +45,7 @@
     <input />
 </ff-searchbox>
 
-<ff-campaign-pushed-products style="border: 1px solid black" unresolved>
+<ff-campaign-pushed-products unresolved>
     <ff-record-list subscribe="false">
         <ff-record add-cart-click>
             <img data-image
