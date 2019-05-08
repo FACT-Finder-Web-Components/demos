@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scroll on paging demo</title>
+    <link rel="stylesheet" href="../demo-styles.css" />
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener("ffReady", function() {
+            factfinder.communication.ResultDispatcher.subscribe("paging", function (resultData, event) {
+                window.scrollTo(0, 0); // or get and scroll a specific scrollbar
+            });
+        })
+    </script>
+
+    <style>
+        [unresolved] {
+            display: none;
+        }
+
+        ff-paging {
+            border: 1px solid black;
+            padding: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <!-- basic connection configuration-->
+    <ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.2"
+                      version="7.2"
+                      channel="bergfreunde-co-uk"
+                      default-query="trousers"
+                      search-immediate="true">
+    </ff-communication>
+
+    <ff-searchbox>
+        <input />
+    </ff-searchbox>
+
+
+    <ff-record-list unresolved>
+        <ff-record>
+            <img data-image="{{record.ImageName}}">
+            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                {{record.Title}}
+            </a>
+
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            </div>
+        </ff-record>
+    </ff-record-list>
+
+    <ff-paging id="paging1" unresolved>
+        Page:
+        <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
+        <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
+        <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
+        <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
+        <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
+    </ff-paging>
+</body>
+</html>
