@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suggest</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        function raiseSuggestEvent(e) {
+            var inputValue = e.value;
+            if (inputValue && inputValue.length >= 2) {
+                // this value is set to indicate if the current input value belongs to the received suggest response
+                // e.g. suggest request takes 100ms while the user is deleting all chars in the input field
+                // input field is empty but suggest data is now arriving.
+                // The suggest needs to know if this data belong to the current input value (which is currently
+                // empty string and therefore does not)
+                factfinder.communication.globalElementValues.currentFFSearchBoxValue = inputValue;
+                factfinder.communication.FFCommunicationEventAggregator.addFFEvent({
+                    type: "suggest",
+                    query: inputValue
+                });
+            } else {
+                hideSuggest();
+            }
+        }
+
+        function hideSuggest() {
+            factfinder.communication.ResultDispatcher.dispatchSuggest(undefined);
+        }
+
+        // Changes the term within the search box to the selected suggest item.
+        function changeSearchTerm(e) {
+            var searchInput = e.suggestion.attributes.id;
+            document.querySelector("input").value = searchInput;
+        }
+    </script>
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+</head>
+<body>
+
+<!-- Configure the connection to the FF-Search backend and a default query-->
+<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.2"
+                  version="7.2"
+                  channel="bergfreunde-co-uk">
+</ff-communication>
+
+<ff-searchbox>
+    <input placeholder="Search..."
+           value="trou"
+           oninput="raiseSuggestEvent(this)"
+           onblur="hideSuggest()"/>
+</ff-searchbox>
+
+
+<ff-suggest layout="list">
+    <section id="searchContainer" class="searchTermContainer">
+        <div data-container="searchTerm">
+            <p class="containerCaption">Suchvorschläge</p>
+            <ff-suggest-item type="searchTerm">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="category">
+            <p class="containerCaption">Kategorievorschläge</p>
+            <ff-suggest-item type="category">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="brand">
+            <p class="containerCaption">Marken</p>
+            <ff-suggest-item type="brand">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+    </section>
+
+    <section id="productContainer" class="productsContainer">
+        <div data-container="productName">
+            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <div>
+                <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
+                    <img data-image>
+                    <div class="product-center">
+                        <div class="product-name">{{{name}}}</div>
+                        <div>Shipping</div>
+                        <div>Rating</div>
+                    </div>
+                    <!-- Price and availability-->
+                    <div class="product-right">
+                        <div class="product-price">{{attributes.Price}}€</div>
+                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                    </div>
+                </ff-suggest-item>
+            </div>
+        </div>
+    </section>
+</ff-suggest>
+</body>
+</html>
