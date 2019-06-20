@@ -6,16 +6,20 @@
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
 
+    <script src="suggestToSearch.js"></script>
+
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
 </head>
 <body>
-
+<h1>Use the seach API for product suggestions</h1>
 <!-- Configure the connection to the FF-Search backend and a default query-->
 <ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.2"
                   version="7.2"
                   default-query="trou"
+                  use-url-parameter="false"
                   channel="bergfreunde-co-uk"
                   search-immediate>
 </ff-communication>
@@ -23,6 +27,7 @@
 <ff-searchbox>
     <input placeholder="Search..."/>
 </ff-searchbox>
+
 <ff-searchbutton>
     <button>Search</button>
 </ff-searchbutton>
@@ -64,7 +69,7 @@
                     </div>
                     <!-- Price and availability-->
                     <div class="product-right">
-                        <div class="product-price">{{attributes.Price}}€</div>
+                        <div class="product-price">{{attributes.price}}€</div>
                         <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
                     </div>
                 </ff-suggest-item>
