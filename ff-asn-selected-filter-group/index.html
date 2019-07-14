@@ -11,18 +11,7 @@
             factfinder.communication.ResultDispatcher.addCallback("asn", function (groups) {
                 const selectedElements = getAllSelectedFilterElements(groups);
                 if (selectedElements.length !== 0)
-                    groups.splice(1, 0, {
-                        detailedLinks: 999,
-                        elements: [],
-                        filterStyle: "DEFAULT",
-                        groupOrder: 1,
-                        name: "Selektierte Filter",
-                        selectedElements,
-                        selectionType: "singleHideUnselected",
-                        showPreviewImages: false,
-                        type: "text",
-                        unit: ""
-                    });
+                    groups.splice(1, 0, createGroup(selectedElements));
             });
 
             function getAllSelectedFilterElements(groups) {
@@ -31,6 +20,21 @@
                     selectedFilters = selectedFilters.concat(group.selectedElements.slice());
                 });
                 return selectedFilters;
+            }
+
+            function createGroup(selectedElements) {
+                return {
+                    detailedLinks: 10,
+                    elements: [],
+                    filterStyle: "DEFAULT",
+                    groupOrder: 1,
+                    name: "Selektierte Filter",
+                    selectedElements,
+                    selectionType: "singleHideUnselected",
+                    showPreviewImages: false,
+                    type: "text",
+                    unit: ""
+                }
             }
         });
     </script>
