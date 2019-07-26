@@ -19,10 +19,16 @@
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        .example-separator {
+            margin-top: 2rem;
+            border-bottom: 1px dotted #555;
+        }
+    </style>
 </head>
 <body>
 <h2>Template 1</h2>
-<div class="example-seperator"></div>
 
 <div class="example">
     <script>
@@ -38,6 +44,7 @@
     </ff-template>
 </div>
 
+<div class="example-separator"></div>
 
 <h2>Template 2</h2>
 
@@ -70,8 +77,9 @@
 
 </div>
 
+<div class="example-separator"></div>
+
 <h2>Template 3</h2>
-<div class="example-seperator"></div>
 
 <div class="example">
     <script>
@@ -105,15 +113,16 @@
     </ff-template>
 </div>
 
+<div class="example-separator"></div>
+
 <h2>Template 4</h2>
-<div class="example-seperator"></div>
 
 <div class="example">
 
     <ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
                       version="7.3"
-                      default-query="tasche"
-                      channel="bergfreunde-de"
+                      default-query="backpack"
+                      channel="bergfreunde-co-uk"
                       search-immediate>
     </ff-communication>
     <p>Access the values from the search result</p>
