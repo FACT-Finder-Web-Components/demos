@@ -117,7 +117,9 @@
                       search-immediate>
     </ff-communication>
     <p>Access the values from the search result</p>
-    <input is="ff-searchbox">
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..."/>
+    </ff-searchbox>
     <ff-searchbutton><button>Search</button></ff-searchbutton>
 
     <ff-template id="demoTemplate4" scope="result">

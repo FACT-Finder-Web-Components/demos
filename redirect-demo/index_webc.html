@@ -26,7 +26,9 @@
     This page will redirect to a Page implemented with Web Components an will trigger a search for the value in the
     input Field.
 </p>
-<input type="text" is="ff-searchbox" id="searchbox" placeholder="Search...">
+<ff-searchbox>
+    <input type="text" id="searchbox" placeholder="Search...">
+</ff-searchbox>
 <button type="submit">Search</button>
 
 <ff-suggest layout="list">
