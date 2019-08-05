@@ -9,6 +9,6 @@ connect().use(serveStatic(directory)).listen(port, function () {
 });
 
 if (process.argv[2]) {
-    require("open")("http://localhost:" + port + "/" + process.argv[2] + "/index.html");
+    require("open")("http://localhost:" + port + "/" + process.argv[2] + `/${process.argv[3] || "index"}.html`);
 }
 
