@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paging Dropdown Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        ff-paging-dropdown {
+            border: 1px solid grey;
+            cursor: pointer;
+        }
+
+        ff-paging-dropdown .ffw-paging-dropdown-container {
+            border: 1px solid grey;
+            margin-left: -1px;
+        }
+
+        ff-paging-item .ffw-cursor {
+            text-align: center;
+            padding: 10px;
+        }
+
+        ff-paging-item:hover {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+<!-- basic connection configuration-->
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  channel="bergfreunde-co-uk"
+                  default-query="trousers"
+                  search-immediate="true">
+</ff-communication>
+<div>
+    <div id="demo-header">
+
+        <ff-searchbox use-suggest="false">
+            <input placeholder="Search..."/>
+        </ff-searchbox>
+
+        <div>
+            <h2>Paging Dropdown 1</h2>
+            <p>This is a simple paging:</p>
+            <ff-paging-dropdown collapse-onblur show-selected>
+                <ff-paging-item>{{caption}}</ff-paging-item>
+            </ff-paging-dropdown>
+        </div>
+
+        <ff-record-list unresolved>
+            <ff-record>
+                <img data-image="{{record.ImageName}}">
+                <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+                   data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                    {{record.Title}}
+                </a>
+
+                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                </div>
+            </ff-record>
+        </ff-record-list>
+</body>
+</html>

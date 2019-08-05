@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campaign Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        document.addEventListener("ffReady", function () {
+            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+                if (result.timedOut) {
+                    alert("Search timeout! Try again later");
+                } else {
+                    // trim records for the demo
+                    if (result.records && result.records.length > 8) {
+                        result.records.splice(8, result.records.length);
+                    }
+                }
+
+
+            }, this);
+        });
+
+        function searchFor(query) {
+            var searchBox = document.querySelector("ff-searchbox");
+            //TODO this is quite inconvenient, should be imnproved somehow
+            var input = document.querySelector("ff-searchbox input");
+            input.value = query;
+            searchBox.search();
+        }
+    </script>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+</head>
+<body>
+<!-- basic communication configuration -->
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  channel="bergfreunde-co-uk"
+                  default-query="jacket"
+                  search-immediate>
+</ff-communication>
+
+<ff-searchbox use-suggest="false">
+    <input placeholder="Search..."/>
+</ff-searchbox>
+
+<ff-searchbutton>
+    <button>Search</button>
+</ff-searchbutton>
+
+<br>
+<button onclick="searchFor('jacket')">Search for 'jacket'</button>
+<button onclick="searchFor('shoe')">Search for 'Shoe'</button>
+<button onclick="searchFor('backpack')">Search for 'backpack'</button>
+
+<ff-campaign-feedbacktext unresolved label="below breadcrumb">
+    <h2>This is a banner campaign configured in the backend and altered in code</h2>
+    {{{text}}}
+</ff-campaign-feedbacktext>
+
+<ff-campaign-advisor unresolved not="Advisor Schuhe">
+    <ff-campaign-advisor-question>
+        <span><h1 data-question>{{text}}</h1></span>
+        <!--OR when HTML-->
+        <!--{{{text}}}-->
+        <div class="answers">
+            <ff-campaign-advisor-answer>
+                {{{text}}}
+            </ff-campaign-advisor-answer>
+        </div>
+    </ff-campaign-advisor-question>
+</ff-campaign-advisor>
+
+<!-- For the campaign 'Schuhe' use this advisor-->
+<ff-campaign-advisor unresolved name="Advisor Schuhe">
+    <style>
+        .shoes-answers {
+            background-color: #0d47a1;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            width: 100px;
+            text-align: center;
+            float: left;
+            margin: 20px;
+            padding: 10px;
+        }
+
+        .shoes-answers-box {
+            margin-left: auto;
+            margin-right: auto;
+            width: 500px;
+        }
+    </style>
+
+    <ff-campaign-advisor-question>
+        <span><h1 data-question>{{text}}</h1></span>
+        <div class="shoes-answers-box">
+            <!--
+                In this campaign the values defined for an campaign answer are just plain text. So you don't need
+                to render it as HTML and can style it here.
+            -->
+            <ff-campaign-advisor-answer>
+                <div class="shoes-answers">
+                    {{text}}
+                </div>
+            </ff-campaign-advisor-answer>
+        </div>
+    </ff-campaign-advisor-question>
+</ff-campaign-advisor>
+
+
+<!--
+    This is a placeholder for a feedback which should be placed over the Product's.
+    In this special case the feedback is a plain Text and not a HTML. So you can style the Feedback how you like.
+-->
+<style>
+    .aboveProductsFeedback {
+        background-color: #00b0ff;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 800px;
+        text-align: center;
+    }
+</style>
+<ff-campaign-feedbacktext unresolved label="above products">
+    <div class="aboveProductsFeedback">
+        {{text}}
+    </div>
+</ff-campaign-feedbacktext>
+
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+            {{record.Title}}
+        </a>
+
+        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>

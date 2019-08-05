@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Navigation (horizontal) Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var checkwindowWidth = function () {
+            var navigation = document.querySelector("ff-navigation");
+            if (window.innerWidth < 600) {
+                navigation.setAttribute("mobile", "true");
+                navigation.setAttribute("flyout", "false");
+//                navigation.setAttribute("layout","vertical");
+            } else {
+                navigation.setAttribute("mobile", "false");
+                navigation.setAttribute("flyout", "true");
+//                navigation.setAttribute("layout", "horizontal");
+            }
+        };
+
+        window.addEventListener("resize", function (evt) {
+            checkwindowWidth();
+        });
+
+        document.addEventListener("WebComponentsReady", function (evt) {
+            checkwindowWidth();
+        });
+
+    </script>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <style>
+        ff-navigation-item .ffw-item-container {
+            box-shadow: 0 0 5px #888888;
+        }
+    </style>
+</head>
+<body>
+
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  search-immediate
+                  default-query="jacket" channel="bergfreunde-co-uk" currency-code="EUR"
+                  currency-country-code="de-DE"
+                  currency-max-digits="5"
+                  currency-min-digits="1"></ff-communication>
+
+<header>
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search...">
+    </ff-searchbox>
+    <p>Resize the window width to under 600px see the ff-navigation in mobile mode</p>
+</header>
+
+<ff-navigation layout="horizontal"
+               mobile="false"
+               flyout="true"
+               fetch-initial="true"
+               first-fetch="2"
+               fetch-size="1"
+               max-fetch="10"
+               fetch-time="500">
+
+    <div slot="menu" class="my-header" style="font-weight: bold"> Navigation</div>
+
+    <ff-navigation-item>
+        <div class="my-item">
+            <img data-search class="search-icon" src="search-icon.png">
+            {{name}}
+        </div>
+    </ff-navigation-item>
+
+    <ff-navigation-item type="header">
+        <div class="my-header">{{name}}</div>
+    </ff-navigation-item>
+
+</ff-navigation>
+
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+            {{record.Title}}
+        </a>
+
+        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        </div>
+    </ff-record>
+</ff-record-list>
+<p style="color: transparent">tobi ist awesome</p>
+</body>
+</html>

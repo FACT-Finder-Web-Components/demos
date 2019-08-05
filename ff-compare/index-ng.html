@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-compare Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <!--load boilerplate at the start-->
+    <script>
+        function resetCompare() {
+            var records = document.querySelectorAll("#selectList > .selected");
+            records.forEach(function (rec) {
+                rec.classList.remove("selected");
+            });
+            document.querySelector("#selectList").style.display = 'inline-block';
+            document.querySelector("#compareList").style.display = 'none';
+        }
+
+        var doCompare = function () {
+            var ids = [];
+            var records = document.querySelectorAll("#selectList > .selected");
+            records.forEach(function (rec) {
+                var r = rec;
+                ids.push(r.recordData.record.ArticleNumber);
+            });
+            var compareElement = document.querySelector("#compareList");
+            //FYI: this would work if the ff-compare has the 'auto-compare' attribute set to true, default is false
+            // compareElement.recordIds = ids;
+            compareElement.compareRecords(ids);
+            document.querySelector("#selectList").style.display = 'none';
+            document.querySelector("#compareList").style.display = 'inline-block';
+        };
+
+        var toggleCompareRecord = function (rec) {
+            rec.classList.toggle("selected");
+        }
+
+    </script>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <style>
+        .ffw-compare-diff {
+            color: red;
+            border: 1px solid red;
+        }
+
+        .ffw-compare-equal {
+            color: green;
+        }
+
+        .selected {
+            /*background: red;*/
+            border: 1px solid black;
+        }
+
+        .comparedRecord {
+            margin: 10px 0;
+            padding: 0;
+            border-left: 1px solid;
+        }
+
+        .comparedRecord:first-of-type {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  channel="bergfreunde-co-uk"
+                  default-query="jacke"
+                  search-immediate>
+</ff-communication>
+
+<ff-searchbox use-suggest="false">
+    <input placeholder="Search..."/>
+</ff-searchbox>
+<ff-record-list id="selectList" unresolved>
+    <p>
+    <h2>Select Records to compare</h2>
+    <button onclick="doCompare()">Compare</button>
+    </p>
+    <ff-record onclick="toggleCompareRecord(this)">
+        <img data-image={{record.ImageName}} data-image-onerror="../img_not_found.gif">
+        <div>
+            <!--<a href="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-action="redirect">-->
+            {{record.Title}}
+            <!--</a>-->
+            <div>Price: <strong>{{record.Price}} €</strong></div>
+        </div>
+    </ff-record>
+</ff-record-list>
+
+<ff-compare max-results="5" id="compareList" style="display: none" unresolved>
+    <div>
+        <h2>Compared Records</h2>
+        <p>(compared by the Field "Manufacturer")</p>
+        <button onclick="resetCompare()">Reset Compare</button>
+    </div>
+    <ff-record-list class="compareList">
+        <ff-record class="comparedRecord">
+            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank"
+               style="background: lightgray">
+                {{record.Title}}
+            </a>
+            <img data-image={{record.ImageName}} data-image-onerror="../img_not_found.gif">
+
+            <div>
+                <div data-attribute="Price" style="background: lightgray">
+                    Price: <strong>{{record.Price}} €</strong>
+                </div>
+                <div data-attribute="Manufacturer">Manufacturer:{{record.Manufacturer}}</div>
+                <div data-attribute="RatingNotRounded" style="background: lightgray">
+                    Rating:{{record.RatingNotRounded}}
+                </div>
+            </div>
+        </ff-record>
+    </ff-record-list>
+</ff-compare>
+
+</body>
+</html>

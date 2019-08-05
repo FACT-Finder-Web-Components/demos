@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-template Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        document.addEventListener("ffReady", function () {
+            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+                if (result.timedOut) {
+                    alert("Search timeout! Try again later");
+                }
+            }, this);
+        });
+        var suggestState = false;
+    </script>
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        .example-separator {
+            margin-top: 2rem;
+            border-bottom: 1px dotted #555;
+        }
+    </style>
+</head>
+<body>
+<h2>Template 1</h2>
+
+<div class="example">
+    <script>
+        function setTemplate1() {
+            var template1 = document.querySelector("#demoTemplate1");
+            template1.data = {test: "This is my Test Data"};
+        }
+    </script>
+    <p>Setting simple data into a template:</p>
+    <button onclick="setTemplate1()">Set simple Data</button>
+    <ff-template id="demoTemplate1">
+        {{test}}
+    </ff-template>
+</div>
+
+<div class="example-separator"></div>
+
+<h2>Template 2</h2>
+
+<div class="example">
+    <script>
+        function setTemplate2() {
+            var tmp = document.querySelector("#demoTemplate2");
+            tmp.data = {
+                product: {
+                    name: "Super awsome Product",
+                    description: "This Product is super awsome! Go buy it!",
+                    info: {
+                        rating: 5,
+                        price: 100,
+                        currency: "€"
+                    }
+                }
+            };
+        }
+    </script>
+    <p>Setting complex data into a template:</p>
+    <button onclick="setTemplate2()">Set complex Data</button>
+    <ff-template id="demoTemplate2">
+        <h2>Name: {{product.name}}</h2>
+        <p>{{product.description}}</p>
+        <strong>{{product.info.price}} {{product.info.currency}}</strong>
+        <p>Rating: {{product.info.rating}}/5</p>
+
+    </ff-template>
+
+</div>
+
+<div class="example-separator"></div>
+
+<h2>Template 3</h2>
+
+<div class="example">
+    <script>
+        function setTemplate3() {
+            var tmp = document.querySelector("#demoTemplate3");
+            tmp.data = {
+                product: {
+                    name: "Your New Product",
+                    description: "This product is brand new! Go buy it!",
+                    info: {
+                        rating: 5,
+                        price: 100,
+                        currency: "€"
+                    },
+                    image: '<img src="" width="200" height="200">'
+                }
+            };
+        }
+    </script>
+    <p>Render HTML with a Template</p>
+    <button onclick="setTemplate3()">Set HTML Data</button>
+
+    <ff-template id="demoTemplate3">
+        <h2>Name: {{product.name}}</h2>
+        <p>{{product.description}}</p>
+        <strong>{{product.info.price}} {{product.info.currency}}</strong>
+        <p>Rating: {{product.info.rating}}/5</p>
+        <p>
+            This prints the value of product.image as string<br>
+            {{product.image}}
+        </p>
+        <p>
+            This renders the value of product.image as HTML<br>
+            {{{product.image}}}
+        </p>
+    </ff-template>
+</div>
+
+<div class="example-separator"></div>
+
+<h2>Template 4</h2>
+
+<div class="example">
+
+    <ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                      version="ng"
+                      default-query="backpack"
+                      channel="bergfreunde-co-uk"
+                      search-immediate>
+    </ff-communication>
+    <p>Access the values from the search result</p>
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..."/>
+    </ff-searchbox>
+    <ff-searchbutton><button>Search</button></ff-searchbutton>
+
+    <ff-template id="demoTemplate4" scope="result">
+        <h2>Search Result:</h2>
+        <p>resultCount: {{resultCount}}</p>
+        <p>searchTime: {{searchTime}}</p>
+    </ff-template>
+</div>
+</body>
+</html>

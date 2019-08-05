@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ff-header-navigation Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <style>
+        body {
+            font-size: 14px;
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            line-height: 18px;
+            color: #333;
+            margin: 0;
+        }
+
+        ff-header-navigation .ffw-nav-item-separator {
+            border-left: 1px solid #cbcbcb;
+            height: 40px;
+        }
+
+        ff-header-navigation .ffw-header {
+            font-weight: bold;
+            background-color: #e3e3e3;
+            background-image: -moz-linear-gradient(top, #f0f0f0, #d0d0d0);
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f0f0f0), to(#d0d0d0));
+            background-image: -webkit-linear-gradient(top, #f0f0f0, #d0d0d0);
+            background-image: -o-linear-gradient(top, #f0f0f0, #d0d0d0);
+            background-image: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+            /* background-repeat: repeat-x; */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF0F0F0', endColorstr='#FFD0D0D0', GradientType=0);
+            /* -webkit-box-shadow: rgba(0,0,0,0.55) 0 1px 4px; */
+            -moz-box-shadow: rgba(0, 0, 0, 0.55) 0 1px 4px;
+            box-shadow: rgba(0, 0, 0, 0.55) 0 1px 4px;
+        }
+
+        ff-nav-element.ffw-nav-item {
+            padding-top: 10px;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        ff-nav-element.ffw-nav-item:hover {
+            background-image: -moz-linear-gradient(top, #f0f0f0, darkgray);
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f0f0f0), to(darkgray));
+            background-image: -webkit-linear-gradient(top, #f0f0f0, darkgray);
+            background-image: -o-linear-gradient(top, #f0f0f0, darkgray);
+            background-image: linear-gradient(to bottom, #f0f0f0, darkgray);
+        }
+
+        ff-nav-element.ffw-nav-group-caption {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        ff-nav-element.ffw-nav-group-caption:hover {
+            color: #1b4385;
+        }
+
+        ff-header-navigation .ffw-nav-group {
+            flex: 1;
+            margin-left: 10px;
+            margin-right: 10px;
+
+            flex-basis: 250px;
+            padding: 10px;
+
+            text-align: start;
+        }
+
+        ff-header-navigation .ffw-header-nav {
+            width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        ff-header-navigation .ffw-body {
+            background-color: #f9f9f9;
+            background-image: -moz-linear-gradient(top, #fff, #f0f0f0);
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#f0f0f0));
+            background-image: -webkit-linear-gradient(top, #fff, #f0f0f0);
+            background-image: -o-linear-gradient(top, #fff, #f0f0f0);
+            background-image: linear-gradient(to bottom, #fff, #f0f0f0);
+            background-repeat: repeat-x;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFF0F0F0', GradientType=0);
+            box-shadow: rgba(0, 0, 0, 0.55) 0 2px 4px;
+        }
+
+        ff-nav-element.ffw-nav-link {
+            cursor: pointer;
+        }
+
+        ff-nav-element.ffw-nav-link:hover {
+            color: #1b4385;
+        }
+
+        #header-wrapper {
+            width: 1000px;
+            box-shadow: rgba(0, 0, 0, 0.55) 0 1px 4px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  channel="bergfreunde-co-uk">
+</ff-communication>
+
+<div id="header-wrapper">
+    <ff-header-navigation></ff-header-navigation>
+</div>
+
+
+<ff-record-list id="test-list" subscribe="true" class="demo-record-list">
+    <ff-record>
+        <img data-image={{record.ImageName}}
+             data-image-onerror="../img_not_found.gif"
+             data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+             data-redirect-target="_self">
+
+        <div data-track>
+            <span id="title"
+                  data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}">
+                {{record.Title}}
+            </span>
+
+            <div>Price: <strong>{{record.Price}} €</strong></div>
+
+            <a data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+               data-redirect-target="_self"
+               data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+               onclick="return false;">
+
+                <span data-track="productClick">
+                    Go to Shop page
+                </span>
+            </a>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>

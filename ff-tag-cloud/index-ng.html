@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tag Cloud Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                      version="ng"
+                      channel="bergfreunde-co-uk">
+    </ff-communication>
+
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Please use the tag cloud below to search." />
+    </ff-searchbox>
+
+    <ff-searchbutton>
+        <button>Search</button>
+    </ff-searchbutton>
+
+    <div class="content">
+        <h3>Please enter a search term or have a look at the results of the most searched terms.</h3>
+
+        <hr>
+
+        <ff-tag-cloud id="tc" min-font-size="10" max-font-size="40" word-count="60" unit="px"></ff-tag-cloud>
+
+        <ff-record-list unresolved>
+            <ff-record>
+                <img data-image="{{record.ImageName}}">
+                <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+                   data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                    {{record.Title}}
+                </a>
+
+                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                </div>
+            </ff-record>
+        </ff-record-list>
+    </div>
+</body>
+</html>

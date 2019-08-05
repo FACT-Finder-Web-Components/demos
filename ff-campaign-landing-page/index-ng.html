@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing Page Campaign Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  channel="bergfreunde-co-uk"></ff-communication>
+
+    <p>This landing page doesn't require a search and immediately displays the requested campaign.<br>The campaign
+    consists of a feedback text and some pushed products</p>
+
+    <ff-campaign-feedbacktext label="above searchbar">
+        <h2>This is the feedback text:</h2>
+        {{{text}}}
+    </ff-campaign-feedbacktext>
+
+    <h2>Followed by the pushed products:</h2>
+
+    <ff-campaign-pushed-products>
+        <span id="productCampaignCaption">Product Campaign</span>
+        <ff-record-list unresolved subscribe="false">
+            <ff-record style="max-width: 20%">
+                <img style="width: 170px; height: 170px" data-image="{{record.ImageName}}">
+                <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+                   data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                    {{record.Title}}
+                </a>
+
+                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                </div>
+            </ff-record>
+        </ff-record-list>
+    </ff-campaign-pushed-products>
+
+    <!-- Add the request at the bottom of the page -->
+    <ff-campaign-landing-page id="test" page-id="home"></ff-campaign-landing-page>
+</body>
+</html>

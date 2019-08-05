@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pushed Products Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  channel="bergfreunde-co-uk"
+                  default-query="backpack"
+                  search-immediate>
+</ff-communication>
+
+<ff-searchbox use-suggest="false"><input placeholder="Search..."></ff-searchbox>
+<ff-searchbutton><button>Search</button></ff-searchbutton>
+<p>Search for <b>sale</b> to trigger the Pushed Products campaign</p>
+
+<ff-campaign-pushed-products unresolved>
+    <span id="productCampaignCaption">Product Campaign</span>
+    <ff-record-list unresolved subscribe="false">
+        <ff-record style="max-width: 20%">
+            <img style="width: 170px; height: 170px" data-image="{{record.ImageName}}">
+            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                {{record.Title}}
+            </a>
+
+            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            </div>
+        </ff-record>
+    </ff-record-list>
+</ff-campaign-pushed-products>
+
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+            {{record.Title}}
+        </a>
+
+        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>

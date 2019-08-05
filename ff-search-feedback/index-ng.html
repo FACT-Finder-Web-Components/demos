@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Feedback Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        var hideFeedback = function(e) {
+            e.preventDefault();
+            var feedbackEle = document.querySelector("ff-search-feedback");
+            feedbackEle.hide();
+        };
+
+        var showFeedback = function(e) {
+            e.preventDefault();
+            var feedbackEle = document.querySelector("ff-search-feedback");
+            feedbackEle.show();
+        };
+        window.addEventListener('WebComponentsReady', function() {
+            document.querySelector('ff-search-feedback').addEventListener('opened-changed', function (e) {
+                if (e.detail.value === false) {
+                    document.querySelector("textarea").value = '';
+                    document.querySelector("#pos").checked = true;
+                };
+            });
+            document.querySelector('ff-search-feedback').addEventListener('successful', function (e) {
+                document.querySelector("textarea").value = '';
+                document.querySelector("#pos").checked = true;
+                e.target.hide();
+                console.log("Thank's for your feedback.");
+            })
+        })
+    </script>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                      version="ng"
+                      channel="bergfreunde-co-uk"
+                      default-query="jacket"
+                      search-immediate>
+    </ff-communication>
+
+    <p>Please search to popup the feedback element</p>
+
+    <main>
+        <ff-search-feedback id="a2" align="right" style="top: 40%" unresolved>
+            <div slot="caption"><div class="rotated-text"><span class="rotated-text__inner">Feedback</span></div></div>
+
+            <div slot="content">
+                <p>Rate search result</p>
+                <fieldset>
+                    <input type="radio" id="pos" name="positive" value="positive" checked data-positive>
+                    <label for="pos"> Gut</label><br>
+                    <input type="radio" id="neg" name="positive" value="negative" data-negative>
+                    <label for="neg"> Schlecht</label><br>
+                    <textarea rows="4" cols="15" maxlength="150" data-message></textarea>
+                </fieldset>
+                <button data-send>Rate</button>
+                <button data-toggle>Cancel</button>
+            </div>
+        </ff-search-feedback>
+
+        <ff-searchbox use-suggest="false">
+            <input placeholder="Search..."/>
+        </ff-searchbox>
+
+        <button onclick="showFeedback(event)">Show feedback button</button>
+        <ff-searchbutton>
+            <button>Search</button>
+        </ff-searchbutton>
+
+        <ff-record-list unresolved>
+            <ff-record>
+                <img data-image="{{record.ImageName}}">
+                <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+                   data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                    {{record.Title}}
+                </a>
+
+                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                </div>
+            </ff-record>
+        </ff-record-list>
+    </main>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record List 3D Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <!-- importing jQuery library and hover3D -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="jquery.hover3d.js"></script>
+
+    <script>
+        function applyEffect(record) {
+            if (record.style.display !== "none") {
+                var id = record.recordData.id;
+                var recordContainer = $("#_" + id);
+
+                recordContainer.hover3d({
+                    selector: '#record_' + id,
+                    shine: true,
+                    sensitivity: 8
+                });
+
+                recordContainer.on('mouseover', function () {
+                    // changed the z-index to make sure the current selected record is overlapping all other records.
+                    $(this).css({zIndex: "999"});
+                    $(this).find('.short-info').css({background: "#FFF"});
+                    $(this).find('.short-info').addClass('hover');
+
+                    // get the rating and information element and showing it.
+                    $(this).find('.rating').show();
+                    $(this).find('.info').show();
+                }).on('mouseout', function () {
+                    //reset the z-index of the selected record.
+                    $(this).css({zIndex: "0"});
+                    // change the background color to none of the rating and the information box.
+                    $(this).find('.short-info').css({background: ""});
+                    $(this).find('.short-info').removeClass('hover');
+
+                    // get the rating and information element and hiding it.
+                    $(this).find('.rating').hide();
+                    $(this).find('.info').hide();
+
+                    // remove the background color of the mouseover shining box after the mouseout event.
+                    $(this).find('.shine').css({background: ""});
+                });
+            }
+        }
+
+        // Hover initializing. Will be called after the elements have been loaded.
+        function applyHover() {
+            // add an eventlistener to the ff-record-list event which is called everytime the html content was updated
+            var list = document.querySelector("ff-record-list");
+            list.addEventListener("dom-updated", function (event) {
+                // get the record list from the source attribute of the event callback.
+                var ffRecordListElement = event.currentTarget;
+                // get the record data from the record list.
+                var records = Polymer.dom(ffRecordListElement).querySelectorAll("ff-record");
+
+                records.forEach(function (record) {
+                    setTimeout(function () {
+                        applyEffect(record);
+                    }, 50)
+                })
+            });
+        }
+    </script>
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <!--//TODO apply hover-->
+
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+<!-- basic communication configuration-->
+<ff-communication url="https://nightly.ff-labs.de/fact-finder/"
+                  version="ng"
+                  default-query="trousers"
+                  channel="bergfreunde-co-uk"
+                  search-immediate>
+</ff-communication>
+
+<ff-searchbox use-suggest="false">
+    <input placeholder="Search..."/>
+</ff-searchbox>
+
+<ff-searchbutton>
+    <button>Search</button>
+</ff-searchbutton>
+
+<h3>Mouse hover over an article to get more information.</h3>
+
+<ff-record-list>
+    <ff-record>
+        <div id="_{{id}}" class="content">
+            <div class="short-info" id="record_{{id}}">
+                <div id="rating_{{id}}" style="display: none" class="rating"><strong>Rating:</strong>
+                    {{record.Rating}}<br/></div>
+                <img data-image="{{record.ImageName}}">
+                <div class="record">
+                    <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+                       data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+                        {{record.Title}}
+                    </a>
+                    <div>Price: <strong>{{record.Price}} €</strong></div>
+                </div>
+                <div id="info_{{id}}" style="display: none" class="info"><strong>Description:</strong><br/>{{record.Description}}
+                </div>
+            </div>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>
