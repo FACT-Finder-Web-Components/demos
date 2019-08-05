@@ -87,29 +87,34 @@
             var tmp = document.querySelector("#demoTemplate3");
             tmp.data = {
                 product: {
-                    name: "Super awsome Product",
-                    description: "This Product is super awsome! Go buy it!",
+                    name: "Your New Product",
+                    description: "This product is brand new! Go buy it!",
                     info: {
                         rating: 5,
                         price: 100,
                         currency: "€"
                     },
-                    image: "<img src='' width='200' height='200'>"
+                    image: '<img src="" width="200" height="200">'
                 }
             };
         }
     </script>
     <p>Render HTML with a Template</p>
     <button onclick="setTemplate3()">Set HTML Data</button>
+
     <ff-template id="demoTemplate3">
         <h2>Name: {{product.name}}</h2>
         <p>{{product.description}}</p>
         <strong>{{product.info.price}} {{product.info.currency}}</strong>
         <p>Rating: {{product.info.rating}}/5</p>
-        <!-- This prints the value of product.image as string-->
-        {{product.image}}
-        <!-- This renders the value of product.image as HTML-->
-        {{{product.image}}}
+        <p>
+            This prints the value of product.image as string<br>
+            {{product.image}}
+        </p>
+        <p>
+            This renders the value of product.image as HTML<br>
+            {{{product.image}}}
+        </p>
     </ff-template>
 </div>
 

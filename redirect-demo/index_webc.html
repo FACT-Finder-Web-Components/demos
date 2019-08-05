@@ -9,9 +9,9 @@
         var Polymer = Polymer || {};
         Polymer.dom = 'shady';
     </script>
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="../bower_components/ff-web-components/dist/elements.build_with_dependencies.html">
-    <link rel="import" href="../ff-suggest_suggestToSearch/mixin-styles.html">
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
     <link rel="stylesheet" href="../demo-styles.css">
 </head>
 <body>
@@ -29,26 +29,26 @@
 <ff-searchbox>
     <input type="text" id="searchbox" placeholder="Search...">
 </ff-searchbox>
-<button type="submit">Search</button>
+<ff-searchbutton><button>Search</button></ff-searchbutton>
 
 <ff-suggest layout="list">
     <section id="searchContainer" class="searchTermContainer">
         <div data-container="searchTerm">
-            <p class="containerCaption">Suchvorschläge</p>
+            <p class="containerCaption">Search terms</p>
             <ff-suggest-item type="searchTerm">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="category">
-            <p class="containerCaption">Kategorievorschläge</p>
+            <p class="containerCaption">Categories</p>
             <ff-suggest-item type="category">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="brand">
-            <p class="containerCaption">Marken</p>
+            <p class="containerCaption">Brands</p>
             <ff-suggest-item type="brand">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
@@ -57,7 +57,7 @@
 
     <section id="productContainer" class="productsContainer">
         <div data-container="productName">
-            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <p class="containerCaption">Products</p>
             <div>
                 <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
                     <img data-image>
@@ -78,17 +78,18 @@
 </ff-suggest>
 
 <script>
-    document.querySelector("input").addEventListener("before-search", function (event) {
+    document.querySelector("ff-searchbox").addEventListener("before-search", function (event) {
         event.preventDefault();
-        window.location = "search.html?query=" + event.srcElement.value;
+        window.location = "search.html?query=" + event.target.value;
     });
 
     document.querySelector("ff-suggest").addEventListener("suggest-item-clicked", function (event) {
+        console.log("bleh");
         if (event.detail.type === "searchTerm" || event.detail.type === "category") {
             var searchParams = event.detail.suggestion.searchParams.split("?")[1];
-            searchParams += "&querFromSuggest=true";
+            searchParams += "&queryFromSuggest=true";
             searchParams += "&userInput=" + factfinder.communication.globalElementValues.currentFFSearchBoxValue;
-            event.srcElement.ffPreventDefault = true;
+            event.target.ffPreventDefault = true;
             window.location = "search.html?" + searchParams;
         }
     });
