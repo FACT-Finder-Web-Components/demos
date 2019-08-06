@@ -29,7 +29,7 @@
                     recommendationElement.recordId = "";
                 } else if (result.resultStatus === "resultsFound") {
                     var record = result.records[0];
-                    recommendationElement.recordId = record.id;
+                    recommendationElement.recordId = record.record.ArticleNumber;
 
                     //The recommendation can also take a comma seperated list of record id's
 //                    var recordIds ="";
@@ -46,7 +46,7 @@
 
         function setRecommendationProduct(ffRecordElement) {
             var recommendationElement = document.querySelector("ff-recommendation");
-            recommendationElement.recordId = ffRecordElement.recordData.id;
+            recommendationElement.recordId = ffRecordElement.recordData.record.ArticleNumber;
         }
     </script>
 
@@ -59,7 +59,7 @@
 <ff-communication url="https://nightly.ff-labs.de/fact-finder/"
                   version="ng"
                   channel="bergfreunde-co-uk"
-                  default-query="trousers"
+                  default-query="crocs spec"
                   search-immediate="true">
 </ff-communication>
 
