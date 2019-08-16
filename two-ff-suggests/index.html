@@ -46,20 +46,20 @@
             //remove the suggest from the data flow so it does not receive data anymore
             function unsubscribeSuggest(suggestElement) {
                 //check if element is already listening
-                if (suggestElement.subscribtionKey) {
-                    factfinder.communication.ResultDispatcher.unsubscribe(["suggest"], suggestElement.subscribtionKey);
+                if (suggestElement.subscriptionKey) {
+                    factfinder.communication.ResultDispatcher.unsubscribe(["suggest"], suggestElement.subscriptionKey);
                     //delete the old key
-                    suggestElement.subscribtionKey = void 0;
+                    suggestElement.subscriptionKey = undefined;
                 }
             }
 
             //add the suggest to data flow so it receives data agian
             function subscribeSuggest(suggestElement) {
                 //check if element is NOT already listening
-                if (!suggestElement.subscribtionKey) {
+                if (!suggestElement.subscriptionKey) {
                     var subKey = factfinder.communication.ResultDispatcher.subscribe(["suggest"], suggestElement._suggestItemsChanged, suggestElement);
                     //add the sub key to the element
-                    suggestElement.subscribtionKey = subKey;
+                    suggestElement.subscriptionKey = subKey;
                 }
             }
         });
@@ -84,24 +84,24 @@
 </ff-searchbox>
 
 <ff-suggest unresolved id="suggest1" layout="list">
-    <!-- You can define diferent elements wich are displayed in the Suggestbox-->
+    <!-- You can define different elements which are displayed in the suggest box -->
     <section class="searchTermContainer">
         <div data-container="searchTerm">
-            <p class="containerCaption">Suchvorschläge</p>
+            <p class="containerCaption">Search terms</p>
             <ff-suggest-item type="searchTerm">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="category">
-            <p class="containerCaption">Kategorievorschläge</p>
+            <p class="containerCaption">Categories</p>
             <ff-suggest-item type="category">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="brand">
-            <p class="containerCaption">Marken</p>
+            <p class="containerCaption">Brands</p>
             <ff-suggest-item type="brand">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
@@ -110,7 +110,7 @@
 
     <section class="productsContainer">
         <div data-container="productName">
-            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <p class="containerCaption">Suggested products</p>
             <div>
                 <ff-suggest-item type="productName">
                     <img data-image>
@@ -131,24 +131,24 @@
 </ff-suggest>
 
 <ff-suggest unresolved id="suggest2" layout="list">
-    <!-- You can define diferent elements wich are displayed in the Suggestbox-->
+    <!-- You can define different elements which are displayed in the suggest box -->
     <section class="searchTermContainer">
         <div data-container="searchTerm">
-            <p class="containerCaption">Suchvorschläge</p>
+            <p class="containerCaption">Search terms</p>
             <ff-suggest-item type="searchTerm">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="category">
-            <p class="containerCaption">Kategorievorschläge</p>
+            <p class="containerCaption">Categories</p>
             <ff-suggest-item type="category">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="brand">
-            <p class="containerCaption">Marken</p>
+            <p class="containerCaption">Brands</p>
             <ff-suggest-item type="brand">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
@@ -157,7 +157,7 @@
 
     <section class="productsContainer">
         <div data-container="productName">
-            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <p class="containerCaption">Suggested products</p>
             <div>
                 <ff-suggest-item type="productName">
                     <img data-image>
