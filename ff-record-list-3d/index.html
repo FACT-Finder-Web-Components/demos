@@ -55,7 +55,7 @@
                 // get the record list from the source attribute of the event callback.
                 var ffRecordListElement = event.currentTarget;
                 // get the record data from the record list.
-                var records = Polymer.dom(ffRecordListElement).querySelectorAll("ff-record");
+                var records = ffRecordListElement.querySelectorAll("ff-record");
 
                 records.forEach(function (record) {
                     setTimeout(function () {
@@ -69,7 +69,6 @@
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
-    <!--//TODO apply hover-->
 
     <link rel="stylesheet" href="styles.css">
 
@@ -113,5 +112,7 @@
         </div>
     </ff-record>
 </ff-record-list>
+
+<script>applyHover();</script>
 </body>
 </html>
