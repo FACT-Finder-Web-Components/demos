@@ -10,7 +10,7 @@
     "Demo"
   ],
   "dependencies": {
-    "ff-web-components": "https://github.com/FACT-Finder-Web-Components/ff-web-components.git#1.3.1"
+    "ff-web-components": "https://github.com/FACT-Finder-Web-Components/ff-web-components.git#1.4.0"
   },
   "license": "FACT-Finder",
   "homepage": "http://web-components.fact-finder.de/",
