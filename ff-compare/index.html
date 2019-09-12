@@ -72,7 +72,7 @@
                   search-immediate>
 </ff-communication>
 
-<ff-searchbox use-suggest="false">
+<ff-searchbox use-suggest="false" unresolved>
     <input placeholder="Search..."/>
 </ff-searchbox>
 <ff-record-list id="selectList" unresolved>
@@ -80,7 +80,7 @@
     <h2>Select Records to compare</h2>
     <button onclick="doCompare()">Compare</button>
     </p>
-    <ff-record onclick="toggleCompareRecord(this)">
+    <ff-record unresolved onclick="toggleCompareRecord(this)">
         <img data-image={{record.ImageName}} data-image-onerror="../img_not_found.gif">
         <div>
             <!--<a href="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-action="redirect">-->
@@ -98,7 +98,7 @@
         <button onclick="resetCompare()">Reset Compare</button>
     </div>
     <ff-record-list class="compareList" unresolved>
-        <ff-record class="comparedRecord">
+        <ff-record class="comparedRecord" unresolved>
             <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank"
                style="background: lightgray">
                 {{record.Title}}
