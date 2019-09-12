@@ -23,32 +23,32 @@
 
 <div class="demo">
     <b>Example 1:</b> You are searching for
-    <ff-breadcrumb-trail>
+    <ff-breadcrumb-trail unresolved>
         <!--//TODO we currently have to put this item here cause an error is thrown otherwise-->
-        <ff-breadcrum-trail-item type="search">{{{text}}}</ff-breadcrum-trail-item>
+        <ff-breadcrum-trail-item unresolved type="search">{{{text}}}</ff-breadcrum-trail-item>
     </ff-breadcrumb-trail>
 </div>
 
 <div class="demo"><b>Example 2:</b> You are searching for
-    <ff-breadcrumb-trail>
+    <ff-breadcrumb-trail unresolved>
         <span data-separator>+</span>
     </ff-breadcrumb-trail>
 </div>
 
 <div class="demo"><b>Example 3:</b> You are searching for
-    <ff-breadcrumb-trail>
+    <ff-breadcrumb-trail unresolved>
         <!-- The search item is the content of the search query-->
-        <ff-breadcrumb-trail-item type="search">
+        <ff-breadcrumb-trail-item unresolved type="search">
             <span>{{text}}</span>
         </ff-breadcrumb-trail-item>
 
         <!-- Filter items are set by the URL or over the ASN-->
-        <ff-breadcrumb-trail-item type="filter">
+        <ff-breadcrumb-trail-item unresolved type="filter">
             <span>{{text}}</span>
         </ff-breadcrumb-trail-item>
 
         <!-- Advisor items are included in the breadcrumb when an advisor-campaign is selected-->
-        <ff-breadcrumb-trail-item type="advisor">
+        <ff-breadcrumb-trail-item unresolved type="advisor">
             <span>{{text}}</span>
         </ff-breadcrumb-trail-item>
     </ff-breadcrumb-trail>
