@@ -39,7 +39,7 @@
     </script>
     <p>Setting simple data into a template:</p>
     <button onclick="setTemplate1()">Set simple Data</button>
-    <ff-template id="demoTemplate1">
+    <ff-template unresolved id="demoTemplate1">
         {{test}}
     </ff-template>
 </div>
@@ -67,7 +67,7 @@
     </script>
     <p>Setting complex data into a template:</p>
     <button onclick="setTemplate2()">Set complex Data</button>
-    <ff-template id="demoTemplate2">
+    <ff-template unresolved id="demoTemplate2">
         <h2>Name: {{product.name}}</h2>
         <p>{{product.description}}</p>
         <strong>{{product.info.price}} {{product.info.currency}}</strong>
@@ -102,7 +102,7 @@
     <p>Render HTML with a Template</p>
     <button onclick="setTemplate3()">Set HTML Data</button>
 
-    <ff-template id="demoTemplate3">
+    <ff-template unresolved id="demoTemplate3">
         <h2>Name: {{product.name}}</h2>
         <p>{{product.description}}</p>
         <strong>{{product.info.price}} {{product.info.currency}}</strong>
@@ -136,7 +136,7 @@
     </ff-searchbox>
     <ff-searchbutton><button>Search</button></ff-searchbutton>
 
-    <ff-template id="demoTemplate4" scope="result">
+    <ff-template unresolved id="demoTemplate4" scope="result">
         <h2>Search Result:</h2>
         <p>resultCount: {{resultCount}}</p>
         <p>searchTime: {{searchTime}}</p>
