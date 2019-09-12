@@ -8,7 +8,7 @@ body {
 }
 
 [unresolved] {
-    opacity: 0;
+    visibility: hidden;
 }
 
 ff-record-list {

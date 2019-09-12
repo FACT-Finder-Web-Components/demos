@@ -19,16 +19,16 @@
 
 <ff-searchbox suggest-onfocus="true"
               use-suggest="false"
-              select-onclick="true">
+              select-onclick="true" unresolved>
     <input placeholder="Search..." />
 </ff-searchbox>
 
-<ff-searchbutton>
+<ff-searchbutton unresolved>
     <button>Search</button>
 </ff-searchbutton>
 
 <ff-record-list unresolved>
-    <ff-record>
+    <ff-record unresolved>
         <img data-image="{{record.ImageName}}">
         <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
            data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
