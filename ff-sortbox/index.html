@@ -36,12 +36,12 @@
 
 <div style="display: flex;flex-wrap: wrap;justify-content: space-around">
     <div class="sortboxContainer">
-        <ff-sortbox id="sortbox2"></ff-sortbox>
+        <ff-sortbox unresolved id="sortbox2"></ff-sortbox>
         <div> This sortbox defaults to the standard layout and does not collapse onblur.</div>
     </div>
 
     <div class="sortboxContainer">
-        <ff-sortbox id="sortbox1" collapse-onblur="true">
+        <ff-sortbox unresolved id="sortbox1" collapse-onblur="true">
             <!--
             key "default.template" is a pseudo key used to specify a default template for all sortbox items
             -->
@@ -69,7 +69,7 @@
         <div class="sortBoxCaption" onclick="toggleSortbox('#sortbox3');">
             Custom Caption Sorting:
         </div>
-        <ff-sortbox show-selected="true" show-selected-first="true" id="sortbox3"></ff-sortbox>
+        <ff-sortbox unresolved show-selected="true" show-selected-first="true" id="sortbox3"></ff-sortbox>
         <div> This sortbox always shows the selected item at position 1 in the dropdown.</div>
     </div>
 
@@ -77,7 +77,7 @@
         <div class="sortBoxCaption" onclick="toggleSortbox('#sortbox4');">
             Sort by...
         </div>
-        <ff-sortbox show-selected="true" id="sortbox4"></ff-sortbox>
+        <ff-sortbox unresolved show-selected="true" id="sortbox4"></ff-sortbox>
         <div>This sortbox always keeps the order of items in its dropdown.</div>
     </div>
 </div>
