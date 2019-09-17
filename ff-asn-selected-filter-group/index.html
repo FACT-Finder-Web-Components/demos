@@ -6,6 +6,18 @@
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
 
+    <style>
+        [for-group="Selected Filters"] ff-asn-group-element,
+        [for-group="Selected Filters"] .groupCaption {
+            color: #0b97c4;
+            font-weight: bold;
+        }
+
+        [for-group="Selected Filters"] [data-container="removeFilter"] {
+            display: none;
+        }
+    </style>
+
     <script>
         document.addEventListener("ffReady", function () {
             factfinder.communication.ResultDispatcher.addCallback("asn", function (groups) {
@@ -28,7 +40,7 @@
                     elements: [],
                     filterStyle: "DEFAULT",
                     groupOrder: 1,
-                    name: "Selektierte Filter",
+                    name: "Selected Filters",
                     selectedElements,
                     selectionType: "singleHideUnselected",
                     showPreviewImages: false,
@@ -68,6 +80,28 @@
 </header>
 <main>
     <ff-asn align="vertical" unresolved>
+
+        <ff-asn-group for-group="Selected Filters" class="cursor">
+            <ff-asn-group-element>
+                <div slot="selected">
+                    <input type="checkbox" checked>
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+                <div slot="unselected">
+                    <input type="checkbox">
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+            </ff-asn-group-element>
+
+            <div slot="groupCaption" class="groupCaption"> AAA
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+
+            <div opened data-container="detailedLinks">
+                <!--all links which should be displayed immediately appear inside this element-->
+                <div data-content="detailedLinks"></div>
+            </div>
+        </ff-asn-group>
 
         <!--use this as a default template for all groups-->
         <ff-asn-group for-group="all" class="cursor">
