@@ -6,36 +6,6 @@
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
 
-    <script>
-        function raiseSuggestEvent(e) {
-            var inputValue = e.value;
-            if (inputValue && inputValue.length >= 2) {
-                // this value is set to indicate if the current input value belongs to the received suggest response
-                // e.g. suggest request takes 100ms while the user is deleting all chars in the input field
-                // input field is empty but suggest data is now arriving.
-                // The suggest needs to know if this data belong to the current input value (which is currently
-                // empty string and therefore does not)
-                factfinder.communication.globalElementValues.currentFFSearchBoxValue = inputValue;
-                factfinder.communication.FFCommunicationEventAggregator.addFFEvent({
-                    type: "suggest",
-                    query: inputValue
-                });
-            } else {
-                hideSuggest();
-            }
-        }
-
-        function hideSuggest() {
-            factfinder.communication.ResultDispatcher.dispatchSuggest(undefined);
-        }
-
-        // Changes the term within the search box to the selected suggest item.
-        function changeSearchTerm(e) {
-            var searchInput = e.suggestion.attributes.id;
-            document.querySelector("input").value = searchInput;
-        }
-    </script>
-
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
@@ -50,9 +20,7 @@
 
 <ff-searchbox>
     <input placeholder="Search..."
-           value="trou"
-           oninput="raiseSuggestEvent(this)"
-           onblur="hideSuggest()"/>
+           value="trou"/>
 </ff-searchbox>
 
 
