@@ -1,10 +1,10 @@
 /**
  * Created by arno.pitters on 04.08.2016.
  */
-var demoData;
+let demoData;
 (function (scope) {
 
-    var searchResult = {
+    const searchResult = {
         query: "rucksack",
         data: {
             "searchResult": {

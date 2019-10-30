@@ -23,10 +23,8 @@
         });
 
         function searchFor(query) {
-            var searchBox = document.querySelector("ff-searchbox");
-            //TODO this is quite inconvenient, should be imnproved somehow
-            var input = document.querySelector("ff-searchbox input");
-            input.value = query;
+            const searchBox = document.querySelector("ff-searchbox");
+            searchBox.value = query;
             searchBox.search();
         }
     </script>

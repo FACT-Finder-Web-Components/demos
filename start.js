@@ -1,8 +1,8 @@
-var connect = require('connect');
-var serveStatic = require('serve-static');
-var port = require('./port');
+const connect = require('connect');
+const serveStatic = require('serve-static');
+const port = require('./port');
 
-var directory = "./";
+const directory = "./";
 
 connect().use(serveStatic(directory)).listen(port, function () {
     console.log('Server running on port ' + port + '...');

@@ -12,8 +12,8 @@
     <script>
         function applyEffect(record) {
             if (record.style.display !== "none") {
-                var id = record.recordData.id;
-                var recordContainer = $("#_" + id);
+                const id = record.recordData.id;
+                const recordContainer = $("#_" + id);
 
                 recordContainer.hover3d({
                     selector: '#record_' + id,
@@ -50,12 +50,12 @@
         // Hover initializing. Will be called after the elements have been loaded.
         function applyHover() {
             // add an eventlistener to the ff-record-list event which is called everytime the html content was updated
-            var list = document.querySelector("ff-record-list");
+            const list = document.querySelector("ff-record-list");
             list.addEventListener("dom-updated", function (event) {
                 // get the record list from the source attribute of the event callback.
-                var ffRecordListElement = event.currentTarget;
+                const ffRecordListElement = event.currentTarget;
                 // get the record data from the record list.
-                var records = ffRecordListElement.querySelectorAll("ff-record");
+                const records = ffRecordListElement.querySelectorAll("ff-record");
 
                 records.forEach(function (record) {
                     setTimeout(function () {

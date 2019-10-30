@@ -5,10 +5,6 @@
     <title>Redirect Demo</title>
     <link rel="stylesheet" href="../ff-suggest_suggestToSearch/styles.css">
 
-    <script>
-        var Polymer = Polymer || {};
-        Polymer.dom = 'shady';
-    </script>
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
@@ -86,7 +82,7 @@
     document.querySelector("ff-suggest").addEventListener("suggest-item-clicked", function (event) {
         console.log("bleh");
         if (event.detail.type === "searchTerm" || event.detail.type === "category") {
-            var searchParams = event.detail.suggestion.searchParams.split("?")[1];
+            let searchParams = event.detail.suggestion.searchParams.split("?")[1];
             searchParams += "&queryFromSuggest=true";
             searchParams += "&userInput=" + factfinder.communication.globalElementValues.currentFFSearchBoxValue;
             event.target.ffPreventDefault = true;

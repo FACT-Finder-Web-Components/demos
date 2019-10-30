@@ -20,15 +20,15 @@
         });
 
         document.addEventListener("ffReady", function () {
-            //Add a handler to the search result and use the first product to build a recomandation.
+            //Add a handler to the search result and use the first product to build a recommendation.
             factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
 
-                var recommendationElement = document.querySelector("ff-recommendation");
+                const recommendationElement = document.querySelector("ff-recommendation");
                 if (result.resultStatus === "nothingFound") {
                     //reset recommendation
                     recommendationElement.recordId = "";
                 } else if (result.resultStatus === "resultsFound") {
-                    var record = result.records[0];
+                    const record = result.records[0];
                     recommendationElement.recordId = record.id;
 
                     //The recommendation can also take a comma seperated list of record id's
@@ -45,7 +45,7 @@
         });
 
         function setRecommendationProduct(ffRecordElement) {
-            var recommendationElement = document.querySelector("ff-recommendation");
+            const recommendationElement = document.querySelector("ff-recommendation");
             recommendationElement.recordId = ffRecordElement.recordData.id;
         }
     </script>
