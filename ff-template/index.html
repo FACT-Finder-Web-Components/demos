@@ -13,7 +13,6 @@
                 }
             }, this);
         });
-        var suggestState = false;
     </script>
 
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
@@ -33,7 +32,7 @@
 <div class="example">
     <script>
         function setTemplate1() {
-            var template1 = document.querySelector("#demoTemplate1");
+            const template1 = document.querySelector("#demoTemplate1");
             template1.data = {test: "This is my Test Data"};
         }
     </script>
@@ -51,7 +50,7 @@
 <div class="example">
     <script>
         function setTemplate2() {
-            var tmp = document.querySelector("#demoTemplate2");
+            const tmp = document.querySelector("#demoTemplate2");
             tmp.data = {
                 product: {
                     name: "Super awsome Product",
@@ -84,7 +83,7 @@
 <div class="example">
     <script>
         function setTemplate3() {
-            var tmp = document.querySelector("#demoTemplate3");
+            const tmp = document.querySelector("#demoTemplate3");
             tmp.data = {
                 product: {
                     name: "Your New Product",

@@ -7,7 +7,7 @@
     <!--load boilerplate at the start-->
     <script>
         function resetCompare() {
-            var records = document.querySelectorAll("#selectList > .selected");
+            const records = document.querySelectorAll("#selectList > .selected");
             records.forEach(function (rec) {
                 rec.classList.remove("selected");
             });
@@ -15,14 +15,13 @@
             document.querySelector("#compareList").style.display = 'none';
         }
 
-        var doCompare = function () {
-            var ids = [];
-            var records = document.querySelectorAll("#selectList > .selected");
+        const doCompare = function () {
+            const ids = [];
+            const records = document.querySelectorAll("#selectList > .selected");
             records.forEach(function (rec) {
-                var r = rec;
-                ids.push(r.recordData.id);
+                ids.push(rec.recordData.id);
             });
-            var compareElement = document.querySelector("#compareList");
+            const compareElement = document.querySelector("#compareList");
             //FYI: this would work if the ff-compare has the 'auto-compare' attribute set to true, default is false
             // compareElement.recordIds = ids;
             compareElement.compareRecords(ids);
@@ -30,9 +29,9 @@
             document.querySelector("#compareList").style.display = 'inline-block';
         };
 
-        var toggleCompareRecord = function (rec) {
+        const toggleCompareRecord = function (rec) {
             rec.classList.toggle("selected");
-        }
+        };
 
     </script>
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>

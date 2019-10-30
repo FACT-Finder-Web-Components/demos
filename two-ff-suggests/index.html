@@ -12,11 +12,11 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var sb1 = document.querySelector("#searchbox1");
-            var sb2 = document.querySelector("#searchbox2");
+            const sb1 = document.querySelector("#searchbox1");
+            const sb2 = document.querySelector("#searchbox2");
 
-            var suggest1 = document.querySelector("#suggest1");
-            var suggest2 = document.querySelector("#suggest2");
+            const suggest1 = document.querySelector("#suggest1");
+            const suggest2 = document.querySelector("#suggest2");
 
             function onfocusSuggest1() {
                 console.log("1 focus called");
@@ -57,7 +57,7 @@
             function subscribeSuggest(suggestElement) {
                 //check if element is NOT already listening
                 if (!suggestElement.subscriptionKey) {
-                    var subKey = factfinder.communication.ResultDispatcher.subscribe(["suggest"], suggestElement._suggestItemsChanged, suggestElement);
+                    const subKey = factfinder.communication.ResultDispatcher.subscribe(["suggest"], suggestElement._suggestItemsChanged, suggestElement);
                     //add the sub key to the element
                     suggestElement.subscriptionKey = subKey;
                 }

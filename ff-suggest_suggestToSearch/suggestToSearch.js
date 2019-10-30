@@ -5,8 +5,8 @@
  * So we recommend to consult with us before applying this code snippet.
  * */
 document.addEventListener("ffReady", function () {
-    var eventAggregator = factfinder.communication.FFCommunicationEventAggregator;
-    var resultDispatcher = factfinder.communication.ResultDispatcher;
+    const eventAggregator = factfinder.communication.FFCommunicationEventAggregator;
+    const resultDispatcher = factfinder.communication.ResultDispatcher;
 
     eventAggregator.addBeforeDispatchingCallback(function (event) {
         if (event.type === "suggest") {
@@ -43,7 +43,7 @@ document.addEventListener("ffReady", function () {
         /**
          * Transform search -> suggest
          */
-        var suggestions = searchResultToSuggestions(result.searchResult);
+        const suggestions = searchResultToSuggestions(result.searchResult);
         /**
          * Dispatch it to the ff-suggest element
          */
@@ -51,7 +51,7 @@ document.addEventListener("ffReady", function () {
     });
 
     function searchResultToSuggestions(result) {
-        var suggestions = [];
+        const suggestions = [];
         result.records.forEach(function (product) {
             suggestions.push({
                 attributes: {

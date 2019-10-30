@@ -6,14 +6,14 @@
     <link rel="stylesheet" href="../demo-styles.css">
 
     <script>
-        var hideFeedback = function(e) {
+        const hideFeedback = function (e) {
             e.preventDefault();
-            var feedbackEle = document.querySelector("ff-search-feedback");
+            const feedbackEle = document.querySelector("ff-search-feedback");
             feedbackEle.hide();
         };
-        var showFeedback = function(e) {
+        const showFeedback = function (e) {
             e.preventDefault();
-            var feedbackEle = document.querySelector("ff-search-feedback");
+            const feedbackEle = document.querySelector("ff-search-feedback");
             feedbackEle.show();
         };
 

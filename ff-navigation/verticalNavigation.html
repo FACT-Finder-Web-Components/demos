@@ -7,24 +7,22 @@
     <link rel="stylesheet" href="../demo-styles.css">
 
     <script>
-        var checkwindowWidth = function () {
-            var navigation = document.querySelector("ff-navigation");
+        const checkwindowWidth = function () {
+            const navigation = document.querySelector("ff-navigation");
             if (window.innerWidth < 600) {
                 navigation.setAttribute("mobile", "true");
                 navigation.setAttribute("flyout", "false");
-//                navigation.setAttribute("layout","vertical");
             } else {
                 navigation.setAttribute("mobile", "false");
                 navigation.setAttribute("flyout", "true");
-//                navigation.setAttribute("layout", "horizontal");
             }
         };
 
-        window.addEventListener("resize", function (evt) {
+        window.addEventListener("resize", function () {
             checkwindowWidth();
         });
 
-        document.addEventListener("WebComponentsReady", function (evt) {
+        document.addEventListener("WebComponentsReady", function () {
             checkwindowWidth();
         });
 
