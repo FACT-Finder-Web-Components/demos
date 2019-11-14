@@ -5,7 +5,7 @@
  * So we recommend to consult with us before applying this code snippet.
  * */
 document.addEventListener("ffReady", function () {
-    const eventAggregator = factfinder.communication.FFCommunicationEventAggregator;
+    const eventAggregator = factfinder.communication.EventAggregator;
     const resultDispatcher = factfinder.communication.ResultDispatcher;
 
     eventAggregator.addBeforeDispatchingCallback(function (event) {

@@ -16,7 +16,7 @@
                 // The suggest needs to know if this data belong to the current input value (which is currently
                 // empty string and therefore does not)
                 factfinder.communication.globalElementValues.currentFFSearchBoxValue = inputValue;
-                factfinder.communication.FFCommunicationEventAggregator.addFFEvent({
+                factfinder.communication.EventAggregator.addFFEvent({
                     type: "suggest",
                     query: inputValue
                 });
