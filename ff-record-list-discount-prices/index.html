@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="../demo-styles.css">
 
     <script>
-        document.addEventListener("ffReady", function () {
-            factfinder.communication.ResultDispatcher.addCallback("records", function (records) {
+        document.addEventListener("ffReady", function (event) {
+            const resultDispatcher = event.resultDispatcher;
+            resultDispatcher.addCallback("records", function (records) {
                 records.forEach(function (product) {
                     //Mustach JS does NOT accept stringy bool: https://github.com/janl/mustache.js/#sections
                     product.record.HasDiscount = product.record.HasDiscount === "true";

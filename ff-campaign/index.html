@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 
     <script>
-        document.addEventListener("ffReady", function () {
+        document.addEventListener("ffReady", function (event) {
+            const factfinder = event.factfinder;
             factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
                 if (result.timedOut) {
                     alert("Search timeout! Try again later");
@@ -17,7 +18,6 @@
                         result.records.splice(8, result.records.length);
                     }
                 }
-
 
             }, this);
         });

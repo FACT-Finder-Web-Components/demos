@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="../demo-styles.css">
 
     <script>
-        document.addEventListener("ffReady", function () {
-            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+        document.addEventListener("ffReady", function (event) {
+            const resultDispatcher = event.resultDispatcher;
+            resultDispatcher.subscribe("result", function (result) {
                 if (result.timedOut) {
                     alert("Search timeout! Try again later");
                 }

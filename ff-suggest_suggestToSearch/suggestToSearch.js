@@ -4,20 +4,20 @@
  * Hence your server will have to deal with more load, which might increase server response time, server cost and license cost.
  * So we recommend to consult with us before applying this code snippet.
  * */
-document.addEventListener("ffReady", function () {
-    const eventAggregator = factfinder.communication.EventAggregator;
-    const resultDispatcher = factfinder.communication.ResultDispatcher;
+document.addEventListener("ffReady", function (event) {
+    const eventAggregator = event.eventAggregator;
+    const resultDispatcher = event.resultDispatcher;
 
-    eventAggregator.addBeforeDispatchingCallback(function (event) {
-        if (event.type === "suggest") {
-            console.log(event);
+    eventAggregator.addBeforeDispatchingCallback(function (evt) {
+        if (evt.type === "suggest") {
+            console.log(evt);
             /**
              * Execute a search
              */
             eventAggregator.addFFEvent({
                 type: "search",
-                query: event.query,
-                channel: event.channel,
+                query: evt.query,
+                channel: evt.channel,
                 "log-internal": "true",
                 topics: function () {
                     /**
@@ -35,11 +35,11 @@ document.addEventListener("ffReady", function () {
             /**
              * dont execute the suggest request
              */
-            delete event["type"];
+            delete evt["type"];
         }
     });
 
-    resultDispatcher.subscribe("searchToSuggest", function (result, event) {
+    resultDispatcher.subscribe("searchToSuggest", function (result, evt) {
         /**
          * Transform search -> suggest
          */
@@ -47,7 +47,7 @@ document.addEventListener("ffReady", function () {
         /**
          * Dispatch it to the ff-suggest element
          */
-        resultDispatcher.dispatchSuggest(suggestions, event);
+        resultDispatcher.dispatchSuggest(suggestions, evt);
     });
 
     function searchResultToSuggestions(result) {

@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="styles.css">
 
     <script>
-        document.addEventListener("ffReady", function () {
-            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+        document.addEventListener("ffReady", function (event) {
+            const resultDispatcher = event.resultDispatcher;
+            resultDispatcher.subscribe("result", function (result) {
                 if (result.timedOut) {
                     alert("Search timeout! Try again later");
                 } else {
@@ -19,9 +20,10 @@
             }, this);
         });
 
-        document.addEventListener("ffReady", function () {
+        document.addEventListener("ffReady", function (event) {
+            const resultDispatcher = event.resultDispatcher;
             //Add a handler to the search result and use the first product to build a recommendation.
-            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+            resultDispatcher.subscribe("result", function (result) {
 
                 const recommendationElement = document.querySelector("ff-recommendation");
                 if (result.resultStatus === "nothingFound") {
@@ -30,16 +32,6 @@
                 } else if (result.resultStatus === "resultsFound") {
                     const record = result.records[0];
                     recommendationElement.recordId = record.id;
-
-                     //The recommendation can also take a comma separated list of record id's
-//                    let recordIds ="";
-//                    result.records.forEach(function(record,index,array){
-//                        recordIds += record.id;
-//                        if(index !== array.length -1 ){
-//                            recordIds += ",";
-//                        }
-//                    });
-//                    recommendationElement.recordId = recordIds;
                 }
             });
         });
