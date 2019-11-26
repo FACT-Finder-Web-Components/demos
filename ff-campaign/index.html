@@ -8,8 +8,8 @@
 
     <script>
         document.addEventListener("ffReady", function (event) {
-            const factfinder = event.factfinder;
-            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+            const resultDispatcher = event.resultDispatcher;
+            resultDispatcher.subscribe("result", function (result) {
                 if (result.timedOut) {
                     alert("Search timeout! Try again later");
                 } else {
