@@ -10,8 +10,9 @@
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
 
     <script>
-        document.addEventListener("ffReady", function() {
-            factfinder.communication.ResultDispatcher.subscribe("paging", function (resultData, event) {
+        document.addEventListener("ffReady", function(event) {
+            const resultDispatcher = event.resultDispatcher;
+            resultDispatcher.subscribe("paging", function (resultData, event) {
                 window.scrollTo(0, 0); // or get and scroll a specific scrollbar
             });
         })

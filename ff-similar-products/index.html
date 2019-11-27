@@ -7,15 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 
     <script>
-        document.addEventListener("ffReady", function () {
-            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+        document.addEventListener("ffReady", function (event) {
+            const resultDispatcher = event.resultDispatcher;
+            resultDispatcher.subscribe("result", function (result) {
                 if (result.timedOut) {
                     alert("Search timeout! Try again later");
                 }
             }, this);
 
             //Add a handler to the search result and use the first product for similar products.
-            factfinder.communication.ResultDispatcher.subscribe("result", function (result) {
+            resultDispatcher.subscribe("result", function (result) {
                 const similarProductsElement = document.querySelector("ff-similar-products");
 
                 if (result.resultStatus === "nothingFound") {
