@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ASN Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        document.addEventListener("ffReady", function (event) {
+            const resultDispatch = event.resultDispatcher;
+            resultDispatch.addCallback("asn", function (groups) {
+                const spliced = groups.splice(3, groups.length);
+                /**
+                 * Render some groups in a different area
+                 */
+                document.querySelector("ff-asn#asn2").asnGroups = spliced;
+            });
+        });
+
+
+        document.addEventListener("WebComponentsReady", function () {
+            /**
+             * This is a workaround for the missing subscribe="true/false" attribute on ff-asn element.
+             * Remove it as soon as <ff-asn subscribe="false">...</ff-asn> is supported.
+             */
+            const asn2 = document.querySelector("ff-asn#asn2");
+            factfinder.communication.ResultDispatcher.unsubscribe("asn", asn2._subscriptionKey);
+
+            /**
+             * Re-append the sliced groups cause addFFEvent({type: "filter"}) does a lookup in groups array
+             */
+            document.querySelector("ff-asn#asn1").addEventListener("dom-updated", function () {
+                const groups = factfinder.communication.EventAggregator.currentSearchResult.groups;
+                groups.splice(groups.length, 0, ...asn2.asnGroups);
+            });
+        });
+    </script>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+</head>
+<body>
+<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
+                  version="7.3"
+                  channel="bergfreunde-co-uk"
+                  default-query="trousers"
+                  search-immediate="true">
+</ff-communication>
+
+<header>
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..."/>
+    </ff-searchbox>
+    <ff-searchbutton>
+        <button>Search</button>
+    </ff-searchbutton>
+
+    <div class="bctContainer">
+        You are searching for:
+        <ff-breadcrumb-trail unresolved>
+            <!--//TODO we currently have to put this item here cause an error is thrown otherwise-->
+            <ff-breadcrum-trail-item type="search">{{{text}}}</ff-breadcrum-trail-item>
+        </ff-breadcrumb-trail>
+    </div>
+</header>
+<main>
+    <ff-asn id="asn1" align="vertical" unresolved>
+
+        <!--use this as a default template for all groups-->
+        <ff-asn-group for-group="all" class="cursor">
+            <ff-asn-group-element>
+                <div slot="selected">
+                    <input type="checkbox" checked>
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+                <div slot="unselected">
+                    <input type="checkbox">
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+            </ff-asn-group-element>
+
+            <div slot="groupCaption" class="groupCaption">
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+
+            <div opened data-container="detailedLinks">
+                <!--all links which should be displayed immediately appear inside this element-->
+                <div data-content="detailedLinks"></div>
+            </div>
+
+            <!--use this container for automatically showing the hiddenLinks container on tap-->
+            <div data-container="showMore">
+                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                <span class="text">Show More</span>
+            </div>
+
+            <div data-container="hiddenLinks">
+                <!--all links which should NOT be displayed immediately appear inside this element-->
+                <div data-content="hiddenLinks"></div>
+            </div>
+
+            <!--use this container for automatically hiding the hiddenLinks container on tap-->
+            <div data-container="showLess">
+                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                <span class="text">Show Less</span>
+            </div>
+        </ff-asn-group>
+
+        <!--style all groups with filter style TREE-->
+        <ff-asn-group filter-style="TREE" opened class="cursor">
+            <ff-asn-group-element>
+                <div slot="selected">
+                    &nbsp;&nbsp;<span class="filterName"><b>{{element.name}}</b></span>
+                </div>
+                <div slot="unselected">
+                    &nbsp;<span class="filterArrowRight"></span>&nbsp;<span class="filterName">{{element.name}}</span>
+                </div>
+            </ff-asn-group-element>
+            <div slot="groupCaption" class="groupCaption">
+                {{group.name}} <span class="filterArrowDown">&nbsp;</span>
+            </div>
+            <div opened data-container="detailedLinks">
+                <div data-content="detailedLinks"></div>
+            </div>
+        </ff-asn-group>
+
+        <!--style slider groups-->
+        <ff-asn-group-slider>
+            <div slot="groupCaption" class="groupCaption">
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+            <div data-container="removeFilter">Remove Filter</div>
+            <ff-slider-control submit-on-input="true">
+                <input data-control='1'
+                       style="position: absolute; width: 60px;left: 15px;top:12px;">
+                <input
+                        data-control='2' style="position: absolute; width: 60px;right: 15px;top:12px;">
+
+                <ff-slider current-min-value="0" style="width: 150px;margin-top: 30px;">
+                    <div slot="slider1" id="slider1" class="sliderBtn"></div>
+                    <div slot="slider2" id="slider2" class="sliderBtn"></div>
+                </ff-slider>
+            </ff-slider-control>
+        </ff-asn-group-slider>
+    </ff-asn>
+
+    <ff-asn id="asn2"
+            align="vertical" unresolved>
+
+        <!--use this as a default template for all groups-->
+        <ff-asn-group for-group="all" class="cursor">
+            <ff-asn-group-element>
+                <div slot="selected">
+                    <input type="checkbox" checked>
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+                <div slot="unselected">
+                    <input type="checkbox">
+                    <span class="filterName">{{element.name}}</span>
+                </div>
+            </ff-asn-group-element>
+
+            <div slot="groupCaption" class="groupCaption">
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+
+            <div opened data-container="detailedLinks">
+                <!--all links which should be displayed immediately appear inside this element-->
+                <div data-content="detailedLinks"></div>
+            </div>
+
+            <!--use this container for automatically showing the hiddenLinks container on tap-->
+            <div data-container="showMore">
+                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                <span class="text">Show More</span>
+            </div>
+
+            <div data-container="hiddenLinks">
+                <!--all links which should NOT be displayed immediately appear inside this element-->
+                <div data-content="hiddenLinks"></div>
+            </div>
+
+            <!--use this container for automatically hiding the hiddenLinks container on tap-->
+            <div data-container="showLess">
+                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                <span class="text">Show Less</span>
+            </div>
+        </ff-asn-group>
+
+        <!--style all groups with filter style TREE-->
+        <ff-asn-group filter-style="TREE" opened class="cursor">
+            <ff-asn-group-element>
+                <div slot="selected">
+                    &nbsp;&nbsp;<span class="filterName"><b>{{element.name}}</b></span>
+                </div>
+                <div slot="unselected">
+                    &nbsp;<span class="filterArrowRight"></span>&nbsp;<span class="filterName">{{element.name}}</span>
+                </div>
+            </ff-asn-group-element>
+            <div slot="groupCaption" class="groupCaption">
+                {{group.name}} <span class="filterArrowDown">&nbsp;</span>
+            </div>
+            <div opened data-container="detailedLinks">
+                <div data-content="detailedLinks"></div>
+            </div>
+        </ff-asn-group>
+
+        <!--style slider groups-->
+        <ff-asn-group-slider>
+            <div slot="groupCaption" class="groupCaption">
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+            <div data-container="removeFilter">Remove Filter</div>
+            <ff-slider-control submit-on-input="true">
+                <input data-control='1'
+                       style="position: absolute; width: 60px;left: 15px;top:12px;">
+                <input
+                        data-control='2' style="position: absolute; width: 60px;right: 15px;top:12px;">
+
+                <ff-slider current-min-value="0" style="width: 150px;margin-top: 30px;">
+                    <div slot="slider1" id="slider1" class="sliderBtn"></div>
+                    <div slot="slider2" id="slider2" class="sliderBtn"></div>
+                </ff-slider>
+            </ff-slider-control>
+        </ff-asn-group-slider>
+    </ff-asn>
+</main>
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{record.ImageName}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+            {{record.Title}}
+        </a>
+
+        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        </div>
+    </ff-record>
+</ff-record-list>
+</body>
+</html>
