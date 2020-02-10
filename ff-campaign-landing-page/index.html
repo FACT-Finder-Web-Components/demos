@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
-                  version="7.3"
-                  channel="bergfreunde-co-uk"></ff-communication>
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en"></ff-communication>
 
     <p>This landing page doesn't require a search and immediately displays the requested campaign.<br>The campaign
     consists of a feedback text and some pushed products</p>
@@ -29,7 +29,7 @@
         <span id="productCampaignCaption">Product Campaign</span>
         <ff-record-list unresolved subscribe="false">
             <ff-record style="max-width: 20%">
-                <img style="width: 170px; height: 170px" data-image="{{record.ImageName}}">
+                <img style="width: 170px; height: 170px" data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
                 <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                    data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
                     {{record.Title}}

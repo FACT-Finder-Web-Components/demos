@@ -75,10 +75,10 @@
 </head>
 <body>
 <!-- basic communication configuration-->
-<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
-                  version="7.3"
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
                   default-query="trousers"
-                  channel="bergfreunde-co-uk"
+                  channel="Bergfreunde-en"
                   search-immediate>
 </ff-communication>
 
@@ -98,7 +98,7 @@
             <div class="short-info" id="record_{{id}}">
                 <div id="rating_{{id}}" style="display: none" class="rating"><strong>Rating:</strong>
                     {{record.Rating}}<br/></div>
-                <img data-image="{{record.ImageName}}">
+                <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
                 <div class="record">
                     <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                        data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">

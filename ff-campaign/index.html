@@ -34,9 +34,9 @@
 </head>
 <body>
 <!-- basic communication configuration -->
-<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
-                  version="7.3"
-                  channel="bergfreunde-co-uk"
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en"
                   default-query="jacket"
                   search-immediate>
 </ff-communication>
@@ -61,7 +61,7 @@
 
 <ff-campaign-advisor unresolved not="Advisor Schuhe">
     <ff-campaign-advisor-question>
-        <span><h1 data-question>{{text}}</h1></span>
+        <span><h1 data-question>{{{text}}}</h1></span>
         <!--OR when HTML-->
         <!--{{{text}}}-->
         <div class="answers">
@@ -134,7 +134,7 @@
 
 <ff-record-list unresolved>
     <ff-record>
-        <img data-image="{{record.ImageName}}">
+        <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
         <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
            data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
             {{record.Title}}

@@ -64,9 +64,9 @@
     </style>
 </head>
 <body>
-<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
-                  version="7.3"
-                  channel="bergfreunde-co-uk"
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en"
                   default-query="jacke"
                   search-immediate>
 </ff-communication>
@@ -80,7 +80,7 @@
     <button onclick="doCompare()">Compare</button>
     </p>
     <ff-record unresolved onclick="toggleCompareRecord(this)">
-        <img data-image={{record.ImageName}} data-image-onerror="../img_not_found.gif">
+        <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}" data-image-onerror="../img_not_found.gif">
         <div>
             <!--<a href="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-action="redirect">-->
             {{record.Title}}
@@ -102,7 +102,7 @@
                style="background: lightgray">
                 {{record.Title}}
             </a>
-            <img data-image={{record.ImageName}} data-image-onerror="../img_not_found.gif">
+            <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}" data-image-onerror="../img_not_found.gif">
 
             <div>
                 <div data-attribute="Price" style="background: lightgray">

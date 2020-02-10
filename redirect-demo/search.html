@@ -13,9 +13,9 @@
 
 <h2>This Page is build  with the FACT-Finder Web Components </h2>
 
-<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
-                  version="7.3"
-                  channel="bergfreunde-co-uk"
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en"
                   use-url-parameter="false"
                   search-immediate>
 </ff-communication>
@@ -30,7 +30,7 @@
 
 <ff-record-list unresolved style="width: 800px">
     <ff-record>
-        <img data-image="{{record.ImageName}}">
+        <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
         <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
            data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
             {{record.Title}}

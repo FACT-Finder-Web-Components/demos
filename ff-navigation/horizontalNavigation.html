@@ -38,9 +38,9 @@
 </head>
 <body>
 
-<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3" version="7.3"
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder" version="ng"
                   search-immediate
-                  default-query="jacket" channel="bergfreunde-co-uk" currency-code="EUR"
+                  default-query="jacket" channel="Bergfreunde-en" currency-code="EUR"
                   currency-country-code="de-DE"
                   currency-max-digits="5"
                   currency-min-digits="1"></ff-communication>
@@ -79,7 +79,7 @@
 
 <ff-record-list unresolved>
     <ff-record>
-        <img data-image="{{record.ImageName}}">
+        <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
         <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
            data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
             {{record.Title}}
