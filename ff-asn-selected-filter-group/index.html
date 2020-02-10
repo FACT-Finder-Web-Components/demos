@@ -56,9 +56,9 @@
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
 </head>
 <body>
-<ff-communication url="https://search-web-components.fact-finder.de/FACT-Finder-7.3"
-                  version="7.3"
-                  channel="bergfreunde-co-uk"
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en"
                   default-query="trousers"
                   search-immediate="true">
 </ff-communication>
@@ -184,7 +184,7 @@
 
     <ff-record-list unresolved>
         <ff-record>
-            <img data-image="{{record.ImageName}}">
+            <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
             <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
                 {{record.Title}}
