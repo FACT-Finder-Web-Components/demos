@@ -35,7 +35,7 @@ document.addEventListener("ffReady", function (event) {
             /**
              * dont execute the suggest request
              */
-            delete evt["type"];
+            evt.cancel();
         }
     });
 
