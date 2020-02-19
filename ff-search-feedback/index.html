@@ -6,15 +6,11 @@
     <link rel="stylesheet" href="../demo-styles.css">
 
     <script>
-        const hideFeedback = function (e) {
-            e.preventDefault();
-            const feedbackEle = document.querySelector("ff-search-feedback");
-            feedbackEle.hide();
-        };
         const showFeedback = function (e) {
             e.preventDefault();
             const feedbackEle = document.querySelector("ff-search-feedback");
             feedbackEle.show();
+            document.querySelector("#showFeedback").setAttribute('disabled', null);
         };
 
         window.addEventListener('WebComponentsReady', function() {
@@ -28,6 +24,7 @@
                 document.querySelector("textarea").value = '';
                 document.querySelector("#pos").checked = true;
                 e.target.hide();
+                document.querySelector("#showFeedback").removeAttribute('disabled');
                 console.log("Thanks for your feedback.");
             })
         })
@@ -72,7 +69,7 @@
         <ff-searchbutton>
             <button>Search</button>
         </ff-searchbutton>
-        <button onclick="showFeedback(event)">Show feedback button</button>
+        <button id="showFeedback" disabled onclick="showFeedback(event)">Show feedback button</button>
 
         <ff-record-list unresolved>
             <ff-record>
