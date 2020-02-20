@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suggest Demo</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        const FEEDBACK_TYPE = "FEEDBACK";
+        const PRODUCT_TYPE = "productName";
+        document.addEventListener("ffReady", function () {
+            factfinder.communication.ResultDispatcher.addCallback("suggest", (suggestEntries) => {
+                if (suggestEntries) {
+                    const feedbackCampaigns = suggestEntries.filter(entry => entry.type === FEEDBACK_TYPE);
+                    removeCampaignTypeSuggestions(suggestEntries, feedbackCampaigns);
+                    feedbackCampaigns.forEach(campaign => suggestEntries.splice(findInsertionIndex(suggestEntries), 0, ...parseCampaignProducts(campaign)));
+                }
+            });
+        });
+
+        function parseCampaignProducts({attributes}) {
+            const resultMap = {};
+
+            Object.entries(attributes).forEach(([fullName, value]) => {
+                //skip meta data
+                if (fullName.indexOf(":") > -1) {
+                    const splittedFullname = fullName.split(/:(?=[^:]+$)/);
+
+                    const realName = splittedFullname[0];
+                    const productIndex = splittedFullname[1];
+                    addProperty(resultMap, productIndex, realName, value);
+                }
+            });
+
+            return Object.values(resultMap).map(productValues => ({
+                attributes: productValues,
+                hitcount: 0,
+                image: productValues.image,
+                name: productValues.name,
+                type: PRODUCT_TYPE
+            }));
+        }
+
+        function addProperty(resultMap, productIndex, realName, value) {
+            resultMap[productIndex] = resultMap[productIndex] || {};
+            resultMap[productIndex][realName] = value;
+        }
+
+        function removeCampaignTypeSuggestions(suggestEntries, foundCampaignEntries) {
+            foundCampaignEntries.forEach(entry => suggestEntries.splice(suggestEntries.indexOf(entry), 1));
+        }
+
+        function findInsertionIndex(suggestEntries) {
+            const index = suggestEntries.findIndex(suggestEntry => suggestEntry.type === PRODUCT_TYPE);
+            return index > -1 ? index : suggestEntries.length;
+        }
+    </script>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+</head>
+<body>
+
+<!-- Configure the connection to the FF-Search backend and a default query-->
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en">
+</ff-communication>
+
+<ff-searchbox>
+    <input placeholder="Search..."
+           value="trou"/>
+</ff-searchbox>
+
+
+<ff-suggest layout="list" unresolved>
+    <section id="searchContainer" class="searchTermContainer">
+        <div data-container="searchTerm">
+            <p class="containerCaption">Suchvorschläge</p>
+            <ff-suggest-item type="searchTerm">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="category">
+            <p class="containerCaption">Kategorievorschläge</p>
+            <ff-suggest-item type="category">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+
+        <div data-container="brand">
+            <p class="containerCaption">Marken</p>
+            <ff-suggest-item type="brand">
+                <span>{{{name}}}</span>
+            </ff-suggest-item>
+        </div>
+    </section>
+
+    <section id="productContainer" class="productsContainer">
+        <div data-container="productName">
+            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <div>
+                <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
+                    <img data-image>
+                    <div class="product-center">
+                        <div class="product-name">{{{name}}}</div>
+                        <div>Shipping</div>
+                        <div>Rating</div>
+                    </div>
+                    <!-- Price and availability-->
+                    <div class="product-right">
+                        <div class="product-price">{{attributes.Price}}€</div>
+                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                    </div>
+                </ff-suggest-item>
+            </div>
+        </div>
+    </section>
+</ff-suggest>
+</body>
+</html>
