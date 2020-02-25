@@ -71,6 +71,12 @@ ff-searchbox input {
     font-size: 15px;
     color: #3c3c3b;
 }
+button:disabled {
+    background-color: gray;
+    background-image: none;
+    cursor: default;
+}
+
 
 button {
     cursor: pointer;
@@ -94,7 +100,7 @@ button {
     border-radius: 6px;
 }
 
-button:hover {
+button:hover:not([disabled]) {
     border: none;
     color: #EDEDED;
     box-shadow: inset 0 1px 0 0 #007BBF, inset 0 -1px 0 0 #007BBF, inset 0 0 0 1px #007BBF;
