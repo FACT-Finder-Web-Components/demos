@@ -24,7 +24,7 @@
                 document.querySelector("textarea").value = '';
                 document.querySelector("#pos").checked = true;
                 e.target.hide();
-                document.querySelector("#showFeedback").removeAttribute('disabled');
+                document.querySelector("#showFeedback").disabled = false;
                 console.log("Thanks for your feedback.");
             })
         })
