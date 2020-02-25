@@ -10,7 +10,7 @@
             e.preventDefault();
             const feedbackEle = document.querySelector("ff-search-feedback");
             feedbackEle.show();
-            document.querySelector("#showFeedback").setAttribute('disabled', null);
+            document.querySelector("#showFeedback").disabled = true;
         };
 
         window.addEventListener('WebComponentsReady', function() {
