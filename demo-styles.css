@@ -74,6 +74,7 @@ ff-searchbox input {
 button:disabled {
     background-color: gray;
     background-image: none;
+    cursor: default;
 }
 
 
