@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parallel Channel Query</title>
+    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        document.addEventListener(`ffReady`, function ({ eventAggregator, resultDispatcher }) {
+            const parallelChannelTopic = `search:parallelChannel`;
+
+            resultDispatcher.subscribe(parallelChannelTopic, response => {
+                document.querySelector(`#right-list`).records = response.searchResult.records;
+            });
+
+            document.querySelector(`#search-controls`)
+                .addEventListener(`before-search`, event => requestToParallelChannel(event.detail.query));
+
+            eventAggregator.addBeforeDispatchingCallback(event => {
+                if (event.searchImmediate === `true`) {
+                    requestToParallelChannel(event.query);
+                }
+            });
+
+
+            function requestToParallelChannel(query) {
+                eventAggregator.addFFEvent({
+                    type: `search`,
+                    query,
+                    channel: `Bergfreunde-de`,
+                    topics: () => [parallelChannelTopic]
+                });
+            }
+        });
+    </script>
+
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        body {
+            width: 1000px;
+        }
+        #main {
+            display: flex;
+            justify-content: space-between;
+        }
+        #main > div {
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 46%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en"
+                  default-query="shirt"
+                  search-immediate
+></ff-communication>
+
+
+<div id="search-controls">
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..." autofocus>
+    </ff-searchbox>
+
+    <ff-searchbutton>
+        <button>Search</button>
+    </ff-searchbutton>
+</div>
+
+<div id="main">
+    <div id="left">
+        <ff-record-list>
+            <ff-record>
+                <div><img data-image></div>
+                <div>{{record.Title}}</div>
+                <div>{{record.Price}}</div>
+            </ff-record>
+        </ff-record-list>
+    </div>
+    <div id="right">
+        <ff-record-list id="right-list" subscribe="false">
+            <ff-record>
+                <div><img data-image></div>
+                <div>{{record.Title}}</div>
+                <div>{{record.Price}}</div>
+            </ff-record>
+        </ff-record-list>
+    </div>
+</div>
+
+
+
+</body>
+</html>
