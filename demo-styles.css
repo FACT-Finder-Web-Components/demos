@@ -71,6 +71,11 @@ ff-searchbox input {
     font-size: 15px;
     color: #3c3c3b;
 }
+
+ff-loading-spinner {
+    text-align: center;
+}
+
 button:disabled {
     background-color: gray;
     background-image: none;
