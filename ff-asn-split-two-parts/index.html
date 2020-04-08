@@ -14,19 +14,12 @@
                 /**
                  * Render some groups in a different area
                  */
-                document.querySelector("ff-asn#asn2").asnGroups = spliced;
+                factfinder.communication.ResultDispatcher.dispatch(spliced, {}, 'splitAsn' )
             });
         });
 
 
         document.addEventListener("WebComponentsReady", function () {
-            /**
-             * This is a workaround for the missing subscribe="true/false" attribute on ff-asn element.
-             * Remove it as soon as <ff-asn subscribe="false">...</ff-asn> is supported.
-             */
-            const asn2 = document.querySelector("ff-asn#asn2");
-            factfinder.communication.ResultDispatcher.unsubscribe("asn", asn2._subscriptionKey);
-
             /**
              * Re-append the sliced groups cause addFFEvent({type: "filter"}) does a lookup in groups array
              */
@@ -146,7 +139,7 @@
     </ff-asn>
 
     <ff-asn id="asn2"
-            align="vertical" unresolved>
+            align="vertical" unresolved topic="splitAsn">
 
         <!--use this as a default template for all groups-->
         <ff-asn-group for-group="all" class="cursor">
