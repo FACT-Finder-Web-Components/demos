@@ -1,0 +1,41 @@
+body {
+    width: inherit;
+}
+
+.warn {
+    background-color: #ffc107;
+    margin: 10px;
+    padding: 10px;
+}
+
+custom-record-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.record {
+    display: inline-block;
+    width: 300px;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #b9b9b9;
+}
+
+.manufacturer {
+    font-weight: bold;
+}
+
+.title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+}
+
+.price {
+    text-decoration: underline;
+}
