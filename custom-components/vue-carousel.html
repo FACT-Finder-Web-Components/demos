@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Carousel</title>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <script defer src="../bower_components/vue/dist/vue.js"></script>
+    <script defer src="vue-carousel.js"></script>
+    <link rel="stylesheet" href="vue-carousel.css">
+</head>
+<body>
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  default-query="jacket"
+                  channel="Bergfreunde-en"
+                  search-immediate
+                  mustache-delimiters="[[,]]"
+                  disable-single-hit-redirect="true">
+</ff-communication>
+<div id="app">
+    <ffc-carousel query="hat" class="hats-carousel"></ffc-carousel>
+    <ff-record-list>
+        <ff-record>
+            <a href="[[record.Deeplink]]" class="product">
+                <img data-image="[[record.ImageURL]]" alt="[[record.Title]]">
+                <div class="title">[[record.Title]]</div>
+                <div class="price">[[record.Price]] €</div>
+            </a>
+        </ff-record>
+    </ff-record-list>
+    <ffc-carousel query="shoe" class="shoes-carousel"></ffc-carousel>
+</div>
+
+<script type="text/x-template" id="product-template">
+    <a :href="record.Deeplink" class="product">
+        <img :src="record.ImageURL" :alt="record.Title"/>
+        <div class="title">{{record.Title}}</div>
+        <div class="price">{{record.Price}} €</div>
+    </a>
+</script>
+
+<script type="type/x-template" id="carousel-template">
+    <div class="carousel-wrapper">
+        <div class="button prev-button" @click="previous">&#10094</div>
+        <div :style="transformStyles" class="carousel">
+            <ffc-product v-for="record in records"
+                         :key="record.id"
+                         :record="record">
+            </ffc-product>
+        </div>
+        <div class="button next-button" @click="next">&#10095</div>
+    </div>
+</script>
+</body>
+</html>
