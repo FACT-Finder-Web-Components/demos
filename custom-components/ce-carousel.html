@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom Element Carousel</title>
+    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+    <script defer src="ce-carousel.js"></script>
+    <link rel="stylesheet" href="carousel.css">
+</head>
+<body>
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  default-query="jacket"
+                  channel="Bergfreunde-en"
+                  search-immediate
+                  disable-single-hit-redirect="true">
+</ff-communication>
+<ffc-carousel query="hat" class="hats-carousel"></ffc-carousel>
+<ff-record-list>
+    <ff-record>
+        <a href="{{record.Deeplink}}" class="product">
+            <img data-image="{{record.ImageURL}}" alt="{{record.Title}}">
+            <div class="title">{{record.Title}}</div>
+            <div class="price">{{record.Price}} €</div>
+        </a>
+    </ff-record>
+</ff-record-list>
+<ffc-carousel query="shoe" class="shoes-carousel"></ffc-carousel>
+</body>
+</html>
