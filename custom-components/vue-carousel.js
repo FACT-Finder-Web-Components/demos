@@ -20,7 +20,7 @@ const Carousel = {
     components: {
         'ffc-product': Product
     },
-    data: function() {
+    data: function () {
         return {
             records: [],
             subscriptionKey: undefined,
@@ -44,7 +44,7 @@ const Carousel = {
             return {transform: 'translateX(-' + offsetPx + 'px)'};
         }
     },
-    mounted: function() {
+    mounted: function () {
         const carousel = this;
         awaitFactfinder(function (resultDispatcher, eventAggregator) {
             setTimeout(function () {
@@ -52,7 +52,7 @@ const Carousel = {
                 eventAggregator.addFFEvent({
                     type: 'search',
                     query: carousel.query,
-                    topics: function() {
+                    topics: function () {
                         return ['carousel-' + carousel._uid];
                     }
                 });
