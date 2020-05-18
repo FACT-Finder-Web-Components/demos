@@ -9,6 +9,7 @@ body {
     width: 1448px; /* 4 x total product width */
     border: blue 5px solid;
     position: relative;
+    display: block;
 }
 .carousel-wrapper::before {
     text-align: center;
