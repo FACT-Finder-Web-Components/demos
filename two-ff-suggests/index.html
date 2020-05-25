@@ -20,8 +20,6 @@
 
             function onfocusSuggest1() {
                 console.log("SearchBox 1 onfocus handler called");
-                //hide the suggest
-                factfinder.communication.ResultDispatcher.dispatch({}, undefined, [`suggest:hide`]);
 
                 unsubscribeSuggest(suggest2);
                 subscribeSuggest(suggest1, sb1);
@@ -31,8 +29,6 @@
 
             function onfocusSuggest2() {
                 console.log("SearchBox 2 onfocus handler called");
-                // hide the suggest
-                factfinder.communication.ResultDispatcher.dispatch({}, undefined, [`suggest:hide`]);
 
                 unsubscribeSuggest(suggest1);
                 subscribeSuggest(suggest2, sb2);
@@ -43,19 +39,21 @@
             sb1.onfocus = onfocusSuggest1;
             sb2.onfocus = onfocusSuggest2;
 
-            // remove the suggest from the data flow so it does not receive data anymore
+            // Remove the suggest from the data flow so it does not receive data anymore
             function unsubscribeSuggest(suggestElement) {
-                // check if element is already listening
+                // Check if element is already listening
+                // Be careful, "_suggestSubscriptionKey" is an internal property of the component and may be a subject of change in future releases
                 if (suggestElement._suggestSubscriptionKey) {
                     factfinder.communication.ResultDispatcher.unsubscribe("suggest", suggestElement._suggestSubscriptionKey);
-                    // reset current key to default
+                    // Reset current key to default value
                     suggestElement._suggestSubscriptionKey = undefined;
                 }
             }
 
-            // add the suggest to data flow so it receives data again
+            // Add the suggest to data flow so it receives data again
             function subscribeSuggest(suggestElement, searchBoxElement) {
-                // check if element is NOT listening already
+                // Check if element is NOT listening already
+                // Be careful, "_suggestSubscriptionKey" is an internal property of the component and may be a subject of change in future releases
                 if (!suggestElement._suggestSubscriptionKey) {
                     // add the subscription key to the element
                     suggestElement._suggestSubscriptionKey = factfinder.communication.ResultDispatcher.subscribe("suggest", function (suggestions, ffEvent) {
@@ -78,12 +76,12 @@
                   disable-single-hit-redirect="true">
 </ff-communication>
 
-<ff-searchbox suggest-onfocus="false">
+<ff-searchbox suggest-onfocus="false" hide-suggest-onblur="true">
     <input id="searchbox1"
            placeholder="Search..."/>
 </ff-searchbox>
 
-<ff-searchbox suggest-onfocus="false">
+<ff-searchbox suggest-onfocus="false" hide-suggest-onblur="true">
     <input id="searchbox2"
            placeholder="Search..."/>
 </ff-searchbox>
