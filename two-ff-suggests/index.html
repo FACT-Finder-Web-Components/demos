@@ -19,23 +19,23 @@
             const suggest2 = document.querySelector("#suggest2");
 
             function onfocusSuggest1() {
-                console.log("1 focus called");
+                console.log("SearchBox 1 onfocus handler called");
                 //hide the suggest
-                factfinder.communication.ResultDispatcher.dispatchSuggest(undefined);
+                factfinder.communication.ResultDispatcher.dispatch({}, undefined, [`suggest:hide`]);
 
                 unsubscribeSuggest(suggest2);
-                subscribeSuggest(suggest1);
+                subscribeSuggest(suggest1, sb1);
                 sb1.setAttribute("use-suggest", "true");
                 sb2.setAttribute("use-suggest", "false");
             }
 
             function onfocusSuggest2() {
-                console.log("2 focus called");
-                //hide the suggest
-                factfinder.communication.ResultDispatcher.dispatchSuggest(undefined);
+                console.log("SearchBox 2 onfocus handler called");
+                // hide the suggest
+                factfinder.communication.ResultDispatcher.dispatch({}, undefined, [`suggest:hide`]);
 
                 unsubscribeSuggest(suggest1);
-                subscribeSuggest(suggest2);
+                subscribeSuggest(suggest2, sb2);
                 sb2.setAttribute("use-suggest", "true");
                 sb1.setAttribute("use-suggest", "false");
             }
@@ -43,23 +43,27 @@
             sb1.onfocus = onfocusSuggest1;
             sb2.onfocus = onfocusSuggest2;
 
-            //remove the suggest from the data flow so it does not receive data anymore
+            // remove the suggest from the data flow so it does not receive data anymore
             function unsubscribeSuggest(suggestElement) {
-                //check if element is already listening
-                if (suggestElement.subscriptionKey) {
-                    factfinder.communication.ResultDispatcher.unsubscribe(["suggest"], suggestElement.subscriptionKey);
-                    //delete the old key
-                    suggestElement.subscriptionKey = undefined;
+                // check if element is already listening
+                if (suggestElement._suggestSubscriptionKey) {
+                    factfinder.communication.ResultDispatcher.unsubscribe("suggest", suggestElement._suggestSubscriptionKey);
+                    // reset current key to default
+                    suggestElement._suggestSubscriptionKey = undefined;
                 }
             }
 
-            //add the suggest to data flow so it receives data agian
-            function subscribeSuggest(suggestElement) {
-                //check if element is NOT already listening
-                if (!suggestElement.subscriptionKey) {
-                    const subKey = factfinder.communication.ResultDispatcher.subscribe(["suggest"], suggestElement._suggestItemsChanged, suggestElement);
-                    //add the sub key to the element
-                    suggestElement.subscriptionKey = subKey;
+            // add the suggest to data flow so it receives data again
+            function subscribeSuggest(suggestElement, searchBoxElement) {
+                // check if element is NOT listening already
+                if (!suggestElement._suggestSubscriptionKey) {
+                    // add the subscription key to the element
+                    suggestElement._suggestSubscriptionKey = factfinder.communication.ResultDispatcher.subscribe("suggest", function (suggestions, ffEvent) {
+                        const currentQuery = searchBoxElement.value;
+                        if (ffEvent && factfinder.common.fixedDecodeURIComponent(ffEvent.query) !== currentQuery)
+                            return;
+                        suggestElement.suggestItems = suggestions || [];
+                    }, suggestElement);
                 }
             }
         });
