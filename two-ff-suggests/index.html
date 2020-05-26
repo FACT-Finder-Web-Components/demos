@@ -53,7 +53,9 @@
             // Add the suggest to data flow so it receives data again
             function subscribeSuggest(suggestElement, searchBoxElement) {
                 // Check if element is NOT listening already
-                // Be careful, "_suggestSubscriptionKey" is an internal property of the component and may be a subject of change in future releases
+                // !!! CAUTION !!!
+                // "_suggestSubscriptionKey" is an internal property of the component and is a subject to change without prior notice
+                // !!! CAUTION !!!
                 if (!suggestElement._suggestSubscriptionKey) {
                     // add the subscription key to the element
                     suggestElement._suggestSubscriptionKey = factfinder.communication.ResultDispatcher.subscribe("suggest", function (suggestions, ffEvent) {
