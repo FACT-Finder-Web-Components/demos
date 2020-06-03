@@ -14,85 +14,76 @@ function Product(props) {
     );
 }
 
-const Carousel = createReactClass({
-    getInitialState: function () {
-        this.ref = React.createRef();
-        this.uid = newId();
+function Carousel(props) {
+    const ref = React.useRef(null);
 
-        return {
-            records: [],
-            subscriptionKey: undefined,
-            offset: 0
-        };
-    },
-    componentDidMount: function () {
-        const carousel = this;
+    const offsetState = React.useState(0);
+    const offset = offsetState[0], setOffset = offsetState[1];
+
+    const recordsState = React.useState([]);
+    const records = recordsState[0], setRecords = recordsState[1];
+
+    React.useEffect(function () {
+        const uid = newId();
+        let subscriptionKey = undefined;
+
         awaitFactfinder(function (resultDispatcher, eventAggregator) {
             setTimeout(function () {
                 // trigger search on a dedicated topic
                 eventAggregator.addFFEvent({
                     type: 'search',
-                    query: carousel.props.query,
+                    query: props.query,
                     topics: function () {
-                        return ['carousel-' + carousel.uid];
+                        return ['carousel-' + uid];
                     }
                 });
             });
 
             // update component's data when FACT-Finder response comes
-            const subscriptionKey = resultDispatcher.subscribe('carousel-' + carousel.uid, function (response) {
-                carousel.setState({
-                    records: response.searchResult.records.map(function (record) {
-                        return record.record;
-                    })
-                });
+            subscriptionKey = resultDispatcher.subscribe('carousel-' + uid, function (response) {
+                setRecords(response.searchResult.records.map(function (record) {
+                    return record.record;
+                }));
             });
-            carousel.setState({subscriptionKey: subscriptionKey});
-        });
-    },
-    componentWillUnmount: function () {
-        const carousel = this;
-        awaitFactfinder(function (resultDispatcher) {
-            if (carousel.state.subscriptionKey) {
-                resultDispatcher.unsubscribe('carousel-' + carousel.uid, carousel.state.subscriptionKey);
-            }
-        });
-    },
-    next: function () {
-        this.setState(function (state) {
-            return {offset: (state.offset + 4) % state.records.length};
-        });
-    },
-    prev: function () {
-        this.setState(function (state) {
-            return {offset: (state.offset - 4 + state.records.length) % state.records.length};
-        });
-    },
-    render: function () {
-        const products = this.state.records.map(function (record) {
-            return e(Product, {record: record, key: record.ArticleID});
         });
 
-        return e('div', {className: 'carousel-wrapper ' + (this.props.className || ''), ref: this.ref},
-            e('div', {onClick: this.prev, className: 'button prev-button'}, '❮'),
-            e('div', {style: transformStyles(this.ref.current, this.state.offset), className: 'carousel'}, products),
-            e('div', {onClick: this.next, className: 'button next-button'}, '❯')
-        );
+        return function () {
+            awaitFactfinder(function (resultDispatcher) {
+                if (subscriptionKey) {
+                    resultDispatcher.unsubscribe('carousel-' + uid, subscriptionKey);
+                }
+            });
+        };
+    }, [props.query]);
+
+    const products = records.map(function (record) {
+        return e(Product, {record: record, key: record.ArticleID});
+    });
+    return e('div', {className: 'carousel-wrapper ' + (props.className || ''), ref: ref},
+        e('div', {onClick: prev, className: 'button prev-button'}, '❮'),
+        e('div', {style: transformStyles(ref.current, offset), className: 'carousel'}, products),
+        e('div', {onClick: next, className: 'button next-button'}, '❯')
+    );
+
+    function next() {
+        setOffset((offset + 4) % records.length);
     }
-});
-
-function transformStyles(carouselElement, offset) {
-    if (!carouselElement) {
-        return {};
+    function prev() {
+        setOffset((offset - 4 + records.length) % records.length);
     }
+    function transformStyles(carouselElement, offset) {
+        if (!carouselElement) {
+            return {};
+        }
 
-    const products = carouselElement.querySelectorAll('.product');
-    if (products.length === 0) {
-        return {};
+        const products = carouselElement.querySelectorAll('.product');
+        if (products.length === 0) {
+            return {};
+        }
+
+        const offsetPx = products[offset].offsetLeft - products[0].offsetLeft;
+        return {transform: 'translateX(-' + offsetPx + 'px)'};
     }
-
-    const offsetPx = products[offset].offsetLeft - products[0].offsetLeft;
-    return {transform: 'translateX(-' + offsetPx + 'px)'};
 }
 
 ReactDOM.render(
