@@ -114,6 +114,20 @@
                 </ff-slider>
             </ff-slider-control>
         </ff-asn-group-slider>
+
+        <ff-asn-group-slider for-group="Price">
+            <div slot="groupCaption" class="groupCaption">
+                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            </div>
+            <div data-container="removeFilter">Remove Filter</div>
+            <ff-slider-control submit-on-input="true">
+                <ff-slider-one-touch></ff-slider-one-touch>
+                <input data-control='1'
+                       style="position: absolute; width: 60px;left: 15px;top:12px;">
+                <input
+                        data-control='2' style="position: absolute; width: 60px;right: 15px;top:12px;">
+            </ff-slider-control>
+        </ff-asn-group-slider>
     </ff-asn>
 
     <ff-record-list unresolved>

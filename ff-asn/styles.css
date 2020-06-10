@@ -49,6 +49,18 @@ ff-asn-group-slider [data-container="groupCaption"] {
     cursor: pointer;
 }
 
+ff-slider-one-touch {
+    margin: 50px 15px 12px;
+}
+
+[for-group="Price"] .ffw-sliderSection {
+    pointer-events: none;
+}
+
+ff-slider-control input {
+    pointer-events: all;
+}
+
 ff-asn-group-element {
     font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial;
     border-radius: 5px;
