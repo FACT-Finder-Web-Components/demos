@@ -20,3 +20,148 @@ body {
 [unresolved] {
     visibility: hidden !important;
 }
+
+
+/*
+    ff-searchbox
+ */
+
+.searchbar {
+    margin: 1rem 0 2rem;
+    padding: 0 10px;
+}
+
+ff-searchbox {
+    display: flex;
+    width: 100%;
+    border: 1px solid #ced4da;
+    box-sizing: border-box;
+}
+
+ff-searchbox input {
+    flex-grow: 1;
+    outline: none;
+    padding: .5rem 1rem;
+    border: none;
+    font-size: 1.25rem;
+    line-height: 2rem;
+    color: #495057;
+}
+
+ff-searchbutton {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+}
+
+ff-searchbutton button {
+    height: 3rem;
+    width: 3rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+ff-searchbutton .icon-search {
+    display: block;
+    width: 1.875rem;
+    height: 1.875rem;
+    background-size: contain;
+    background-image: url("search.svg");
+}
+
+
+/*
+    ff-record-list
+ */
+
+ff-record-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+ff-record {
+    flex-grow: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border: 1px solid #b9b9b9;
+    width: 240px;
+    margin: 0 10px 20px 10px;
+    user-select: none;
+}
+
+ff-record a {
+    font-family: inherit;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+}
+
+ff-record .record-img {
+    box-sizing: border-box;
+    padding: 15px 15px 0 15px;
+    height: 223px;
+    overflow-y: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ff-record .record-img img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+ff-record .record-product-info {
+    padding: 15px 15px 0 15px;
+    font-size: .9rem;
+    line-height: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+ff-record h3.record-product-name {
+    margin: 0;
+    font-size: .9rem;
+    line-height: 1.25rem;
+    height: 2.5rem;
+    margin-bottom: .5rem;
+    overflow: hidden;
+}
+
+ff-record .record-product-brand,
+ff-record .record-product-price {
+    height: 1.5rem;
+    overflow: hidden;
+}
+
+ff-record .record-product-add-to-cart {
+    margin-top: 1.2rem;
+    padding: 0 15px 15px 15px;
+}
+
+ff-record .record-product-add-to-cart button {
+    display: inline-block;
+    width: 100%;
+    padding: .375rem .75rem;
+    background-color: #004587;
+    border: 1px solid #004587;
+    line-height: 1.25rem;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    cursor: pointer;
+}
+
+ff-record .record-product-add-to-cart button:hover {
+    background-color: #003669;
+}
