@@ -3,72 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <title>Suggest Demo</title>
-    <link rel="stylesheet" href="../demo-styles.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/demo-styles.css">
 
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener("ffReady", ({ factfinder }) => {
+            // The fieldRoles are included in search responses and WebComponents will store them for later use.
+            // This means that they are not available before the first regular search request.
+            // However, ff-suggest (and other features like tracking) requires the fieldRoles immediately to fully function.
+            // Therefore you must configure them manually in order to use ff-suggest before the first search request has been issued.
+            // The values must be identical to those configured in the FACT-Finder UI.
+            factfinder.communication.fieldRoles = {
+                brand: "Manufacturer",
+                deeplink: "Deeplink",
+                description: "Description",
+                ean: "EAN",
+                imageUrl: "ImageURL",
+                masterId: "MasterArticleNumber",
+                price: "Price",
+                productName: "Title",
+                productNumber: "ArticleNumber",
+            };
+        });
+    </script>
 </head>
 <body>
 
-<!-- Configure the connection to the FF-Search backend and a default query-->
-<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
-                  version="ng"
-                  channel="Bergfreunde-en"
-                  disable-single-hit-redirect="true">
-</ff-communication>
+<ff-communication
+        url="https://showcase-phoenix.ff-labs.de/fact-finder"
+        version="ng"
+        channel="Bergfreunde-en"
 
-<ff-searchbox>
-    <input placeholder="Search..."
-           value="trou"/>
-</ff-searchbox>
+        currency-code="EUR"
+        currency-country-code="de-DE"
+
+        default-query="backp"
+
+        disable-single-hit-redirect="true"
+></ff-communication>
+
+<div class="searchbar">
+    <ff-searchbox>
+        <input placeholder="Search..." />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
 
 
-<ff-suggest layout="list" unresolved>
-    <section id="searchContainer" class="searchTermContainer">
-        <div data-container="searchTerm">
-            <p class="containerCaption">Suchvorschläge</p>
-            <ff-suggest-item type="searchTerm">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-
-        <div data-container="category">
-            <p class="containerCaption">Kategorievorschläge</p>
-            <ff-suggest-item type="category">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-
-        <div data-container="brand">
-            <p class="containerCaption">Marken</p>
-            <ff-suggest-item type="brand">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-    </section>
-
-    <section id="productContainer" class="productsContainer">
-        <div data-container="productName">
-            <p class="containerCaption">Vorgeschlagene Produkte</p>
-            <div>
-                <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
-                    <img data-image>
-                    <div class="product-center">
-                        <div class="product-name">{{{name}}}</div>
-                        <div>Shipping</div>
-                        <div>Rating</div>
-                    </div>
-                    <!-- Price and availability-->
-                    <div class="product-right">
-                        <div class="product-price">{{attributes.Price}}€</div>
-                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
-                    </div>
+    <ff-suggest layout="block" unresolved>
+        <section id="searchContainer" class="search-terms-container">
+            <div data-container="searchTerm">
+                <h2 class="container-caption">Search terms</h2>
+                <ff-suggest-item type="searchTerm">
+                    <span>{{{name}}}</span>
                 </ff-suggest-item>
             </div>
+
+            <div data-container="category">
+                <h2 class="container-caption">Categories</h2>
+                <ff-suggest-item type="category">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+
+            <div data-container="brand">
+                <h2 class="container-caption">Brands</h2>
+                <ff-suggest-item type="brand">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+        </section>
+
+        <section id="productContainer" class="products-container">
+            <div data-container="productName">
+                <h2 class="container-caption">Products</h2>
+                <div class="suggest-images">
+                    <ff-suggest-item type="productName">
+                        <div class="product-image">
+                            <img data-image>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">{{{name}}}</div>
+                        </div>
+                    </ff-suggest-item>
+                </div>
+            </div>
+            <div class="all-results-container">
+                <ff-searchbutton>
+                    <button>Show all results</button>
+                </ff-searchbutton>
+            </div>
+        </section>
+    </ff-suggest>
+</div>
+
+<ff-record-list unresolved>
+    <ff-record>
+        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+            <div class="record-img">
+                <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
+            </div>
+            <div class="record-product-info">
+                <h3 class="record-product-name">
+                    {{record.Title}}
+                </h3>
+                <div class="record-product-brand">{{record.Manufacturer}}</div>
+                <div class="record-product-price">{{record.Price}}</div>
+            </div>
+        </a>
+        <div class="record-product-add-to-cart">
+            <button>Add to Cart</button>
         </div>
-    </section>
-</ff-suggest>
+    </ff-record>
+</ff-record-list>
+
+<script>
+    document.querySelector("ff-suggest").addEventListener("suggest-item-clicked", e => {
+        // Reference to the clicked ff-suggest-item HTML element
+        const ffSuggestItem = e.detail.element;
+        // Reference to the suggest item's underlying data
+        const suggestionData = e.detail.suggestion;
+
+        // Check if the ffSuggestItem matches the desired type for which you want to override the action
+        if (suggestionData.type === "productName") {
+            // Tell the suggest-item to skip its default action
+            ffSuggestItem.ffPreventDefault = true;
+
+            // The fields contained in "attributes" must be configured in the FACT-Finder UI
+            const deeplink = suggestionData.attributes["deeplink"];
+
+            window.open("https://www.alpinetrek.co.uk" + deeplink, "_blank");
+        }
+    });
+</script>
 </body>
 </html>

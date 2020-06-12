@@ -165,3 +165,113 @@ ff-record .record-product-add-to-cart button {
 ff-record .record-product-add-to-cart button:hover {
     background-color: #003669;
 }
+
+
+/*
+    ff-suggest
+ */
+
+ff-suggest {
+    display: block;
+}
+
+ff-suggest .ffw-suggestContainerWrapper {
+    width: 100%;
+    border: 1px solid #b9b9b9;
+    box-shadow: 0 1rem 1rem rgba(0,0,0,.5);
+}
+
+ff-suggest .ffw-suggestContainer {
+    padding: 20px;
+}
+
+ff-suggest h2.container-caption {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    color: #5a6268;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+ff-suggest .search-terms-container {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 33.3%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0 10px;
+}
+
+ff-suggest .search-terms-container [data-container]:not(:first-child) {
+    margin-top: 20px;
+}
+
+ff-suggest-item {
+    display: block;
+}
+
+ff-suggest-item:hover {
+    text-decoration: underline;
+}
+
+ff-suggest .search-terms-container ff-suggest-item {
+    padding-bottom: 10px;
+    line-height: 1.5rem;
+    word-wrap: break-word;
+    cursor: pointer;
+}
+
+ff-suggest .products-container .suggest-images {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -10px;
+    margin-left: -10px;
+}
+ff-suggest .products-container ff-suggest-item {
+    flex: 0 0 calc(100% / 3);
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 2rem;
+    cursor: pointer;
+}
+
+ff-suggest-item .product-image {
+    height: 130px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+ff-suggest-item .product-image img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+ff-suggest-item .product-info {
+    font-size: 12px;
+    text-align: center;
+}
+
+ff-suggest-item .product-info .product-name {
+    height: 3em;
+    overflow: hidden;
+    font-weight: bold;
+}
+
+ff-suggest .all-results-container ff-searchbutton button {
+    border: none;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: #2372bd;
+    cursor: pointer;
+}
+
+ff-suggest-item span.ffw-query {
+    font-weight: bold;
+    color: #2372bd;
+}
