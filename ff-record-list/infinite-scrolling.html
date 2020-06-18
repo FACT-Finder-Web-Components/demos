@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Record List Demo</title>
+    <title>Record List Demo (Infinite Scrolling)</title>
     <link rel="stylesheet" href="../assets/demo-styles.css">
     <script src="../assets/scripts.js"></script>
 
@@ -14,8 +14,8 @@
 
 <nav class="demo-variations">
     <span class="title">Variations:</span>
-    <a>Regular</a>
-    <a href="./infinite-scrolling.html">Infinite Scrolling</a>
+    <a href="./index.html">Regular</a>
+    <a>Infinite Scrolling</a>
 </nav>
 
 <ff-communication
@@ -43,7 +43,13 @@
     </ff-searchbox>
 </div>
 
-<ff-record-list unresolved>
+<ff-record-list
+        infinite-scrolling
+        infinite-scroll-margin="-700"
+        infinite-max-pages="4"
+        infinite-debounce-delay="10"
+        unresolved
+>
     <ff-record>
         <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
            data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
