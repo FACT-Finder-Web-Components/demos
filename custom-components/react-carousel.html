@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>React Carousel</title>
-    <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
-    <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-    <script crossorigin src="https://unpkg.com/create-react-class@15.6.3/create-react-class.js"></script>
-    <script defer src="react-carousel.js"></script>
-    <link rel="stylesheet" href="carousel.css">
+  <meta charset="UTF-8">
+  <title>React Carousel</title>
+  <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+  <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+  <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+  <script type="text/babel" defer src="react-carousel.jsx"></script>
+  <link rel="stylesheet" href="carousel.css">
 </head>
 <body>
 <ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
                   version="ng"
+                  currency-code="EUR"
+                  currency-country-code="en-GB"
                   default-query="jacket"
-                  channel="Bergfreunde-en"
                   search-immediate
-                  mustache-delimiters="[[,]]"
-                  disable-single-hit-redirect="true">
+                  channel="Bergfreunde-en">
 </ff-communication>
 <div id="app"></div>
 </body>
