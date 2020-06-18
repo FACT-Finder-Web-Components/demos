@@ -14,7 +14,7 @@
                 const storage = factfinder.common.localStorage;
 
                 if (storage.getItem('ff_redirect_off') !== '1' || storage.getItem('ff_redirect_referer') !== window.location.href) {
-                    if (result.resultStatus === 'resultsFound' && result.records && result.records.length === 1) {
+                    if (result.resultArticleNumberStatus === 'resultsFound' && result.records && result.records.length === 1) {
                         storage.setItem('ff_redirect_off', '1');
                         storage.setItem('ff_redirect_referer', window.location.href);
                         const record = result.records[0].record;
