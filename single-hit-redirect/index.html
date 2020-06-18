@@ -11,16 +11,18 @@
     <script>
         document.addEventListener("WebComponentsReady", function () {
             factfinder.communication.ResultDispatcher.subscribe('result', function(result) {
-                if (!+factfinder.common.localStorage.getItem('ff_redirect_off') || factfinder.common.localStorage.getItem('ff_redirect_referer') !== window.location.href) {
+                const storage = factfinder.localStorage;
+
+                if (storage.getItem('ff_redirect_off') !== '1' || storage.getItem('ff_redirect_referer') !== window.location.href) {
                     if (result.resultArticleNumberStatus === 'resultsFound' && result.records && result.records.length === 1) {
-                        factfinder.common.localStorage.setItem('ff_redirect_off', 1);
-                        factfinder.common.localStorage.setItem('ff_redirect_referer', window.location.href);
+                        storage.setItem('ff_redirect_off', 1);
+                        storage.setItem('ff_redirect_referer', window.location.href);
                         const record = result.records[0].record;
                         window.location.href = window.location.origin + record.Deeplink;
                     }
                 } else {
-                    factfinder.common.localStorage.setItem('ff_redirect_off', 0);
-                    factfinder.common.localStorage.setItem('ff_redirect_referer', null);
+                    storage.setItem('ff_redirect_off', 0);
+                    storage.setItem('ff_redirect_referer', null);
                 }
             });
         });
