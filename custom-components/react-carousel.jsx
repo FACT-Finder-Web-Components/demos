@@ -1,8 +1,7 @@
-let UID = 0
-
-function newId() {
-  return UID++
-}
+const newId = (() => {
+  let uid = 0
+  return () => uid++
+})()
 
 function Product(props) {
   const {Deeplink, ImageURL, Price, Title} = props.record
@@ -21,28 +20,29 @@ class Carousel extends React.Component {
     records: []
   }
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.uid = newId()
     this.ref = React.createRef()
   }
 
-  componentDidMount() {
-    awaitFactfinder((resultDispatcher, eventAggregator) => {
-      setTimeout(() => eventAggregator.addFFEvent({
-        type: 'search',
-        query: this.props.query,
-        topics: () => ['carousel-' + this.uid]
-      }))
+  async componentDidMount() {
+    const {EventAggregator, ResultDispatcher} = (await withFactfinder()).communication
 
-      this.subscriptionKey = resultDispatcher.subscribe('carousel-' + this.uid, ({searchResult}) => {
-        this.setState({records: searchResult.records.map(r => r.record)})
-      })
+    setTimeout(() => EventAggregator.addFFEvent({
+      type: 'search',
+      query: this.props.query,
+      topics: () => ['carousel-' + this.uid]
+    }))
+
+    this.subscriptionKey = ResultDispatcher.subscribe('carousel-' + this.uid, ({searchResult}) => {
+      this.setState({records: searchResult.records.map(r => r.record)})
     })
   }
 
-  componentWillUnmount() {
-    resultDispatcher.unsubscribe('carousel-' + this.uid, this.subscriptionKey)
+  async componentWillUnmount() {
+    const {ResultDispatcher} = (await withFactfinder()).communication
+    ResultDispatcher.unsubscribe('carousel-' + this.uid, this.subscriptionKey)
   }
 
   prev = () => {
@@ -77,12 +77,16 @@ class Carousel extends React.Component {
   }
 }
 
-function awaitFactfinder(callback) {
-  if (typeof factfinder !== 'undefined') {
-    callback(factfinder.communication.ResultDispatcher, factfinder.communication.EventAggregator)
-  } else {
-    document.addEventListener('ffReady', (event) => callback(event.resultDispatcher, event.eventAggregator))
-  }
+function withFactfinder() {
+  return new Promise(resolve => {
+    if (typeof window.factfinder !== 'undefined') {
+      resolve(window.factfinder)
+    } else {
+      document.addEventListener('ffReady', (event) => {
+        resolve(event.factfinder)
+      })
+    }
+  })
 }
 
 function App() {
