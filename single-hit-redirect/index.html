@@ -11,7 +11,7 @@
     <script>
         document.addEventListener("WebComponentsReady", function () {
             factfinder.communication.ResultDispatcher.subscribe('result', function(result) {
-                const storage = factfinder.localStorage;
+                const storage = factfinder.common.localStorage;
 
                 if (storage.getItem('ff_redirect_off') !== '1' || storage.getItem('ff_redirect_referer') !== window.location.href) {
                     if (result.resultArticleNumberStatus === 'resultsFound' && result.records && result.records.length === 1) {
