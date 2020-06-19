@@ -14,67 +14,57 @@ function Product(props) {
   )
 }
 
-class Carousel extends React.Component {
-  state = {
-    offset: 0,
-    records: []
-  }
+function Carousel(props) {
+  const uid = newId()
+  const ref = React.useRef()
+  const [offset, setOffset] = React.useState(0)
+  const [records, setRecords] = React.useState([])
 
-  constructor(props) {
-    super(props)
-    this.uid = newId()
-    this.ref = React.createRef()
-  }
+  React.useEffect(() => {
+    let subscriptionKey = '';
 
-  async componentDidMount() {
-    const {EventAggregator, ResultDispatcher} = (await withFactfinder()).communication
+    (async () => {
+      const {EventAggregator, ResultDispatcher} = (await withFactfinder()).communication
 
-    setTimeout(() => EventAggregator.addFFEvent({
-      type: 'search',
-      query: this.props.query,
-      topics: () => ['carousel-' + this.uid]
-    }))
+      setTimeout(() => EventAggregator.addFFEvent({
+        type: 'search',
+        query: props.query,
+        topics: () => ['carousel-' + uid]
+      }))
 
-    this.subscriptionKey = ResultDispatcher.subscribe('carousel-' + this.uid, ({searchResult}) => {
-      this.setState({records: searchResult.records.map(r => r.record)})
-    })
-  }
+      subscriptionKey = ResultDispatcher.subscribe('carousel-' + uid, ({searchResult}) => {
+        setRecords(searchResult.records.map(r => r.record))
+      })
+    })()
 
-  async componentWillUnmount() {
-    const {ResultDispatcher} = (await withFactfinder()).communication
-    ResultDispatcher.unsubscribe('carousel-' + this.uid, this.subscriptionKey)
-  }
+    return async () => {
+      const {ResultDispatcher} = (await withFactfinder()).communication
+      ResultDispatcher.unsubscribe('carousel-' + uid, subscriptionKey)
+    }
+  }, [props.query])
 
-  prev = () => {
-    const {offset, records} = this.state
-    this.setState({offset: (offset - 4 + records.length) % records.length})
-  }
+  const prev = () => setOffset((offset - 4 + records.length) % records.length)
 
-  next = () => {
-    const {offset, records} = this.state
-    this.setState({offset: (offset + 4) % records.length})
-  }
+  const next = () => setOffset((offset + 4) % records.length)
 
-  render() {
-    return (
-      <div className={'carousel-wrapper ' + this.props.className} ref={this.ref}>
-        <div className="button prev-button" onClick={this.prev}>❮</div>
-        <div className="carousel" style={this.transformStyles()}>
-          {this.state.records.map(r => <Product record={r} key={r.ArticleID} />)}
-        </div>
-        <div className="button next-button" onClick={this.next}>❯</div>
-      </div>
-    )
-  }
-
-  transformStyles() {
-    const products = this.ref.current ? this.ref.current.querySelectorAll('.product') : []
+  const transformStyles = () => {
+    const products = ref.current ? ref.current.querySelectorAll('.product') : []
     if (products.length) {
-      const offsetPx = products[this.state.offset].offsetLeft - products[0].offsetLeft
+      const offsetPx = products[offset].offsetLeft - products[0].offsetLeft
       return {transform: 'translateX(-' + offsetPx + 'px)'}
     }
     return {}
   }
+
+  return (
+    <div className={'carousel-wrapper ' + props.className} ref={ref}>
+      <div className="button prev-button" onClick={prev}>❮</div>
+      <div className="carousel" style={transformStyles()}>
+        {records.map(r => <Product record={r} key={r.ArticleID} />)}
+      </div>
+      <div className="button next-button" onClick={next}>❯</div>
+    </div>
+  )
 }
 
 function withFactfinder() {
