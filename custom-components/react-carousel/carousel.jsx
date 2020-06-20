@@ -15,27 +15,27 @@ function Product(props) {
 }
 
 function Carousel(props) {
-  const uid = newId()
   const ref = React.useRef()
   const [offset, setOffset] = React.useState(0)
   const [records, setRecords] = React.useState([])
 
   React.useEffect(() => {
-    let subscriptionKey = '';
+    const uid = newId()
+    let subscriptionKey = ''
 
-    (async () => {
-      const {EventAggregator, ResultDispatcher} = (await withFactfinder()).communication
+    withFactfinder().then(factfinder => {
+      const {EventAggregator, ResultDispatcher} = factfinder.communication
+
+      subscriptionKey = ResultDispatcher.subscribe('carousel-' + uid, ({searchResult}) => {
+        setRecords(searchResult.records.map(r => r.record))
+      })
 
       setTimeout(() => EventAggregator.addFFEvent({
         type: 'search',
         query: props.query,
         topics: () => ['carousel-' + uid]
       }))
-
-      subscriptionKey = ResultDispatcher.subscribe('carousel-' + uid, ({searchResult}) => {
-        setRecords(searchResult.records.map(r => r.record))
-      })
-    })()
+    })
 
     return async () => {
       const {ResultDispatcher} = (await withFactfinder()).communication
@@ -72,9 +72,7 @@ function withFactfinder() {
     if (typeof window.factfinder !== 'undefined') {
       resolve(window.factfinder)
     } else {
-      document.addEventListener('ffReady', (event) => {
-        resolve(event.factfinder)
-      })
+      document.addEventListener('ffReady', event => resolve(event.factfinder))
     }
   })
 }
