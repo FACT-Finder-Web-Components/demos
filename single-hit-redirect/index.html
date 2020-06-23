@@ -11,28 +11,36 @@
     <script>
         document.addEventListener("WebComponentsReady", function () {
             factfinder.communication.ResultDispatcher.subscribe('result', function(result) {
-                const storage = factfinder.common.localStorage;
+                const redirectOn = localStorage.getItem('ff_redirect_on');
+                const refererUrl = localStorage.getItem('ff_redirect_referer');
 
-                if (storage.getItem('ff_redirect_off') !== '1' || storage.getItem('ff_redirect_referer') !== window.location.href) {
+                if (redirectOn !== '0' || refererUrl !== window.location.href) {
                     if (result.resultArticleNumberStatus === 'resultsFound' && result.records && result.records.length === 1) {
-                        storage.setItem('ff_redirect_off', 1);
-                        storage.setItem('ff_redirect_referer', window.location.href);
+                        localStorage.setItem('ff_redirect_on', 0);
+                        localStorage.setItem('ff_redirect_referer', window.location.href);
                         const record = result.records[0].record;
                         window.location.href = window.location.origin + record.Deeplink;
                     }
                 } else {
-                    storage.setItem('ff_redirect_off', 0);
-                    storage.setItem('ff_redirect_referer', null);
+                    localStorage.setItem('ff_redirect_on', 1);
+                    localStorage.setItem('ff_redirect_referer', null);
                 }
             });
         });
     </script>
 </head>
 <body>
+<div class="warn">
+    <h1>WARNING</h1>
+    This demo uses Local Storage.
+    To make it work properly, make sure that the browser in which you want to run it supports this feature.
+</div>
+
 <h1>Single Hit Redirect Demo</h1>
 <p>
     Search for EAN '9327868039067' to be redirected to record page.
 </p>
+
 <ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
                   version="ng"
                   default-query="backpack"
