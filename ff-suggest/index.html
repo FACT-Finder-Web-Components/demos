@@ -8,27 +8,6 @@
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
-
-    <script>
-        document.addEventListener("ffReady", ({ factfinder }) => {
-            // The fieldRoles are included in search responses and WebComponents will store them for later use.
-            // This means that they are not available before the first regular search request.
-            // However, ff-suggest (and other features like tracking) requires the fieldRoles immediately to fully function.
-            // Therefore you must configure them manually in order to use ff-suggest before the first search request has been issued.
-            // The values must be identical to those configured in the FACT-Finder UI.
-            factfinder.communication.fieldRoles = {
-                brand: "Manufacturer",
-                deeplink: "Deeplink",
-                description: "Description",
-                ean: "EAN",
-                imageUrl: "ImageURL",
-                masterId: "MasterArticleNumber",
-                price: "Price",
-                productName: "Title",
-                productNumber: "ArticleNumber",
-            };
-        });
-    </script>
 </head>
 <body>
 
@@ -136,7 +115,9 @@
             // Tell the suggest-item to skip its default action
             ffSuggestItem.ffPreventDefault = true;
 
-            // The fields contained in "attributes" must be configured in the FACT-Finder UI
+            // The fields contained in "attributes" must be configured in the FACT-Finder UI.
+            // Here we have "deeplink" which corresponds to the configured field role.
+            // Note that the suggest's attributes use the KEYS from the field role mapping. This allows you to have stable attribute names without being forced to manually configure the field role mapping during WebComponents initialisation.
             const deeplink = suggestionData.attributes["deeplink"];
 
             window.open("https://www.alpinetrek.co.uk" + deeplink, "_blank");
