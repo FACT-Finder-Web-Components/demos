@@ -517,3 +517,42 @@ ff-asn-remove-all-filter:hover {
     color: #000;
     border-color: #000;
 }
+
+
+/*
+    ff-filter-cloud
+*/
+
+ff-filter-cloud {
+    display: block;
+    box-sizing: border-box;
+    border: 1px solid #b9b9b9;
+    padding: .625rem;
+    margin-left: 10px;
+    margin-bottom: 1rem;
+}
+
+ff-filter-cloud .fc-header {
+    font-weight: 500;
+}
+
+ff-filter-cloud .fc-body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+ff-filter-cloud .fc-filter-item {
+    background-color: #c7e4ec;
+    border: 1px solid #b9b9b9;
+    padding: .4rem .1rem .4rem .6rem;
+    margin-top: .625rem;
+    margin-right: .625rem;
+    white-space: nowrap;
+    cursor: default;
+}
+
+ff-filter-cloud .fc-btn-deselect {
+    cursor: pointer;
+    padding: 0 .5rem;
+}

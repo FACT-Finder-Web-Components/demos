@@ -3,12 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Filter Cloud Demo</title>
-    <link rel="stylesheet" href="../demo-styles.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/demo-styles.css">
 
     <script src="../bower_components/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../bower_components/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../bower_components/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        main {
+            display: flex;
+            padding: 0 10px;
+        }
+        .filters {
+            flex: 0 0;
+            width: 240px;
+            margin-right: 10px;
+        }
+        .products-listing {
+            flex: 1 0;
+        }
+
+        ff-record-list {
+            margin-right: -10px;
+        }
+    </style>
+
     <script>
         function userOnClick(event) {
             if (!event.target.classList.contains('fc-btn-deselect')) {
@@ -18,132 +37,171 @@
     </script>
 </head>
 <body>
-<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
-                  version="ng"
-                  channel="Bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate="true"
-                  disable-single-hit-redirect="true">
-</ff-communication>
+<ff-communication
+        url="https://showcase-phoenix.ff-labs.de/fact-finder"
+        version="ng"
+        channel="Bergfreunde-en"
 
-<header>
+        currency-code="EUR"
+        currency-country-code="de-DE"
+
+        default-query="shirt"
+        search-immediate
+
+        disable-single-hit-redirect="true"
+></ff-communication>
+
+<div class="searchbar">
     <ff-searchbox use-suggest="false">
-        <input placeholder="Search..."/>
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
     </ff-searchbox>
-    <ff-searchbutton>
-        <button>Search</button>
-    </ff-searchbutton>
+</div>
 
-    <div class="bctContainer">
-        You are searching for:
-        <ff-breadcrumb-trail unresolved>
-            <!--//TODO we currently have to put this item here cause an error is thrown otherwise-->
-            <ff-breadcrum-trail-item type="search">{{{text}}}</ff-breadcrum-trail-item>
-        </ff-breadcrumb-trail>
-    </div>
-</header>
 <main>
-    <nav>
-        <ff-asn align="vertical" unresolved>
+    <div class="filters">
+         <ff-asn-remove-all-filter>Reset all filters</ff-asn-remove-all-filter>
 
-            <!--use this as a default template for all groups-->
-            <ff-asn-group for-group="all" class="cursor">
+        <ff-asn unresolved>
+            <ff-asn-group for-group="all">
                 <ff-asn-group-element>
                     <div slot="selected">
-                        <input type="checkbox" checked>
-                        <span class="filterName">{{element.name}}</span>
+                        <span class="checkbox"></span> {{element.name}}&nbsp;{{group.unit}}
                     </div>
+
                     <div slot="unselected">
-                        <input type="checkbox">
-                        <span class="filterName">{{element.name}}</span>
+                        <span class="checkbox"></span>
+                        <span>{{element.name}}&nbsp;{{group.unit}}</span>
+                        <span>({{element.recordCount}})</span>
                     </div>
                 </ff-asn-group-element>
 
-                <div slot="groupCaption" class="groupCaption">
-                    {{group.name}}<span class="filterArrowDown">&nbsp;</span>
-                </div>
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
 
-                <div opened data-container="detailedLinks">
-                    <!--all links which should be displayed immediately appear inside this element-->
+                <div data-container="detailedLinks">
                     <div data-content="detailedLinks"></div>
-                </div>
-
-                <!--use this container for automatically showing the hiddenLinks container on tap-->
-                <div data-container="showMore">
-                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
-                    <span class="text">Show More</span>
                 </div>
 
                 <div data-container="hiddenLinks">
-                    <!--all links which should NOT be displayed immediately appear inside this element-->
                     <div data-content="hiddenLinks"></div>
                 </div>
 
-                <!--use this container for automatically hiding the hiddenLinks container on tap-->
-                <div data-container="showLess">
-                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
-                    <span class="text">Show Less</span>
-                </div>
+                <div data-container="removeFilter">[x] Reset Filter</div>
             </ff-asn-group>
 
-            <!--style all groups with filter style TREE-->
-            <ff-asn-group filter-style="TREE" opened class="cursor">
+            <ff-asn-group filter-style="TREE" collapsible="false" opened>
                 <ff-asn-group-element>
-                    <div slot="selected">
-                        &nbsp;&nbsp;<span class="filterName"><b>{{element.name}}</b></span>
-                    </div>
+                    <div slot="selected">{{element.name}}&nbsp;{{group.unit}}</div>
                     <div slot="unselected">
-                        &nbsp;<span class="filterArrowRight"></span>&nbsp;<span class="filterName">{{element.name}}</span>
+                        <p>{{element.name}}&nbsp;{{group.unit}} <span class="count">({{element.recordCount}})</span>
+                        </p>
                     </div>
                 </ff-asn-group-element>
-                <div slot="groupCaption" class="groupCaption">
-                    {{group.name}} <span class="filterArrowDown">&nbsp;</span>
-                </div>
-                <div opened data-container="detailedLinks">
-                    <div data-content="detailedLinks"></div>
-                </div>
+
+                <div slot="groupCaption"><div>{{group.name}}</div></div>
+
+                <div data-container="removeFilter">[x] Reset Filter</div>
             </ff-asn-group>
 
-            <!--style slider groups-->
-            <ff-asn-group-slider>
-                <div slot="groupCaption" class="groupCaption">
-                    {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+            <ff-asn-group filter-style="DEFAULT">
+                <ff-asn-group-element>
+                    <div slot="selected">
+                        <span class="circle"></span> {{element.name}}&nbsp;{{group.unit}}
+                    </div>
+
+                    <div slot="unselected">
+                        <span class="circle"></span>
+                        <span>{{element.name}}&nbsp;{{group.unit}}</span>
+                        <span>({{element.recordCount}})</span>
+                    </div>
+                </ff-asn-group-element>
+
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+                <div data-container="detailedLinks">
+                    <div data-content="detailedLinks"></div>
                 </div>
-                <div data-container="removeFilter">Remove Filter</div>
+                <div data-container="hiddenLinks">
+                    <div data-content="hiddenLinks"></div>
+                </div>
+
+                <div data-container="removeFilter">[x] Reset Filter</div>
+            </ff-asn-group>
+
+            <ff-asn-group-slider for-group="Price" class="one-touch-slider">
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+                <div data-container="removeFilter">[x] Reset Filter</div>
+
+                <ff-slider-control submit-on-input="true">
+                    <div class="slider-inputs">
+                        <input data-control='1'
+                               ssstyle="position: absolute; left: 15px;top:12px;">
+                        <input data-control='2'
+                               ssstyle="position: absolute; right: 15px;top:12px;">
+                    </div>
+
+                    <ff-slider-one-touch></ff-slider-one-touch>
+                </ff-slider-control>
+            </ff-asn-group-slider>
+
+            <ff-asn-group-slider>
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+                <div data-container="removeFilter">[x] Reset Filter</div>
+
                 <ff-slider-control submit-on-input="true">
                     <input data-control='1'
-                           style="position: absolute; width: 60px;left: 15px;top:12px;">
-                    <input
-                            data-control='2' style="position: absolute; width: 60px;right: 15px;top:12px;">
+                           style="position: absolute; left: 15px;top:12px;">
+                    <input data-control='2'
+                           style="position: absolute; right: 15px;top:12px;">
 
-                    <ff-slider current-min-value="0" style="width: 150px;margin-top: 30px;">
-                        <div slot="slider1" id="slider1" class="sliderBtn"></div>
-                        <div slot="slider2" id="slider2" class="sliderBtn"></div>
+                    <ff-slider current-min-value="0">
+                        <div slot="slider1"></div>
+                        <div slot="slider2"></div>
                     </ff-slider>
                 </ff-slider-control>
             </ff-asn-group-slider>
         </ff-asn>
-    </nav>
-    <section>
+    </div>
+
+    <div class="products-listing">
+
         <ff-filter-cloud blacklist="Weight,Price,Rating" order="alphabetical" unresolved>
-            <span class="fc-header">Selected filters</span>
-            <div class="fc-container">
-                    <span data-template="filter" onclick="userOnClick(event)" class="fc-filter-item" ><span>{{element.name}}</span> <span class="fc-btn-deselect">×</span></span>
+            <div class="fc-header">Selected filters</div>
+            <div class="fc-body">
+                <span class="fc-filter-item" data-template="filter" onclick="userOnClick(event)">
+                    <span>{{element.name}}</span>
+                    <span class="fc-btn-deselect">×</span>
+                </span>
             </div>
         </ff-filter-cloud>
+
         <ff-record-list unresolved>
             <ff-record>
-                <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
                 <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                    data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                    {{record.Title}}
+                    <div class="record-img">
+                        <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
+                    </div>
+                    <div class="record-product-info">
+                        <h3 class="record-product-name">
+                            {{record.Title}}
+                        </h3>
+                        <div class="record-product-brand">{{record.Manufacturer}}</div>
+                        <div class="record-product-price">{{record.Price}}</div>
+                    </div>
                 </a>
-
-                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                <div class="record-product-add-to-cart">
+                    <button>Add to Cart</button>
                 </div>
             </ff-record>
         </ff-record-list>
-    </section>
+    </div>
 </main>
 </body>
 </html>
