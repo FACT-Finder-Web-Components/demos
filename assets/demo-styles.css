@@ -494,3 +494,26 @@ ff-slider [slot^=slider] {
     background-color: #fff;
     margin-top: -10px;  /* this value is calculated from the button's height and the slider bar's default thickness */
 }
+
+
+/*
+    ff-asn-remove-all-filter
+ */
+
+ff-asn-remove-all-filter {
+    border: 1px solid #b9b9b9;
+    padding: .625rem;
+    box-sizing: border-box;
+    width: 240px;
+    text-align: center;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .3s ease;
+    margin-bottom: 1rem;
+}
+
+ff-asn-remove-all-filter:hover {
+    background-color: #4bbee9;
+    color: #000;
+    border-color: #000;
+}
