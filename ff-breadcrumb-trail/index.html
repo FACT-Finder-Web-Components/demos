@@ -24,10 +24,7 @@
 
 <div class="demo">
     <b>Example 1:</b> You are searching for
-    <ff-breadcrumb-trail unresolved>
-        <!--//TODO we currently have to put this item here cause an error is thrown otherwise-->
-        <ff-breadcrum-trail-item unresolved type="search">{{{text}}}</ff-breadcrum-trail-item>
-    </ff-breadcrumb-trail>
+    <ff-breadcrumb-trail unresolved></ff-breadcrumb-trail>
 </div>
 
 <div class="demo"><b>Example 2:</b> You are searching for
@@ -39,6 +36,9 @@
 <div class="demo"><b>Example 3:</b> You are searching for
     <ff-breadcrumb-trail unresolved>
         <!-- The search item is the content of the search query-->
+        <!-- Be careful to not use triple curly braces here because it would open the door to Cross Site Scripting!
+             The contents of `text` can be provided through the `query` URL parameter and {{{text}}} would be interpreted as HTML.
+             This potentially runs arbitrary JavaScript. -->
         <ff-breadcrumb-trail-item unresolved type="search">
             <span>{{text}}</span>
         </ff-breadcrumb-trail-item>
