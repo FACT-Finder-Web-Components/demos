@@ -49,7 +49,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "../../bower_components/ff-web-components/dist/",
+                "input": "../../node_modules/ff-web-components/dist/",
                 "output": "/ffwebcomponents/"
               },
               "src/favicon.ico",
