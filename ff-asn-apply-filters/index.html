@@ -65,9 +65,10 @@
           button.classList.add('btn')
           button.onclick = applyFilters(use, eventAggregator)
           links.parentNode.prepend(button)
+
+          document.querySelector('ff-asn').removeEventListener('dom-updated', addButton)
         }
 
-        document.querySelector('ff-asn').removeEventListener('dom-updated', addButton)
       }
 
       document.querySelector('ff-asn').addEventListener('dom-updated', addButton);
