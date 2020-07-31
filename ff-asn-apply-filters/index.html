@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ASN "Apply Filters" Demo</title>
+  <link rel="stylesheet" href="../assets/demo-styles.css">
+
+  <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+  <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+  <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+  <style>
+    main {
+      display: flex;
+      padding: 0 10px;
+    }
+
+    .filters {
+      flex: 0 0;
+      width: 240px;
+      margin-right: 10px;
+    }
+
+    .products-listing {
+      flex: 1 0;
+    }
+
+    ff-record-list {
+      margin-right: -10px;
+    }
+  </style>
+
+  <script>
+    const applyFilters = (group, eventAggregator) => () => {
+      const selected = Array.from(group.querySelectorAll('ff-asn-group-element') || [])
+        .filter(g => g.selected)
+        .map(g => g.element)
+
+      if (selected) {
+        eventAggregator.addFFEvent({
+          type: 'search',
+          filter: selected.map(e => `${e.associatedFieldName}:${e.name}`),
+        })
+      }
+    }
+
+    document.addEventListener('ffReady', function (event) {
+      const eventAggregator = event.eventAggregator;
+
+      function addButton(e) {
+        const use = e.srcElement.querySelector('ff-asn-group[for-group="Brand"]')
+        const links = use && use.querySelector('[data-container="detailedLinks"]')
+
+        if (links) {
+          // Deactivate regular behavior (Filter on click)
+          eventAggregator.addBeforeDispatchingCallback(function (event) {
+            if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
+              event.cancel()
+            }
+          })
+
+          // Add "Apply filters" button
+          const button = document.createElement('button')
+          button.textContent = 'Apply filters'
+          button.classList.add('btn')
+          button.onclick = applyFilters(use, eventAggregator)
+          links.parentNode.prepend(button)
+        }
+
+        document.querySelector('ff-asn').removeEventListener('dom-updated', addButton)
+      }
+
+      document.querySelector('ff-asn').addEventListener('dom-updated', addButton);
+    });
+  </script>
+</head>
+<body>
+
+<ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+                  version="ng"
+                  channel="Bergfreunde-en"
+                  currency-code="EUR"
+                  currency-country-code="de-DE"
+                  default-query="boots"
+                  search-immediate
+                  only-search-params
+                  disable-single-hit-redirect="true"
+></ff-communication>
+
+<div class="searchbar">
+  <ff-searchbox use-suggest="false">
+    <input placeholder="Search..." autofocus />
+    <ff-searchbutton>
+      <button>
+        <span class="icon-search"></span>
+      </button>
+    </ff-searchbutton>
+  </ff-searchbox>
+</div>
+
+<main>
+  <div class="filters">
+    <ff-asn-remove-all-filter>Reset all filters</ff-asn-remove-all-filter>
+    <ff-asn unresolved>
+
+      <ff-asn-group for-group="all">
+        <ff-asn-group-element>
+          <div slot="selected">
+            <span class="checkbox"></span> {{element.name}}&nbsp;{{group.unit}}
+          </div>
+
+          <div slot="unselected">
+            <span class="checkbox"></span>
+            <span>{{element.name}}&nbsp;{{group.unit}}</span>
+            <span>({{element.recordCount}})</span>
+          </div>
+        </ff-asn-group-element>
+
+        <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+        <div data-container="detailedLinks">
+          <div data-content="detailedLinks"></div>
+        </div>
+
+        <div data-container="hiddenLinks">
+          <div data-content="hiddenLinks"></div>
+        </div>
+
+        <div data-container="removeFilter">[x] Reset Filter</div>
+      </ff-asn-group>
+
+      <ff-asn-group filter-style="TREE" collapsible="false" opened>
+        <ff-asn-group-element>
+          <div slot="selected">{{element.name}}&nbsp;{{group.unit}}</div>
+          <div slot="unselected">
+            <p>{{element.name}}&nbsp;{{group.unit}} <span class="count">({{element.recordCount}})</span>
+            </p>
+          </div>
+        </ff-asn-group-element>
+
+        <div slot="groupCaption"><div>{{group.name}}</div></div>
+
+        <div data-container="removeFilter">[x] Reset Filter</div>
+      </ff-asn-group>
+
+      <ff-asn-group filter-style="DEFAULT">
+        <ff-asn-group-element>
+          <div slot="selected">
+            <span class="circle"></span> {{element.name}}&nbsp;{{group.unit}}
+          </div>
+
+          <div slot="unselected">
+            <span class="circle"></span>
+            <span>{{element.name}}&nbsp;{{group.unit}}</span>
+            <span>({{element.recordCount}})</span>
+          </div>
+        </ff-asn-group-element>
+
+        <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+        <div data-container="detailedLinks">
+          <div data-content="detailedLinks"></div>
+        </div>
+        <div data-container="hiddenLinks">
+          <div data-content="hiddenLinks"></div>
+        </div>
+
+        <div data-container="removeFilter">[x] Reset Filter</div>
+      </ff-asn-group>
+
+      <ff-asn-group-slider for-group="Price" class="one-touch-slider" opened>
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+        <div data-container="removeFilter">[x] Reset Filter</div>
+
+        <ff-slider-control submit-on-input="true">
+          <div class="slider-inputs">
+            <input data-control='1'
+                   ssstyle="position: absolute; left: 15px;top:12px;">
+            <input data-control='2'
+                   ssstyle="position: absolute; right: 15px;top:12px;">
+          </div>
+
+          <ff-slider-one-touch></ff-slider-one-touch>
+        </ff-slider-control>
+      </ff-asn-group-slider>
+
+      <ff-asn-group-slider>
+        <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+        <div data-container="removeFilter">[x] Reset Filter</div>
+
+        <ff-slider-control submit-on-input="true">
+          <input data-control='1'
+                 style="position: absolute; left: 15px;top:12px;">
+          <input data-control='2'
+                 style="position: absolute; right: 15px;top:12px;">
+
+          <ff-slider current-min-value="0">
+            <div slot="slider1"></div>
+            <div slot="slider2"></div>
+          </ff-slider>
+        </ff-slider-control>
+      </ff-asn-group-slider>
+
+    </ff-asn>
+  </div>
+  <div class="products-listing">
+    <ff-record-list unresolved>
+      <ff-record>
+        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+          <div class="record-img">
+            <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
+          </div>
+          <div class="record-product-info">
+            <h3 class="record-product-name">
+              {{record.Title}}
+            </h3>
+            <div class="record-product-brand">{{record.Manufacturer}}</div>
+            <div class="record-product-price">{{record.Price}}</div>
+          </div>
+        </a>
+        <div class="record-product-add-to-cart">
+          <button>Add to Cart</button>
+        </div>
+      </ff-record>
+    </ff-record-list>
+  </div>
+</main>
+</body>
+</html>
