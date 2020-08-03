@@ -196,7 +196,7 @@ ff-asn .btn {
     outline: none;
 }
 
-ff-asn .btn-pending {
+ff-asn .btn--pending {
     background-color: #004587;
     color: #fff;
 }

@@ -41,7 +41,7 @@
           type: 'search',
           filter: selected.map(e => `${e.associatedFieldName}:${e.name}`),
         })
-        group.querySelector('.btn').classList.remove('btn-pending')
+        group.querySelector('.btn').classList.remove('btn--pending')
       }
     }
 
@@ -57,7 +57,7 @@
           eventAggregator.addBeforeDispatchingCallback(function (event) {
             if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand') && event.filterName) {
               event.cancel()
-              use.querySelector('.btn').classList.add('btn-pending')
+              use.querySelector('.btn').classList.add('btn--pending')
             }
           })
 
