@@ -31,7 +31,7 @@
   </style>
 
   <script>
-    const applyFilters = (group, eventAggregator) => () => {
+    const applyFilters = (group, button, eventAggregator) => () => {
       const selected = Array.from(group.querySelectorAll('ff-asn-group-element') || [])
         .filter(g => g.selected)
         .map(g => g.element)
@@ -40,8 +40,11 @@
         eventAggregator.addFFEvent({
           type: 'search',
           filter: selected.map(e => `${e.associatedFieldName}:${e.name}`),
+          success: () => {
+            button.classList.remove('btn--pending')
+            button.disabled = true
+          }
         })
-        group.querySelector('.btn').classList.remove('btn--pending')
       }
     }
 
@@ -49,28 +52,35 @@
       const eventAggregator = event.eventAggregator;
 
       function addButton(e) {
-        const use = e.srcElement.querySelector('ff-asn-group[for-group="Brand"]')
+        const use = e.target.querySelector('ff-asn-group[for-group="Brand"]')
         const links = use && use.querySelector('[data-container="detailedLinks"]')
 
         if (links) {
-          // Deactivate regular behavior (Filter on click)
-          eventAggregator.addBeforeDispatchingCallback(function (event) {
-            if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand') && event.filterName) {
-              event.cancel()
-              use.querySelector('.btn').classList.add('btn--pending')
-            }
-          })
-
           // Add "Apply filters" button
           const button = document.createElement('button')
           button.textContent = 'Apply filters'
+          button.disabled = true
           button.classList.add('btn')
-          button.onclick = applyFilters(use, eventAggregator)
+          button.onclick = applyFilters(use, button, eventAggregator)
           links.parentNode.append(button)
 
           document.querySelector('ff-asn').removeEventListener('dom-updated', addButton)
-        }
 
+          // Deactivate regular behavior (Filter on click)
+          eventAggregator.addBeforeDispatchingCallback(function (event) {
+            if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
+              if (event.filterName) {
+                event.cancel()
+                button.classList.add('btn--pending')
+                button.disabled = false
+              } else {
+                // Reset filter
+                button.classList.remove('btn--pending')
+                button.disabled = true
+              }
+            }
+          })
+        }
       }
 
       document.querySelector('ff-asn').addEventListener('dom-updated', addButton);

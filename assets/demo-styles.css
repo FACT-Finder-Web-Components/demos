@@ -196,6 +196,10 @@ ff-asn .btn {
     outline: none;
 }
 
+ff-asn .btn[disabled] {
+    cursor: not-allowed;
+}
+
 ff-asn .btn--pending {
     background-color: #004587;
     color: #fff;
