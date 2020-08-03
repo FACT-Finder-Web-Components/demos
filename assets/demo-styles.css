@@ -181,6 +181,26 @@ ff-record .record-product-add-to-cart button {
     cursor: pointer;
 }
 
+ff-asn .btn {
+    display: inline-block;
+    width: 100%;
+    padding: .375rem .75rem;
+    color: #004587;
+    border: 1px solid #004587;
+    line-height: 1.25rem;
+    background-color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+}
+
+ff-asn .btn-pending {
+    background-color: #004587;
+    color: #fff;
+}
+
 ff-record .record-product-add-to-cart button:hover {
     background-color: #003669;
 }
