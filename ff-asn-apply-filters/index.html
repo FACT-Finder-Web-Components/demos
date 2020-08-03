@@ -54,7 +54,7 @@
         if (links) {
           // Deactivate regular behavior (Filter on click)
           eventAggregator.addBeforeDispatchingCallback(function (event) {
-            if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
+            if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand') && event.filterName) {
               event.cancel()
             }
           })
