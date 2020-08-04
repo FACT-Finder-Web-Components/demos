@@ -31,20 +31,32 @@
   </style>
 
   <script>
+    function createButton(clickHandler) {
+      const button = document.createElement('button');
+      button.textContent = 'Apply filters';
+      button.classList.add('btn');
+      button.enable = () => {
+        button.disabled = false;
+        button.classList.add('btn--pending');
+      }
+      button.disable = () => {
+        button.disabled = true;
+        button.classList.remove('btn--pending');
+      }
+      return button;
+    }
+
     const applyFilters = (group, button, eventAggregator) => () => {
       const selected = Array.from(group.querySelectorAll('ff-asn-group-element') || [])
         .filter(g => g.selected)
-        .map(g => g.element)
+        .map(g => g.element);
 
       if (selected) {
         eventAggregator.addFFEvent({
           type: 'search',
           filter: selected.map(e => `${e.associatedFieldName}:${e.name}`),
-          success: () => {
-            button.classList.remove('btn--pending')
-            button.disabled = true
-          }
-        })
+          success: () => button.disable(),
+        });
       }
     }
 
@@ -52,31 +64,27 @@
       const eventAggregator = event.eventAggregator;
 
       function addButton(e) {
-        const use = e.target.querySelector('ff-asn-group[for-group="Brand"]')
-        const links = use && use.querySelector('[data-container="detailedLinks"]')
+        const use = e.target.querySelector('ff-asn-group[for-group="Brand"]');
+        const links = use && use.querySelector('[data-container="detailedLinks"]');
 
         if (links) {
           // Add "Apply filters" button
-          const button = document.createElement('button')
-          button.textContent = 'Apply filters'
-          button.disabled = true
-          button.classList.add('btn')
-          button.onclick = applyFilters(use, button, eventAggregator)
-          links.parentNode.append(button)
+          const button = createButton();
+          button.onclick = applyFilters(use, button, eventAggregator);
+          button.disable();
+          links.parentNode.append(button);
 
-          document.querySelector('ff-asn').removeEventListener('dom-updated', addButton)
+          document.querySelector('ff-asn').removeEventListener('dom-updated', addButton);
 
           // Deactivate regular behavior (Filter on click)
           eventAggregator.addBeforeDispatchingCallback(function (event) {
             if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
               if (event.filterName) {
-                event.cancel()
-                button.classList.add('btn--pending')
-                button.disabled = false
+                event.cancel();
+                button.enable();
               } else {
                 // Reset filter
-                button.classList.remove('btn--pending')
-                button.disabled = true
+                button.disable();
               }
             }
           })
