@@ -57,6 +57,12 @@
           filter: selected.map(e => `${e.associatedFieldName}:${e.name}`),
           success: () => button.disable(),
         });
+      } else {
+        eventAggregator.addFFEvent({
+          type: 'filter',
+          groupName: group.group.groupName,
+          success: () => button.disable(),
+        });
       }
     }
 
