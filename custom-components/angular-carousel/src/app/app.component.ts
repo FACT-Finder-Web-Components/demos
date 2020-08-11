@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'ffc-root',
   template: `
-    <ff-communication url="https://showcase-phoenix.ff-labs.de/fact-finder"
+    <ff-communication url="https://showcase.ff-labs.de/fact-finder"
                       version="ng"
                       default-query="jacket"
                       channel="Bergfreunde-en"
