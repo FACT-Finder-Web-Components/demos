@@ -31,6 +31,9 @@
   </style>
 
   <script>
+    const difference = (a, b) => a.filter(x => !b.includes(x));
+    const symmetricDifference = (a, b) => difference(a, b).concat(difference(b, a));
+
     function createButton() {
       const button = document.createElement('button');
       button.textContent = 'Apply filters';
@@ -46,12 +49,25 @@
       return button;
     }
 
-    const applyFilters = (group, button, eventAggregator) => () => {
-      const selected = Array.from(group.querySelectorAll('ff-asn-group-element') || [])
-        .filter(g => g.selected)
-        .map(g => g.element);
+    const currentSelection = eventAggregator => filter => {
+      const values = eventAggregator.currentSearchResult.filters.find(f => f.name === filter) || {valueList: []};
+      return values.valueList.map(v => v.value);
+    }
 
-      if (selected) {
+    const pendingSelection = grp => {
+      return Array.from(grp.querySelectorAll('ff-asn-group-element') || []).filter(g => g.selected).map(g => g.element);
+    }
+
+    const hasPending = (group, currentSelection) => {
+      const pending = pendingSelection(group).map(e => e.name);
+      const current = currentSelection('Manufacturer');
+      return symmetricDifference(pending, current);
+    }
+
+    const applyFilters = (group, button, eventAggregator) => () => {
+      const selected = pendingSelection(group);
+
+      if (selected.length) {
         eventAggregator.addFFEvent({
           type: 'search',
           filter: selected.map(e => `${e.associatedFieldName}:${e.name}`),
@@ -60,7 +76,7 @@
       } else {
         eventAggregator.addFFEvent({
           type: 'filter',
-          groupName: group.group.groupName,
+          groupName: group.group.name,
           success: () => button.disable(),
         });
       }
@@ -70,13 +86,13 @@
       const eventAggregator = event.eventAggregator;
 
       function addButton(e) {
-        const use = e.target.querySelector('ff-asn-group[for-group="Brand"]');
-        const links = use && use.querySelector('[data-container="detailedLinks"]');
+        const brand = e.target.querySelector('ff-asn-group[for-group="Brand"]');
+        const links = brand && brand.querySelector('[data-container="detailedLinks"]');
 
         if (links) {
           // Add "Apply filters" button
           const button = createButton();
-          button.onclick = applyFilters(use, button, eventAggregator);
+          button.onclick = applyFilters(brand, button, eventAggregator);
           button.disable();
           links.parentNode.append(button);
 
@@ -87,11 +103,12 @@
             if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
               if (event.filterName) {
                 event.cancel();
-                button.enable();
               } else {
                 // Reset filter
                 button.disable();
               }
+
+              hasPending(brand, currentSelection(eventAggregator)).length ? button.enable() : button.disable();
             }
           })
         }
