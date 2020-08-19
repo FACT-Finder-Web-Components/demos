@@ -103,12 +103,12 @@
             if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
               if (event.filterName) {
                 event.cancel();
+                hasPending(brand, currentSelection(eventAggregator)).length ? button.enable() : button.disable();
               } else {
                 // Reset filter
-                button.disable();
+                event.success = () => button.disable();
               }
 
-              hasPending(brand, currentSelection(eventAggregator)).length ? button.enable() : button.disable();
             }
           })
         }
