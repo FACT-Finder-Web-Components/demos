@@ -68,9 +68,16 @@
       const selected = pendingSelection(group);
 
       if (selected.length) {
+        const groupName = selected[0].associatedFieldName;
+        const params = factfinder.common.parameterStringToDict(location.search.substr(1));
+
         eventAggregator.addFFEvent({
+          ...params,
           type: 'search',
-          filter: selected.map(e => `${e.associatedFieldName}:${e.name}`),
+          filter: Array.from(new Set([
+            ...(params.filter || []).map(f => decodeURIComponent(f)).filter(f => !f.startsWith(`${groupName}:`)),
+            ...selected.map(e => `${e.associatedFieldName}:${e.name}`),
+          ])),
           success: () => button.disable(),
         });
       } else {
