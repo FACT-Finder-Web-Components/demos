@@ -61,7 +61,7 @@
     const hasPending = (group, currentSelection) => {
       const pending = pendingSelection(group).map(e => e.name);
       const current = currentSelection('Manufacturer');
-      return symmetricDifference(pending, current);
+      return symmetricDifference(pending, current).length > 0;
     }
 
     const applyFilters = (group, button, eventAggregator) => () => {
@@ -104,7 +104,7 @@
             if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
               if (event.filterName) {
                 event.cancel();
-                hasPending(brand, currentSelection(eventAggregator)).length ? button.enable() : button.disable();
+                hasPending(brand, currentSelection(eventAggregator)) ? button.enable() : button.disable();
               } else {
                 // Reset filter
                 event.success = () => button.disable();
