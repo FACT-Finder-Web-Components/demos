@@ -55,7 +55,7 @@
     }
 
     const pendingSelection = grp => {
-      return Array.from(grp.querySelectorAll('ff-asn-group-element') || []).filter(g => g.selected).map(g => g.element);
+      return Array.from(grp.querySelectorAll('ff-asn-group-element')).filter(g => g.selected).map(g => g.element);
     }
 
     const hasPending = (group, currentSelection) => {
