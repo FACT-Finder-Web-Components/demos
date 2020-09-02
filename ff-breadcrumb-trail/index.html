@@ -3,56 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <title>Breadcrumb Trail Demo</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="../assets/demo-styles.css">
 
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        main {
+            display: flex;
+            padding: 0 10px;
+        }
+        .filters {
+            flex: 0 0;
+            width: 240px;
+            margin-right: 24px;
+        }
+        .bct-examples {
+            flex: 1 0;
+        }
+        .bct-example {
+            margin-bottom: 36px;
+        }
+        .bct-example-description {
+            font-style: italic;
+        }
+        .advisor-example ff-breadcrumb-trail-item[type="search"] {
+            color: blue;
+        }
+        .advisor-example ff-breadcrumb-trail-item[type="filter"] {
+            color: red;
+        }
+        .advisor-example ff-breadcrumb-trail-item[type="advisor"] {
+            color: orange;
+        }
+        .advisor-answers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+    </style>
 </head>
 <body>
 <!-- Configure the connection to the FF-Search backend and a default query-->
 <ff-communication url="https://showcase.ff-labs.de/fact-finder"
                   version="ng"
                   channel="Bergfreunde-en"
-                  default-query="jacken"
-                  add-params="filterGender=Female"
+                  default-query="jackets"
                   search-immediate
-                  disable-single-hit-redirect="true">
-</ff-communication>
-<ff-searchbox use-suggest="false"><input placeholder="Search..."></ff-searchbox>
+                  disable-single-hit-redirect="true"
+></ff-communication>
 
-<div class="demo">
-    <b>Example 1:</b> You are searching for
-    <ff-breadcrumb-trail unresolved></ff-breadcrumb-trail>
+<div class="searchbar">
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
 </div>
 
-<div class="demo"><b>Example 2:</b> You are searching for
-    <ff-breadcrumb-trail unresolved>
-        <span data-separator>+</span>
-    </ff-breadcrumb-trail>
-</div>
+<main>
+    <div class="filters">
+        <ff-asn unresolved>
+            <ff-asn-group for-group="Categories" collapsible="false" opened></ff-asn-group>
+            <ff-asn-group for-group="all">
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+            </ff-asn-group>
+            <ff-asn-group-slider for-group="Price" class="one-touch-slider">
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
 
-<div class="demo"><b>Example 3:</b> You are searching for
-    <ff-breadcrumb-trail unresolved>
-        <!-- The search item is the content of the search query-->
-        <!-- Be careful to not use triple curly braces here because it would open the door to Cross Site Scripting!
-             The contents of `text` can be provided through the `query` URL parameter and {{{text}}} would be interpreted as HTML.
-             This potentially runs arbitrary JavaScript. -->
-        <ff-breadcrumb-trail-item unresolved type="search">
-            <span>{{text}}</span>
-        </ff-breadcrumb-trail-item>
+                <div data-container="removeFilter">[x] Reset Filter</div>
 
-        <!-- Filter items are set by the URL or over the ASN-->
-        <ff-breadcrumb-trail-item unresolved type="filter">
-            <span>{{text}}</span>
-        </ff-breadcrumb-trail-item>
+                <ff-slider-control submit-on-input="true">
+                    <div class="slider-inputs">
+                        <input data-control='1'>
+                        <input data-control='2'>
+                    </div>
 
-        <!-- Advisor items are included in the breadcrumb when an advisor-campaign is selected-->
-        <ff-breadcrumb-trail-item unresolved type="advisor">
-            <span>{{text}}</span>
-        </ff-breadcrumb-trail-item>
-    </ff-breadcrumb-trail>
-</div>
+                    <ff-slider-one-touch></ff-slider-one-touch>
+                </ff-slider-control>
+            </ff-asn-group-slider>
+        </ff-asn>
+    </div>
+
+    <div class="bct-examples">
+
+        <div class="bct-example">
+            <h3>Example 1:</h3>
+            <p class="bct-example-description">Default templates</p>
+            <ff-breadcrumb-trail unresolved></ff-breadcrumb-trail>
+        </div>
+
+        <div class="bct-example">
+            <h3>Example 2:</h3>
+            <p class="bct-example-description">Custom separator ⇒</p>
+            <ff-breadcrumb-trail unresolved>
+                <span data-separator>⇒</span>
+            </ff-breadcrumb-trail>
+        </div>
+
+        <div class="bct-example advisor-example">
+            <h3>Example 3:</h3>
+            <p class="bct-example-description">Custom item templates</p>
+            <ff-breadcrumb-trail unresolved>
+                <!-- The search item is the content of the search box -->
+                <!-- Be careful to not use triple curly braces here because it would open the door to Cross Site Scripting!
+                     The contents of `text` can be provided through the `query` URL parameter and {{{text}}} would be interpreted as HTML.
+                     This potentially runs arbitrary JavaScript. -->
+                <ff-breadcrumb-trail-item type="search">
+                    <span>SEARCH TERM: {{text}}</span>
+                </ff-breadcrumb-trail-item>
+
+                <!-- Filter items are set by the URL or by the ASN -->
+                <ff-breadcrumb-trail-item type="filter">
+                    <span>FILTER: {{text}}</span>
+                </ff-breadcrumb-trail-item>
+
+                <!-- Advisor items are included in the breadcrumb when an advisor-campaign is selected -->
+                <ff-breadcrumb-trail-item type="advisor">
+                    <span>ADVISOR: {{text}}</span>
+                </ff-breadcrumb-trail-item>
+            </ff-breadcrumb-trail>
+        </div>
+
+
+        <ff-campaign-advisor unresolved>
+            <hr>
+            <em>Advisor Campaign</em>
+            <ff-campaign-advisor-question>
+                <div><h1 data-question>{{{text}}}</h1></div>
+                <div class="advisor-answers">
+                    <ff-campaign-advisor-answer>
+                        {{{text}}}
+                    </ff-campaign-advisor-answer>
+                </div>
+            </ff-campaign-advisor-question>
+        </ff-campaign-advisor>
+    </div>
+
+</main>
 </body>
 </html>

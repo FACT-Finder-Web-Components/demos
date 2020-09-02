@@ -580,3 +580,26 @@ ff-filter-cloud .fc-btn-deselect {
     cursor: pointer;
     padding: 0 .5rem;
 }
+
+
+/*
+    ff-breadcrumb-trail
+*/
+
+ff-breadcrumb-trail [data-separator] {
+    margin-left: .5rem;
+    margin-right: .5rem;
+}
+
+ff-breadcrumb-trail-item {
+    font-weight: 500;
+}
+
+
+/*
+    ff-campaign-advisor-answer
+*/
+
+ff-campaign-advisor-answer {
+    cursor: pointer;
+}
