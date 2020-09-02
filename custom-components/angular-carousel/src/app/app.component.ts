@@ -8,8 +8,7 @@ import { Component } from '@angular/core';
                       default-query="jacket"
                       channel="Bergfreunde-en"
                       search-immediate
-                      mustache-delimiters="[[,]]"
-                      disable-single-hit-redirect="true">
+                      mustache-delimiters="[[,]]">
     </ff-communication>
     <div id="app">
       <ffc-carousel query="hat" class="hats-carousel"></ffc-carousel>
