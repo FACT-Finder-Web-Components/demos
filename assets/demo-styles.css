@@ -519,6 +519,18 @@ ff-slider [slot^=slider] {
     margin-top: -10px;  /* this value is calculated from the button's height and the slider bar's default thickness */
 }
 
+.stars {
+    display: inline-block;
+    vertical-align: bottom;
+    font-size: 24px;
+    pointer-events: none;
+}
+.stars > span:not(:last-child) {
+    margin-right: 3px;
+}
+.stars .star-dim {
+    color: #ededed;
+}
 
 /*
     ff-asn-remove-all-filter
