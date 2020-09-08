@@ -477,31 +477,35 @@ ff-slider-control input {
     text-align: center;
 }
 
-ff-slider-one-touch .ffw-line {
-    height: 5px;
-    background-color: #4bbee9;
-}
-
-ff-slider-one-touch .ffw-slider-button {
-    width: 25px;
-    height: 25px;
-    border: 1px solid #4bbee9;
-    border-radius: 50%;
-    background-color: #fff;
-    transition-property: width, height;
-    transition-duration: .2s;
-    z-index: 1000;
-}
-
-ff-slider-one-touch .ffw-slider-container:hover .ffw-slider-button {
-    width: 30px;
-    height: 30px;
-    transition-duration: .2s;
+ff-slider-one-touch {
+    margin-top: 30px;
+    margin-bottom: 12px;
 }
 
 ff-slider-one-touch .ffw-triangle {
     border-color: transparent transparent #4bbee9;
     opacity: .17;
+}
+
+ff-slider-one-touch .ffw-line {
+    height: 18px;
+    background-color: #ededed;
+    box-sizing: content-box;
+}
+
+ff-slider-one-touch .ffw-selected-range {
+    height: 18px;
+    background-color: #4bbee9;
+    box-sizing: content-box;
+}
+
+ff-slider-one-touch .ffw-slider-button {
+    width: 2px;
+    height: 16px;
+    border: 8px solid #565656;
+    box-sizing: content-box;
+    background-color: #9d9d9d;
+    z-index: 1000;
 }
 
 ff-slider {
