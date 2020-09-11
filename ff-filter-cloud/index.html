@@ -5,6 +5,8 @@
     <title>Filter Cloud Demo</title>
     <link rel="stylesheet" href="../assets/demo-styles.css">
 
+    <script type="module" src="../scripts/star-rating.js"></script>
+
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
@@ -125,6 +127,37 @@
                 <div data-container="detailedLinks">
                     <div data-content="detailedLinks"></div>
                 </div>
+                <div data-container="hiddenLinks">
+                    <div data-content="hiddenLinks"></div>
+                </div>
+
+                <div data-container="removeFilter">[x] Reset Filter</div>
+            </ff-asn-group>
+
+            <ff-asn-group for-group="Rating">
+                <ff-asn-group-element>
+                    <div slot="selected">
+                        <span class="checkbox"></span>
+                        <span class="stars">
+                            {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
+                        </span>
+                    </div>
+
+                    <div slot="unselected">
+                        <span class="checkbox"></span>
+                        <span class="stars">
+                            {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
+                        </span>
+                        <span class="count">({{element.recordCount}})</span>
+                    </div>
+                </ff-asn-group-element>
+
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+                <div data-container="detailedLinks">
+                    <div data-content="detailedLinks"></div>
+                </div>
+
                 <div data-container="hiddenLinks">
                     <div data-content="hiddenLinks"></div>
                 </div>

@@ -5,29 +5,7 @@
     <title>ASN Demo</title>
     <link rel="stylesheet" href="../assets/demo-styles.css">
 
-    <script>
-        document.addEventListener('ffReady', ({resultDispatcher}) => {
-            resultDispatcher.subscribe('asn', addRatingInfo);
-        });
-
-        function addRatingInfo(groups) {
-            if (!groups) return;
-
-            groups.filter(group => group.name === "Rating").forEach(group => {
-                group.elements.concat(group.selectedElements).forEach(el => {
-                    const offset = el.name.match(/^< \d/) ? -1 : 0;
-                    const rating = parseInt(el.name.match(/\d+(\.\d+)?/g)[0]) + offset;
-                    el._stars = ratingToStars(rating);
-                });
-            });
-
-            function ratingToStars(rating) {
-                return Array.from({length: 5}, (_, i) => ({
-                    class: i < rating ? "star-bright" : "star-dim"
-                }));
-            }
-        }
-    </script>
+    <script type="module" src="../scripts/star-rating.js"></script>
 
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
@@ -148,23 +126,6 @@
                 <div data-container="removeFilter">[x] Reset Filter</div>
             </ff-asn-group>
 
-            <ff-asn-group-slider for-group="Price" class="one-touch-slider" opened>
-                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
-
-                <div data-container="removeFilter">[x] Reset Filter</div>
-
-                <ff-slider-control submit-on-input="true">
-                    <div class="slider-inputs">
-                        <input data-control='1'
-                               ssstyle="position: absolute; left: 15px;top:12px;">
-                        <input data-control='2'
-                               ssstyle="position: absolute; right: 15px;top:12px;">
-                    </div>
-
-                    <ff-slider-one-touch></ff-slider-one-touch>
-                </ff-slider-control>
-            </ff-asn-group-slider>
-
             <ff-asn-group for-group="Rating">
                 <ff-asn-group-element>
                     <div slot="selected">
@@ -195,6 +156,23 @@
 
                 <div data-container="removeFilter">[x] Reset Filter</div>
             </ff-asn-group>
+
+            <ff-asn-group-slider for-group="Price" class="one-touch-slider" opened>
+                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
+
+                <div data-container="removeFilter">[x] Reset Filter</div>
+
+                <ff-slider-control submit-on-input="true">
+                    <div class="slider-inputs">
+                        <input data-control='1'
+                               ssstyle="position: absolute; left: 15px;top:12px;">
+                        <input data-control='2'
+                               ssstyle="position: absolute; right: 15px;top:12px;">
+                    </div>
+
+                    <ff-slider-one-touch></ff-slider-one-touch>
+                </ff-slider-control>
+            </ff-asn-group-slider>
 
             <ff-asn-group-slider>
                 <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
