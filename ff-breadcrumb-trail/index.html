@@ -49,7 +49,7 @@
 <ff-communication url="https://showcase.ff-labs.de/fact-finder"
                   version="ng"
                   channel="Bergfreunde-en"
-                  default-query="jackets"
+                  default-query="sale"
                   search-immediate
                   disable-single-hit-redirect="true"
 ></ff-communication>
@@ -107,7 +107,7 @@
 
         <div class="bct-example advisor-example">
             <h3>Example 3:</h3>
-            <p class="bct-example-description">Custom item templates</p>
+            <p class="bct-example-description">Custom item templates with interpreted HTML</p>
             <ff-breadcrumb-trail unresolved>
                 <!-- The search item is the content of the search box -->
                 <!-- Be careful to not use triple curly braces here because it would open the door to Cross Site Scripting!
@@ -124,7 +124,7 @@
 
                 <!-- Advisor items are included in the breadcrumb when an advisor-campaign is selected -->
                 <ff-breadcrumb-trail-item type="advisor">
-                    <span>ADVISOR: {{text}}</span>
+                    <span>ADVISOR: {{{text}}}</span>
                 </ff-breadcrumb-trail-item>
             </ff-breadcrumb-trail>
         </div>
