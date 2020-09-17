@@ -389,6 +389,30 @@ ff-asn-group[filter-style=TREE] [slot=groupCaption] {
     cursor: default;
 }
 
+ff-asn-group [slot=filterSearch] {
+    display: flex;
+    margin-bottom: 1rem;
+    padding-top: .625rem;
+}
+ff-asn-group [slot=filterSearch] input {
+    width: 100%;
+    padding: .375rem 2.5rem .375rem .625rem;
+    box-sizing: border-box;
+    border: 1px solid #b9b9b9;
+}
+ff-asn-group [slot=filterSearch] input::placeholder {
+    font-style: italic;
+    color: #b9b9b9;
+}
+ff-asn-group [slot=filterSearch] svg {
+    position: absolute;
+    right: 0;
+    height: 1.25rem;
+    align-self: center;
+    margin-right: 1.1rem;
+    fill: #b9b9b9;
+}
+
 ff-asn-group-element {
     word-break: break-word !important;
     margin-bottom: 1rem;
@@ -414,6 +438,20 @@ ff-asn [data-container=showLess],
 ff-asn [data-container=removeFilter] {
     cursor: pointer;
     margin-bottom: .625rem;
+    display: flex;
+    align-items: center;
+    font-style: italic;
+    color: #b9b9b9;
+}
+
+ff-asn [data-container=showMore] svg,
+ff-asn [data-container=showLess] svg,
+ff-asn [data-container=removeFilter] svg {
+    width: 1rem;
+    fill: #b9b9b9;
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-right: .625rem;
 }
 
 ff-asn-group,
@@ -433,7 +471,7 @@ ff-asn-group-element .circle {
 }
 
 ff-asn-group-element .checkbox {
-    background-color: #b9b9b9;
+    border: 1px solid #b9b9b9;
     transition: all .3s ease;
 }
 
@@ -444,11 +482,23 @@ ff-asn-group-element .circle {
     transition: all .3s ease;
 }
 
-ff-asn-group-element[selected] .checkbox,
 ff-asn-group-element[selected] .circle,
-ff-asn-group-element:hover .checkbox,
 ff-asn-group-element:hover .circle {
     background: #47bfe9;
+}
+
+ff-asn-group-element[selected] .checkbox svg {
+    fill: #47bfe9;
+}
+
+ff-asn-group-element .color-circle {
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #b9b9b9;
+    vertical-align: middle;
+    margin-right: .3125rem;
 }
 
 ff-asn-group-slider .ffw-sliderSection {
