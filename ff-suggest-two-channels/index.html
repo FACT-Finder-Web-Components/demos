@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Two Channel Suggest Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script>
+        const cmsChannel = `Bergfreunde-de`;
+
+        document.addEventListener(`ffReady`, ({eventAggregator}) => {
+            eventAggregator.addBeforeDispatchingCallback(event => {
+                if (event.type === `suggest` && event.channel !== cmsChannel) {
+                    const cmsResponse = new Promise((resolve) => {
+                        // delayed to prioritize product channel
+                        setTimeout(() => {
+                            eventAggregator.addFFEvent({
+                                ...event,
+                                channel: cmsChannel,
+                                success: resolve,
+                                // custom topic set to not dispatch directly to ff-suggest
+                                topics: () => [`cms-suggest`],
+                            });
+                        });
+                    });
+                    const productResponse = new Promise((resolve) => {
+                       event.success = resolve;
+                    });
+
+                    Promise.all([productResponse, cmsResponse]).then(([productSuggestions, cmsSuggestions]) => {
+                        const contentSuggestions = cmsSuggestions
+                            .filter(s => s.type === `productName`)
+                            .map(s => ({...s, type: `content`}));
+                        document.querySelector(`ff-suggest`).suggestItems = productSuggestions.concat(contentSuggestions);
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+</head>
+<body>
+
+<ff-communication
+        url="https://showcase.ff-labs.de/fact-finder"
+        version="ng"
+        channel="Bergfreunde-en"
+
+        currency-code="EUR"
+        currency-country-code="de-DE"
+
+        default-query="wome"
+
+        disable-single-hit-redirect="true"
+></ff-communication>
+
+<div class="searchbar">
+    <ff-searchbox>
+        <input placeholder="Search..."/>
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+
+
+    <ff-suggest layout="block" unresolved>
+        <section id="searchContainer" class="search-terms-container">
+            <div data-container="searchTerm">
+                <h2 class="container-caption">Search terms</h2>
+                <ff-suggest-item type="searchTerm">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+
+            <div data-container="category">
+                <h2 class="container-caption">Categories</h2>
+                <ff-suggest-item type="category">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+
+            <div data-container="brand">
+                <h2 class="container-caption">Brands</h2>
+                <ff-suggest-item type="brand">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+
+            <div data-container="content">
+                <h2 class="container-caption">Content</h2>
+                <ff-suggest-item type="content">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+        </section>
+
+        <section id="productContainer" class="products-container">
+            <div data-container="productName">
+                <h2 class="container-caption">Products</h2>
+                <div class="suggest-images">
+                    <ff-suggest-item type="productName">
+                        <div class="product-image">
+                            <img data-image>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">{{{name}}}</div>
+                        </div>
+                    </ff-suggest-item>
+                </div>
+            </div>
+            <div class="all-results-container">
+                <ff-searchbutton>
+                    <button>Show all results</button>
+                </ff-searchbutton>
+            </div>
+        </section>
+    </ff-suggest>
+</div>
+</body>
+</html>
