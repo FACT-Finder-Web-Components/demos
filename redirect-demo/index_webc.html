@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Redirect Demo</title>
+    <title>WebComponents Redirect Demo</title>
     <link rel="stylesheet" href="../ff-suggest_suggestToSearch/styles.css">
 
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
@@ -12,16 +12,17 @@
 </head>
 <body>
 <!-- basic connection configuration-->
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  channel="Bergfreunde-en"
-                  disable-single-hit-redirect="true">
-</ff-communication>
+                  api="v3"
+                  channel="demo-bergfreunde-en"
+                  disable-single-hit-redirect="true"
+></ff-communication>
 
 <h1>Page without the Product Visualization but with Suggest etc.</h1>
 <p>
-    This page will redirect to a Page implemented with Web Components an will trigger a search for the value in the
-    input Field.
+    This page will redirect to a page implemented with Web Components and will trigger a search for the value in the
+    input field.
 </p>
 <ff-searchbox>
     <input type="text" id="searchbox" placeholder="Search...">
@@ -81,7 +82,6 @@
     });
 
     document.querySelector("ff-suggest").addEventListener("suggest-item-clicked", function (event) {
-        console.log("bleh");
         if (event.detail.type === "searchTerm" || event.detail.type === "category") {
             let searchParams = event.detail.suggestion.searchParams.split("?")[1];
             searchParams += "&queryFromSuggest=true";

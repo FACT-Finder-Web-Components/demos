@@ -15,16 +15,17 @@
   <link rel="stylesheet" href="../carousel.css">
 </head>
 <body>
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
+                  api="v3"
+                  channel="demo-bergfreunde-en"
                   currency-code="EUR"
                   currency-country-code="en-GB"
+                  only-search-params="true"
                   default-query="jacket"
                   search-immediate
-                  only-search-params="true"
                   disable-single-hit-redirect="true"
-                  channel="Bergfreunde-en">
-</ff-communication>
+></ff-communication>
 <div id="app"></div>
 </body>
 </html>

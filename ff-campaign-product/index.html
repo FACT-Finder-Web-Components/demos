@@ -12,11 +12,12 @@
     <link rel="stylesheet" href="../demo-styles.css">
 </head>
 <body>
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  channel="Bergfreunde-en"
-                  disable-single-hit-redirect="true">
-</ff-communication>
+                  api="v3"
+                  channel="demo-bergfreunde-en"
+                  disable-single-hit-redirect="true"
+></ff-communication>
 
 <ff-searchbox use-suggest="false"><input placeholder="Search..."></ff-searchbox>
 <ff-searchbutton><button>Search</button></ff-searchbutton>

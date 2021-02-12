@@ -97,7 +97,7 @@
       const eventAggregator = event.eventAggregator;
 
       function addButton(e) {
-        const brand = e.target.querySelector('ff-asn-group[for-group="Brand"]');
+        const brand = e.target.querySelector('ff-asn-group[for-group="Manufacturer"]');
         const links = brand && brand.querySelector('[data-container="detailedLinks"]');
 
         if (links) {
@@ -149,9 +149,10 @@
   <!-- use with viewBox="2 2 12 12" -->
   <path id="icon-check" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
 </svg>
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  channel="Bergfreunde-en"
+                  api="v3"
+                  channel="demo-bergfreunde-en"
                   currency-code="EUR"
                   currency-country-code="de-DE"
                   default-query="boots"
@@ -289,7 +290,7 @@
         </div>
       </ff-asn-group>
 
-      <ff-asn-group for-group="Brand" not-searchable>
+      <ff-asn-group for-group="Manufacturer" not-searchable>
         <ff-asn-group-element>
           <div slot="selected">
                         <span class="checkbox">
@@ -449,7 +450,7 @@
         <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
            data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
           <div class="record-img">
-            <img data-image="https://showcase-phoenix.ff-labs.de/demoshop-images/{{record.ImageName}}">
+            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
           </div>
           <div class="record-product-info">
             <h3 class="record-product-name">
