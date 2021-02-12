@@ -19,7 +19,7 @@
             const ids = [];
             const records = document.querySelectorAll("#selectList > .selected");
             records.forEach(function (rec) {
-                ids.push(rec.recordData.id);
+                ids.push(rec.recordData.record.ArticleNumber);
             });
             const compareElement = document.querySelector("#compareList");
             //FYI: this would work if the ff-compare has the 'auto-compare' attribute set to true, default is false
@@ -64,12 +64,13 @@
     </style>
 </head>
 <body>
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  channel="Bergfreunde-en"
+                  api="v4"
+                  channel="demo-bergfreunde-en"
                   default-query="jacke"
-                  search-immediate>
-</ff-communication>
+                  search-immediate
+></ff-communication>
 
 <ff-searchbox use-suggest="false" unresolved>
     <input placeholder="Search..."/>

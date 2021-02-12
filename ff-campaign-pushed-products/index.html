@@ -12,16 +12,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  channel="Bergfreunde-en"
-                  default-query="sale"
-                  search-immediate>
-</ff-communication>
+                  api="v4"
+                  channel="demo-bergfreunde-en"
+                  default-query="climbing gear"
+                  search-immediate
+></ff-communication>
 
 <ff-searchbox use-suggest="false"><input placeholder="Search..."></ff-searchbox>
 <ff-searchbutton><button>Search</button></ff-searchbutton>
-<p>Search for <b>sale</b> to trigger the Pushed Products campaign</p>
+<p>Search for <b>climbing gear</b> to trigger the Pushed Products campaign</p>
 
 <ff-campaign-pushed-products unresolved>
     <span id="productCampaignCaption">Product Campaign</span>

@@ -3,13 +3,14 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'ffc-root',
   template: `
-    <ff-communication url="https://showcase.ff-labs.de/fact-finder"
+    <ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                       version="ng"
+                      api="v4"
+                      channel="demo-bergfreunde-en"
+                      mustache-delimiters="[[,]]"
                       default-query="jacket"
-                      channel="Bergfreunde-en"
                       search-immediate
-                      mustache-delimiters="[[,]]">
-    </ff-communication>
+    ></ff-communication>
     <div id="app">
       <ffc-carousel query="hat" class="hats-carousel"></ffc-carousel>
       <ff-record-list>

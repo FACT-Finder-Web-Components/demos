@@ -62,10 +62,11 @@
 <body>
 
 <!-- Configure the connection to the FF-Search backend and a default query-->
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  channel="Bergfreunde-en">
-</ff-communication>
+                  api="v4"
+                  channel="demo-bergfreunde-en"
+></ff-communication>
 
 <ff-searchbox>
     <input placeholder="Search..."
@@ -76,21 +77,21 @@
 <ff-suggest layout="list" unresolved>
     <section id="searchContainer" class="searchTermContainer">
         <div data-container="searchTerm">
-            <p class="containerCaption">Suchvorschläge</p>
+            <p class="containerCaption">Search terms</p>
             <ff-suggest-item type="searchTerm">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="category">
-            <p class="containerCaption">Kategorievorschläge</p>
+            <p class="containerCaption">Categories</p>
             <ff-suggest-item type="category">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="brand">
-            <p class="containerCaption">Marken</p>
+            <p class="containerCaption">Brands</p>
             <ff-suggest-item type="brand">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
@@ -99,7 +100,7 @@
 
     <section id="productContainer" class="productsContainer">
         <div data-container="productName">
-            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <p class="containerCaption">Products</p>
             <div>
                 <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
                     <img data-image>
@@ -110,7 +111,7 @@
                     </div>
                     <!-- Price and availability-->
                     <div class="product-right">
-                        <div class="product-price">{{attributes.Price}}€</div>
+                        <div class="product-price">{{attributes.Price}}</div>
                         <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
                     </div>
                 </ff-suggest-item>
