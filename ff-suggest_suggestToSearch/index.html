@@ -16,13 +16,15 @@
 <body>
 <h1>Use the search API for product suggestions</h1>
 <!-- Configure the connection to the FF-Search backend and a default query-->
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  default-query="trou"
+                  api="v4"
+                  channel="demo-bergfreunde-en"
+
                   use-url-parameter="false"
-                  channel="Bergfreunde-en"
-                  search-immediate>
-</ff-communication>
+                  default-query="trou"
+                  search-immediate
+></ff-communication>
 
 <ff-searchbox>
     <input placeholder="Search..."/>
@@ -35,21 +37,21 @@
 <ff-suggest unresolved layout="list">
     <section id="searchContainer" class="searchTermContainer">
         <div data-container="searchTerm">
-            <p class="containerCaption">Suchvorschläge</p>
+            <p class="containerCaption">Search terms</p>
             <ff-suggest-item type="searchTerm">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="category">
-            <p class="containerCaption">Kategorievorschläge</p>
+            <p class="containerCaption">Categories</p>
             <ff-suggest-item type="category">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
         </div>
 
         <div data-container="brand">
-            <p class="containerCaption">Marken</p>
+            <p class="containerCaption">Brands</p>
             <ff-suggest-item type="brand">
                 <span>{{{name}}}</span>
             </ff-suggest-item>
@@ -58,7 +60,7 @@
 
     <section id="productContainer" class="productsContainer">
         <div data-container="productName">
-            <p class="containerCaption">Vorgeschlagene Produkte</p>
+            <p class="containerCaption">Products</p>
             <div>
                 <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
                     <img data-image>

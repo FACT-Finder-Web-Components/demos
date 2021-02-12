@@ -94,7 +94,7 @@
                         price: 100,
                         currency: "€"
                     },
-                    image: '<img src="" width="200" height="200">'
+                    image: '<img src="defaultSocks.jpg" width="215" height="215">'
                 }
             };
         }
@@ -124,12 +124,13 @@
 
 <div class="example">
 
-    <ff-communication url="https://showcase.ff-labs.de/fact-finder"
+    <ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                       version="ng"
+                      api="v4"
+                      channel="demo-bergfreunde-en"
                       default-query="backpack"
-                      channel="Bergfreunde-en"
-                      search-immediate>
-    </ff-communication>
+                      search-immediate
+    ></ff-communication>
     <p>Access the values from the search result</p>
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..."/>

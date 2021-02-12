@@ -28,14 +28,16 @@
     </style>
 </head>
 <body>
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
+<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                   version="ng"
-                  channel="Bergfreunde-en"
+                  api="v4"
+                  channel="demo-bergfreunde-en"
                   only-search-params
                   currency-code="EUR"
                   currency-country-code="en-GB"
+                  default-query="backpack"
                   search-immediate
-                  default-query="socks">
+>
     <ff-middleware>
         <ff-product-teaser-campaign-processor></ff-product-teaser-campaign-processor>
     </ff-middleware>
