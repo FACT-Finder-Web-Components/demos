@@ -35,7 +35,7 @@ document.addEventListener('ffReady', ({resultDispatcher}) => {
 function asnColors(groups) {
     if (!groups) return;
 
-    groups.filter(group => group.name === "Color").forEach(group => {
+    groups.filter(group => group.associatedFieldName === "BaseColor").forEach(group => {
         group.elements.concat(group.selectedElements).forEach(el => {
             el._color = colorToCSS(el.name);
         });
