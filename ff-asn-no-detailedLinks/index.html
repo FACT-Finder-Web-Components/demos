@@ -336,12 +336,12 @@
     ffAsn.addEventListener('dom-updated', () => {
         ffAsn.querySelectorAll('ff-asn-group').forEach(ffAsnGroup => {
             // simulates "Max. number of displayed filter elements" = 0 filter setting
-            if (ffAsnGroup.group.name === "Color") ffAsnGroup.group.detailedLinks = 0;
+            if (ffAsnGroup.group.associatedFieldName  === "BaseColor") ffAsnGroup.group.detailedLinks = 0;
 
             if (ffAsnGroup.group.detailedLinks === 0 && ffAsnGroup.group.selectedElements.length === 0) {
                 ffAsnGroup.group = {...ffAsnGroup.group, detailedLinks: 9999};
-                if (!dontAutohide[ffAsnGroup.group.name]) {
-                    dontAutohide[ffAsnGroup.group.name] = true;
+                if (!dontAutohide[ffAsnGroup.group.associatedFieldName]) {
+                    dontAutohide[ffAsnGroup.group.associatedFieldName] = true;
                     setTimeout(() => ffAsnGroup.hide(false));
                 }
             }
