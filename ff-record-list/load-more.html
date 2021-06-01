@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Record List Demo</title>
+  <link rel="stylesheet" href="../assets/demo-styles.css">
+  <script src="../assets/scripts.js"></script>
+
+  <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+  <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+  <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+  <script>
+    document.addEventListener(`ffReady`, ({ factfinder }) => {
+      let loadedRecords = [];
+      let pageNumPrev;
+      let pageNumNext;
+
+      const ffRecordList = document.querySelector(`ff-record-list`);
+      const previousButtonContainer = document.querySelector(`#previous-button`);
+      const nextButtonContainer = document.querySelector(`#next-button`);
+
+
+      previousButtonContainer.querySelector(`button`).addEventListener(`click`, previousPage);
+      nextButtonContainer.querySelector(`button`).addEventListener(`click`, nextPage);
+
+
+      factfinder.communication.ResultDispatcher.subscribe(`records`, records => {
+        const paging = factfinder.communication.EventAggregator.currentSearchResult.paging;
+
+        console.log(`records`, paging.currentPage, records);
+
+        loadedRecords = records;
+        // Not assigning to ff-record-list here because it already received the data through the default 'records' topic.
+
+        pageNumPrev = paging.currentPage - 1;
+        pageNumNext = paging.currentPage + 1;
+
+        previousButtonContainer.hidden = pageNumPrev < 1;
+        nextButtonContainer.hidden = pageNumNext > paging.pageCount;
+      });
+
+      factfinder.communication.ResultDispatcher.subscribe(`previousPage`, result => {
+        const paging = result.searchResult.paging;
+
+        console.log(`previousPage`, paging.currentPage, result.searchResult.records);
+
+        // It is important to create a new array instance here or ff-record-list will not notice the change.
+        loadedRecords = [...result.searchResult.records, ...loadedRecords];
+        ffRecordList.records = loadedRecords;
+
+        pageNumPrev = paging.currentPage - 1;
+
+        if (pageNumPrev < 1) {
+          previousButtonContainer.hidden = true;
+        }
+      });
+
+      factfinder.communication.ResultDispatcher.subscribe(`nextPage`, result => {
+        const paging = result.searchResult.paging;
+
+        console.log(`nextPage`, paging.currentPage, result.searchResult.records);
+
+        // It is important to create a new array instance here or ff-record-list will not notice the change.
+        loadedRecords = [...loadedRecords, ...result.searchResult.records];
+        ffRecordList.records = loadedRecords;
+
+        pageNumNext = paging.currentPage + 1;
+
+        if (pageNumNext > paging.pageCount) {
+          nextButtonContainer.hidden = true;
+        }
+      });
+
+
+      function previousPage() {
+        factfinder.communication.EventAggregator.addFFEvent({
+          type: `paging`,
+          number: pageNumPrev,
+          topics: () => [`previousPage`],
+        });
+      }
+
+      function nextPage() {
+        factfinder.communication.EventAggregator.addFFEvent({
+          type: `paging`,
+          number: pageNumNext,
+          topics: () => [`nextPage`],
+        });
+      }
+    });
+  </script>
+
+  <style>
+    .load-more {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .load-more button {
+      width: 40%;
+      padding: .375rem .75rem;
+      background-color: #004587;
+      border: 1px solid #004587;
+      line-height: 1.25rem;
+      color: #fff;
+      text-align: center;
+      vertical-align: middle;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .load-more button:hover {
+      background-color: #003669;
+    }
+  </style>
+</head>
+<body>
+
+<ff-communication
+        url="https://ng-search-web-components.fact-finder.de/fact-finder"
+        version="ng"
+        api="v4"
+        channel="demo-bergfreunde-en"
+
+        currency-code="EUR"
+        currency-country-code="de-DE"
+
+        default-query="cooking"
+        search-immediate
+></ff-communication>
+
+<div class="searchbar">
+  <ff-searchbox use-suggest="false">
+    <input placeholder="Search..." autofocus />
+    <ff-searchbutton>
+      <button>
+        <span class="icon-search"></span>
+      </button>
+    </ff-searchbutton>
+  </ff-searchbox>
+</div>
+
+<div id="previous-button" class="load-more" hidden>
+  <button>Load previous</button>
+</div>
+
+<ff-record-list unresolved>
+  <ff-record>
+    <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
+       data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
+      <div class="record-img">
+        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+      </div>
+      <div class="record-product-info">
+        <h3 class="record-product-name">
+          {{record.Title}}
+        </h3>
+        <div class="record-product-brand">{{record.Manufacturer}}</div>
+        <div class="record-product-price">{{record.Price}}</div>
+      </div>
+    </a>
+    <div class="record-product-add-to-cart">
+      <button onclick="addToCart(event)">Add to Cart</button>
+    </div>
+  </ff-record>
+</ff-record-list>
+
+<div id="next-button" class="load-more" hidden>
+  <button>Load next</button>
+</div>
+
+</body>
+</html>
