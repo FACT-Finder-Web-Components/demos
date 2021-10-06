@@ -419,18 +419,39 @@ ff-asn-group-element {
     cursor: pointer;
 }
 
-ff-asn-group-element:hover {
-    color: #2c72ac;
-}
-
 ff-asn-group-element.clusterLevel1 {
     padding-left: .75em;
 }
 ff-asn-group-element.clusterLevel2 {
     padding-left: 1.5em;
 }
+ff-asn-group-element.clusterLevel3 {
+    padding-left: 2.25em;
+}
+ff-asn-group-element.clusterLevel4 {
+    padding-left: 3em;
+}
+ff-asn-group-element.clusterLevel5 {
+    padding-left: 3.75em;
+}
+
+ff-asn-group-element:not([fixed]):not([implicit]):hover {
+    color: #2c72ac;
+}
+ff-asn-group-element[fixed] {
+    color: #aaa;
+}
+
 ff-asn-group-element[selected] {
     font-weight: 500;
+}
+
+ff-asn-group-element[fixed],
+ff-asn-group-element[implicit] {
+    cursor: default;
+}
+ff-asn-group-element[implicit] {
+    font-style: italic;
 }
 
 ff-asn [data-container=showMore],
