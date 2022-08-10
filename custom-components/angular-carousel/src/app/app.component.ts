@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: `
     <ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
                       version="ng"
-                      api="v4"
+                      api="v5"
                       channel="demo-bergfreunde-en"
                       mustache-delimiters="[[,]]"
                       default-query="jacket"
