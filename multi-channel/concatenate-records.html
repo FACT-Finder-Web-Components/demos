@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multi-Channel Concatenated Records</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <style>
+        body {
+            width: 1040px;
+        }
+        main {
+            display: flex;
+            padding: 0 10px;
+        }
+        .filters {
+            flex: 0 0;
+            width: 240px;
+            margin-right: 10px;
+        }
+        .products-listing {
+            flex: 1 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 10px;
+            margin-bottom: 2rem;
+        }
+
+        ff-searchbox {
+            border-color: #b9b9b9;
+        }
+
+        ff-sortbox {
+            border: 1px solid #b9b9b9;
+            min-width: 200px;
+            position: relative;
+        }
+        ff-sortbox[opened] .ffw-dropdown-container {
+            border: 1px solid #b9b9b9;
+            left: -1px;
+            right: -1px;
+        }
+        ff-sortbox-item {
+            padding: 10px;
+            min-width: 200px;
+        }
+        ff-sortbox[opened] .ffw-dropdown-container ff-sortbox-item:hover {
+            color: #2c72ac;
+        }
+        ff-sortbox-item.ffw-selected {
+            font-weight: bold;
+            min-width: 200px;
+        }
+
+        ff-paging-item {
+            padding: 10px;
+        }
+        ff-paging-item:hover {
+            color: #2c72ac;
+        }
+
+        ff-products-per-page-list {
+            border: 1px solid #b9b9b9;
+        }
+        ff-products-per-page-list .ffw-selected {
+            font-weight: bold;
+        }
+        ff-products-per-page-item {
+            padding: 10px;
+        }
+        ff-products-per-page-item:hover {
+            color: #2c72ac;
+        }
+
+        ff-record-list {
+            margin-right: -10px;
+        }
+        ff-record {
+            position: relative;
+        }
+        ff-record .tag-secondary {
+            position: absolute;
+            top: 120px;
+            transform: rotate(-15deg);
+            width: 100%;
+            text-align: center;
+            text-shadow: 1px 1px #f00;
+        }
+    </style>
+
+    <script>
+        document.addEventListener(`ffReady`, event => {
+            const factfinder = event.factfinder;
+
+            // List of secondary channels that shall be queried with every search request.
+            // Any number of channels works.
+            // Results will be appended to the primary channel's results in the order of this list.
+            const secondaryChannels = [
+                `Bergfreunde-de`,
+            ];
+            const isSecondaryChannel = channel => secondaryChannels.includes(channel);
+
+
+            factfinder.communication.EventAggregator.addBeforeHistoryPushCallback((response, event, url) => {
+                // Primary channel handler
+
+                if (isSecondaryChannel(event.channel)) return;
+
+
+                const { decodeDict, urlStringToDict } = factfinder.common;
+                // Extracting 'cancel' property to prevent a warning from being emitted further down the line.
+                const { cancel, ...eventProps } = event;
+
+                const secondaryEvent = {
+                    ...eventProps,
+                    ...decodeDict(urlStringToDict(url)),
+                };
+
+                Promise.all(secondaryChannels.map(channel => requestToSecondaryChannel(secondaryEvent, channel)))
+                    .then(([...responses]) => {
+                        const secondaryRecords = responses.reduce((records, resp) => records.concat(resp.secondaryChannelResult.records), []);
+                        const combinedRecords = response.searchResult.records.concat(secondaryRecords);
+
+                        const recList = document.querySelector(`ff-record-list`);
+                        recList.records = combinedRecords;
+                    });
+            });
+
+            factfinder.communication.EventAggregator.addBeforeHistoryPushCallback((response, event) => {
+                // Secondary channel handler
+
+                if (!isSecondaryChannel(event.channel)) return;
+
+
+                // Renaming 'searchResult' prevents secondary channel results from overwriting 'currentSearchResult' which shall always contain the primary channel's result.
+                response.secondaryChannelResult = response.searchResult;
+                delete response.searchResult;
+
+                // Specifying 'topics' prevents the result from being auto-dispatched to the WebComponents' default topics.
+                // For the secondary channels, we don't want the result to be auto-dispatched to any topic because we will do it manually.
+                event.topics = () => [];
+
+                // Prevent the addition of a browser history entry.
+                return false;
+            });
+        });
+
+
+        function requestToSecondaryChannel(event, channel) {
+            return new Promise(resolve => {
+                factfinder.communication.EventAggregator.addFFEvent({
+                    ...event,
+                    type: `search`,
+                    channel,
+
+                    // Optimizations to reduce workload on FACT-Finder and bandwidth usage.
+                    useAsn: false,
+                    useCampaigns: false,
+
+                    success: resolve,
+                });
+            }).then(response => {
+                // OPTIONAL: Add data to identify the record's origin. For highlighting in the HTML template.
+                response.secondaryChannelResult.records.forEach(rec => {
+                    rec.record._channel = response.secondaryChannelResult.channel;
+                });
+                return response;
+            });
+        }
+    </script>
+
+    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+</head>
+
+<body>
+
+<ff-communication
+        url="https://showcase.ff-labs.de/fact-finder"
+        version="ng"
+        api="v4"
+        channel="Bergfreunde-en"
+        default-query="shirt"
+        search-immediate
+></ff-communication>
+
+
+<div class="searchbar">
+    <ff-searchbox use-suggest="false" unresolved>
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+</div>
+
+<main>
+    <div class="filters">
+        <ff-asn unresolved></ff-asn>
+    </div>
+    <div class="products-listing">
+        <div class="controls">
+            <ff-sortbox unresolved></ff-sortbox>
+            <ff-paging unresolved>
+                <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
+            </ff-paging>
+            <ff-products-per-page-list unresolved></ff-products-per-page-list>
+        </div>
+
+        <!-- Set subscribe="false" to avoid auto-rendering after the primary channel's request returns. -->
+        <!-- We only want to render the concatenated result which we dispatch manually. -->
+        <ff-record-list subscribe="false" unresolved>
+            <ff-record>
+                <div class="record-img">
+                    <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+                </div>
+                <div class="record-product-info">
+                    <h3 class="record-product-name">
+                        {{record.Title}}
+                    </h3>
+                    <div class="record-product-brand">{{record.Manufacturer}}</div>
+                    <div class="record-product-price">{{record.Price}}</div>
+                </div>
+                <div class="record-product-add-to-cart">
+                    <button>Add to Cart</button>
+                </div>
+                {{#record._channel}}
+                <div class="tag-secondary">From secondary channel</div>
+                {{/record._channel}}
+            </ff-record>
+        </ff-record-list>
+    </div>
+</main>
+
+</body>
+</html>
