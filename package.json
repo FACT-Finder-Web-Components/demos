@@ -9,7 +9,7 @@
     "Demo"
   ],
   "dependencies": {
-    "ff-web-components": "https://github.com/FACT-Finder-Web-Components/ff-web-components.git#4.2.2"
+    "ff-web-components": "https://github.com/FACT-Finder-Web-Components/ff-web-components.git#4.2.5"
   },
   "devDependencies": {
     "connect": "^3.7.0",
