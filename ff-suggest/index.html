@@ -8,6 +8,16 @@
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener(`ffCommunicationReady`, ({ factfinder }) => {
+            factfinder.communication.EventAggregator.addBeforeDispatchingCallback(event => {
+                if (event.type === `search`) {
+                    document.querySelector(`ff-suggest`).hideSelf();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -24,7 +34,7 @@
 ></ff-communication>
 
 <div class="searchbar">
-    <ff-searchbox>
+    <ff-searchbox hide-suggest-onblur="false">
         <input placeholder="Search..." />
         <ff-searchbutton>
             <button>
@@ -34,7 +44,7 @@
     </ff-searchbox>
 
 
-    <ff-suggest layout="block" unresolved>
+    <ff-suggest layout="block" hide-onblur="true" unresolved>
         <section id="searchContainer" class="search-terms-container">
             <div data-container="searchTerm">
                 <h2 class="container-caption">Search terms</h2>
