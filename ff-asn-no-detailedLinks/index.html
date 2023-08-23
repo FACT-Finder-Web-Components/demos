@@ -30,6 +30,15 @@
             margin-right: -10px;
         }
     </style>
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = "https://ng-search-web-components.fact-finder.de/fact-finder";
+            defs.api = "v5";
+            defs.channel = "demo-bergfreunde-en";
+            factfinder.request.search({ query: `boots` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+    </script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" display="none">
@@ -51,19 +60,6 @@
     <!-- use with viewBox="2 2 12 12" -->
     <path id="icon-check" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
 </svg>
-<ff-communication
-        url="https://ng-search-web-components.fact-finder.de/fact-finder"
-        version="ng"
-        api="v5"
-        channel="demo-bergfreunde-en"
-
-        currency-code="EUR"
-        currency-country-code="de-DE"
-
-        default-query="boots"
-        search-immediate
-></ff-communication>
-
 <div class="searchbar">
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..." autofocus />
@@ -91,13 +87,13 @@
                         <span class="checkbox">
                             <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
                         </span>
-                        {{{element.name}}}&nbsp;{{group.unit}}
+                        {{{element.text}}}&nbsp;{{group.unit}}
                     </div>
 
                     <div slot="unselected">
                         <span class="checkbox"></span>
-                        <span>{{{element.name}}}&nbsp;{{group.unit}}</span>
-                        <span>({{element.recordCount}})</span>
+                        <span>{{{element.text}}}&nbsp;{{group.unit}}</span>
+                        <span>({{element.totalHits}})</span>
                     </div>
                 </ff-asn-group-element>
 
@@ -128,9 +124,9 @@
 
             <ff-asn-group filter-style="TREE" collapsible="false" not-searchable opened>
                 <ff-asn-group-element>
-                    <div slot="selected">{{{element.name}}}&nbsp;{{group.unit}}</div>
+                    <div slot="selected">{{{element.text}}}&nbsp;{{group.unit}}</div>
                     <div slot="unselected">
-                        <p>{{{element.name}}}&nbsp;{{group.unit}} <span class="count">({{element.recordCount}})</span>
+                        <p>{{{element.text}}}&nbsp;{{group.unit}} <span class="count">({{element.totalHits}})</span>
                         </p>
                     </div>
                 </ff-asn-group-element>
@@ -159,13 +155,13 @@
 
                 <ff-asn-group-element>
                     <div slot="selected">
-                        <span class="circle"></span> {{{element.name}}}&nbsp;{{group.unit}}
+                        <span class="circle"></span> {{{element.text}}}&nbsp;{{group.unit}}
                     </div>
 
                     <div slot="unselected">
                         <span class="circle"></span>
-                        <span>{{{element.name}}}&nbsp;{{group.unit}}</span>
-                        <span>({{element.recordCount}})</span>
+                        <span>{{{element.text}}}&nbsp;{{group.unit}}</span>
+                        <span>({{element.totalHits}})</span>
                     </div>
                 </ff-asn-group-element>
 
@@ -200,16 +196,16 @@
                             <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
                         </span>
                         <span class="stars">
-                            {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
+                            {{element.text}}}
                         </span>
                     </div>
 
                     <div slot="unselected">
                         <span class="checkbox"></span>
-                        <span class="stars">
-                            {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
+                        <span>
+                            {{element.text}}
                         </span>
-                        <span class="count">({{element.recordCount}})</span>
+                        <span class="count">({{element.totalHits}})</span>
                     </div>
                 </ff-asn-group-element>
 
@@ -231,19 +227,19 @@
 
             <ff-asn-group for-group="BaseColor" not-searchable opened>
                 <ff-asn-group-element>
-                    <div slot="selected">
+                    <div slot="selected" style="display:flex; align-items: center;">
                         <span class="checkbox">
                             <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
                         </span>
-                        <span class="color-circle" style="background-color: {{element._color}}"> </span>
-                        {{{element.name}}}
+                        <img src="{{element.previewImageURL}}" style="margin-right: 16px;margin-left:16px"/>
+                        {{{element.text}}}
                     </div>
 
-                    <div slot="unselected">
+                    <div slot="unselected" style="display:flex; align-items: center;">
                         <span class="checkbox"></span>
-                        <span class="color-circle" style="background-color: {{element._color}}"> </span>
-                        <span>{{{element.name}}}</span>
-                        <span>({{element.recordCount}})</span>
+                        <img src="{{element.previewImageURL}}" style="margin-right: 16px;margin-left: 16px"/>
+                        <span>{{{element.text}}}</span>
+                        <span>({{element.totalHits}})</span>
                     </div>
                 </ff-asn-group-element>
 
@@ -310,14 +306,14 @@
                 <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                    data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
                     <div class="record-img">
-                        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+                        <img data-image="{{variantValues.0.ImageURL}}">
                     </div>
                     <div class="record-product-info">
                         <h3 class="record-product-name">
                             {{record.Title}}
                         </h3>
-                        <div class="record-product-brand">{{record.Manufacturer}}</div>
-                        <div class="record-product-price">{{record.Price}}</div>
+                        <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                        <div class="record-product-price">{{variantValues.0.Price}}</div>
                     </div>
                 </a>
                 <div class="record-product-add-to-cart">
