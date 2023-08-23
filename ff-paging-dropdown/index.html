@@ -29,16 +29,23 @@
             background-color: lightgray;
         }
     </style>
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.config.debug = true;
+
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+    </script>
 </head>
 <body>
-<!-- basic connection configuration-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate="true"
-></ff-communication>
+
 <div>
     <div id="demo-header">
 
@@ -50,21 +57,23 @@
             <h2>Paging Dropdown 1</h2>
             <p>This is a simple paging:</p>
             <ff-paging-dropdown collapse-onblur show-selected unresolved>
-                <ff-paging-item>{{caption}}</ff-paging-item>
+                <ff-paging-item>{{page}}</ff-paging-item>
             </ff-paging-dropdown>
         </div>
 
         <ff-record-list unresolved>
             <ff-record>
-                <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-                <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-                   data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                    {{record.Title}}
+                <img data-image="{{variantValues.0.ImageURL}}">
+                <a data-anchor="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}"
+                   data-redirect="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                    {{variantValues.0.Title}}
                 </a>
 
-                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
                 </div>
             </ff-record>
         </ff-record-list>
+    </div>
+</div>
 </body>
 </html>

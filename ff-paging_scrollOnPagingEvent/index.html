@@ -9,15 +9,6 @@
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
-    <script>
-        document.addEventListener("ffReady", function(event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("paging", function (resultData, event) {
-                window.scrollTo(0, 0); // or get and scroll a specific scrollbar
-            });
-        })
-    </script>
-
     <style>
         [unresolved] {
             display: none;
@@ -28,42 +19,65 @@
             padding: 0.5em;
         }
     </style>
+    <script>
+        let page = 1
+
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.config.debug = true;
+
+            factfinder.response.subscribeSearch((e) => {
+                if (e.paging.currentPage !== page) {
+                    page = e.paging.currentPage
+                    document.getElementById('ff-record-list').scrollIntoView({behavior: "smooth"})
+                    // you can specify any element to scroll to by custom ID or just use window.scrollTo() with desired coordinates
+                    // for example:
+                    // window.scrollTo(0, 0);
+                }
+            });
+
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+
+
+
+
+    </script>
 </head>
 <body>
-    <!-- basic connection configuration-->
-    <ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                      version="ng"
-                      api="v5"
-                      channel="demo-bergfreunde-en"
-                      default-query="trousers"
-                      search-immediate="true"
-    ></ff-communication>
+
 
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..."/>
     </ff-searchbox>
 
 
-    <ff-record-list unresolved>
+    <ff-record-list id="ff-record-list" unresolved>
         <ff-record>
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
+            <img data-image="{{variantValues.0.ImageURL}}">
+            <a data-anchor="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                {{variantValues.0.Title}}
             </a>
 
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
             </div>
         </ff-record>
     </ff-record-list>
 
     <ff-paging id="paging1" unresolved>
         Page:
-        <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
+        <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+        <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+        <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}</ff-paging-item>
+        <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+        <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
     </ff-paging>
 </body>
 </html>
