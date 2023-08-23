@@ -13,202 +13,215 @@
             color: grey;
         }
     </style>
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            // ffInit could be a more interesting approach compared to settings properties directly. See newcore.js
+
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.config.debug = true;
+
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+    </script>
 </head>
 <body>
 <!-- basic connection configuration-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate="true"
-></ff-communication>
-<div>
-    <div id="demo-header">
+<div id="demo-header">
 
-        <ff-searchbox use-suggest="false">
-            <input placeholder="Search..."/>
-        </ff-searchbox>
-        <div>
-            <h2>Paging 1</h2>
-            <p>This is a simple paging:</p>
-            <ff-paging id="paging1" unresolved>
-                <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
-                <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
-                <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
-                <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
-                <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
-            </ff-paging>
-        </div>
-
-        <div>
-
-            <h2>Paging 2</h2>
-            <p>This is a paging with 'go to last/next' buttons:</p>
-            <ff-paging class="paging2" unresolved>
-                <ff-paging-set state="currentPage <= 3">
-                    <ff-paging-item type="previousLink" style="color:blue">
-                        <strong>{{caption}}</strong>
-                    </ff-paging-item>
-
-                    <ff-paging-item type="currentLink -2">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink -1">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink" style="color:black"><strong>{{caption}}</strong>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +1">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +2">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    ...
-                    <ff-paging-item type="nextLink" style="color:blue">
-                        <strong>{{caption}}</strong>
-                    </ff-paging-item>
-
-                </ff-paging-set>
-
-                <ff-paging-set state="currentPage > 3 && pageCount-currentPage >= 3">
-
-                    <ff-paging-item type="previousLink" style="color:blue">
-                        <strong>{{caption}}</strong>
-                    </ff-paging-item>
-                    ...
-                    <ff-paging-item type="currentLink -2">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink -1">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink" style="color:black"><strong>{{caption}}</strong>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +1">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +2">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    ...
-                    <ff-paging-item type="nextLink" style="color:blue">
-                        <strong>{{caption}}</strong>
-                    </ff-paging-item>
-
-                </ff-paging-set>
-
-                <ff-paging-set state="pageCount-currentPage < 3  && currentPage > 3">
-                    <ff-paging-item type="previousLink" style="color:blue">
-                        <strong>{{caption}}</strong>
-                    </ff-paging-item>
-                    ...
-                    <ff-paging-item type="currentLink -2">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink -1">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink" style="color:black"><strong>{{caption}}</strong>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +1">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +2">
-                        <small>{{caption}}</small>
-                    </ff-paging-item>
-
-                    <ff-paging-item type="nextLink" style="color:blue">
-                        <strong>{{caption}}</strong>
-                    </ff-paging-item>
-                </ff-paging-set>
-            </ff-paging>
-        </div>
-
-        <div>
-            <h2>Paging 3</h2>
-            <p>This is a paging with 'go to start/end' buttons:</p>
-            <ff-paging unresolved>
-                <ff-paging-set state="currentPage <= 3">
-                    <ff-paging-item type="previousLink">{{caption}}</ff-paging-item>
-
-                    <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
-                    ...
-                    <ff-paging-item type="nextLink">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="lastLink">{{caption}}</ff-paging-item>
-
-
-                </ff-paging-set>
-
-                <ff-paging-set state="currentPage > 3 && pageCount-currentPage >= 3">
-                    <ff-paging-item type="firstLink">{{caption}}</ff-paging-item>
-
-                    <ff-paging-item type="previousLink">{{caption}}</ff-paging-item>
-                    ...
-                    <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
-                    ...
-                    <ff-paging-item type="nextLink">{{caption}}</ff-paging-item>
-
-                    <ff-paging-item type="lastLink">{{caption}}</ff-paging-item>
-                </ff-paging-set>
-
-                <ff-paging-set state="pageCount-currentPage < 3 && currentPage > 3">
-                    <ff-paging-item type="firstLink">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="previousLink">{{caption}}</ff-paging-item>
-                    ...
-                    <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
-
-                    <ff-paging-item type="nextLink">{{caption}}</ff-paging-item>
-                </ff-paging-set>
-            </ff-paging>
-        </div>
-
-        <div>
-            <h2>Paging 4</h2>
-            <p>This is a paging with only one paging set:</p>
-            <ff-paging unresolved>
-                <ff-paging-set state="1<2">
-                    <ff-paging-item type="firstLink">{{caption}}</ff-paging-item>
-
-                    <ff-paging-item type="previousLink">{{caption}}</ff-paging-item>
-                    ...
-                    <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}
-                    </ff-paging-item>
-                    <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
-                    <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
-                    ...
-                    <ff-paging-item type="nextLink">{{caption}}</ff-paging-item>
-
-                    <ff-paging-item type="lastLink">{{caption}}</ff-paging-item>
-                </ff-paging-set>
-            </ff-paging>
-        </div>
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..."/>
+    </ff-searchbox>
+    <div>
+        <h2>Paging 1</h2>
+        <p>This is a simple paging without sets:</p>
+        <ff-paging id="paging1" unresolved>
+            <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+            <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+            <ff-paging-item type="currentLink" style="font-weight: bold;">
+                <strong>{{page}}</strong>
+            </ff-paging-item>
+            <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+            <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+        </ff-paging>
     </div>
-    <ff-record-list unresolved>
-        <ff-record>
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
-            </a>
 
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-            </div>
-        </ff-record>
-    </ff-record-list>
+    <div>
+
+        <h2>Paging 2</h2>
+        <p>This is a paging with 'first/last' buttons and custom css:</p>
+        <ff-paging class="paging2" unresolved>
+            <ff-paging-set state="currentPage <= 3">
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">
+                    <strong>{{page}}</strong>
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                ...
+                <ff-paging-item type="lastLink" style="color:blue">
+                    <strong>Last</strong>
+                </ff-paging-item>
+            </ff-paging-set>
+
+            <ff-paging-set state="currentPage > 3 && pageCount-currentPage >= 3">
+                <ff-paging-item type="firstLink" style="color:blue">
+                    <strong>First</strong>
+                </ff-paging-item>
+                ...
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">
+                    <strong>{{page}}</strong>
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                ...
+                <ff-paging-item type="lastLink" style="color:blue">
+                    <strong>Last</strong>
+                </ff-paging-item>
+            </ff-paging-set>
+
+            <ff-paging-set state="pageCount-currentPage < 3  && currentPage > 3">
+                <ff-paging-item type="firstLink" style="color:blue">
+                    <strong>First</strong>
+                </ff-paging-item>
+                ...
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">
+                    <strong>{{page}}</strong>
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+            </ff-paging-set>
+        </ff-paging>
+    </div>
+
+    <div>
+        <h2>Paging 3</h2>
+        <p>This is a paging with 'go to previous/next' buttons:</p>
+        <ff-paging unresolved>
+            <ff-paging-set state="currentPage <= 3">
+                <ff-paging-item type="previousLink">Prev</ff-paging-item>
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                ...
+                <ff-paging-item type="nextLink">Next</ff-paging-item>
+            </ff-paging-set>
+
+            <ff-paging-set state="currentPage > 3 && pageCount-currentPage >= 3">
+                <ff-paging-item type="previousLink">Prev</ff-paging-item>
+                ...
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                ...
+                <ff-paging-item type="nextLink">Next</ff-paging-item>
+            </ff-paging-set>
+
+            <ff-paging-set state="pageCount-currentPage < 3 && currentPage > 3">
+                <ff-paging-item type="previousLink">Prev</ff-paging-item>
+                ...
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+            </ff-paging-set>
+        </ff-paging>
+    </div>
+
+    <div>
+        <h2>Paging 4</h2>
+        <p>This is a paging with first/last/previous/next' buttons using conditional sets:</p>
+        <ff-paging unresolved>
+            <ff-paging-set state="currentPage <= 3">
+                <ff-paging-item type="previousLink">Prev</ff-paging-item>
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                ...
+                <ff-paging-item type="nextLink">Next</ff-paging-item>
+                <ff-paging-item type="lastLink">Last</ff-paging-item>
+            </ff-paging-set>
+
+            <ff-paging-set state="currentPage > 3 && pageCount-currentPage >= 3">
+                <ff-paging-item type="firstLink"><strong>First</strong></ff-paging-item>
+                <ff-paging-item type="previousLink">Prev</ff-paging-item>
+                ...
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                ...
+                <ff-paging-item type="nextLink">Next</ff-paging-item>
+                <ff-paging-item type="lastLink"><strong>Last</strong></ff-paging-item>
+            </ff-paging-set>
+
+            <ff-paging-set state="pageCount-currentPage < 3 && currentPage > 3">
+                <ff-paging-item type="firstLink">First</ff-paging-item>
+                <ff-paging-item type="previousLink">Prev</ff-paging-item>
+                ...
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                <ff-paging-item type="nextLink">Next</ff-paging-item>
+            </ff-paging-set>
+        </ff-paging>
+    </div>
+
+    <div>
+        <h2>Paging 5</h2>
+        <p>This is a paging with only one paging set:</p>
+        <ff-paging unresolved>
+            <ff-paging-set state="1<2">
+                <ff-paging-item type="firstLink">First</ff-paging-item>
+                <ff-paging-item type="previousLink">Prev</ff-paging-item>
+                <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}
+                </ff-paging-item>
+                <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+                <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+                <ff-paging-item type="nextLink">Next</ff-paging-item>
+                <ff-paging-item type="lastLink">Last</ff-paging-item>
+            </ff-paging-set>
+        </ff-paging>
+    </div>
+</div>
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{variantValues.0.ImageURL}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+            {{variantValues.0.Title}}
+        </a>
+
+        <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
+        </div>
+    </ff-record>
+</ff-record-list>
 </body>
 </html>
