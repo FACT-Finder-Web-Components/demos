@@ -6,53 +6,46 @@
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
 
-    <script>
-        function raiseSuggestEvent(e) {
-            const inputValue = e.value;
-            if (inputValue && inputValue.length >= 2) {
-                // this value is set to indicate if the current input value belongs to the received suggest response
-                // e.g. suggest request takes 100ms while the user is deleting all chars in the input field
-                // input field is empty but suggest data is now arriving.
-                // The suggest needs to know if this data belong to the current input value (which is currently
-                // empty string and therefore does not)
-                factfinder.communication.globalElementValues.currentFFSearchBoxValue = inputValue;
-                factfinder.communication.EventAggregator.addFFEvent({
-                    type: "suggest",
-                    query: inputValue
-                });
-            } else {
-                hideSuggest();
-            }
-        }
-
-        function hideSuggest() {
-            factfinder.communication.ResultDispatcher.dispatchSuggest(undefined);
-        }
-
-        // Changes the term within the search box to the selected suggest item.
-        function changeSearchTerm(e) {
-            const searchInput = e.suggestion.attributes.id;
-            document.querySelector("input").value = searchInput;
-        }
-    </script>
-
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+
+            const searchBox  = document.querySelector("#searchbox");
+            searchBox.addEventListener("input", (e) => {
+                const inputValue = e.target.value;
+                console.log(e, inputValue)
+                if (inputValue && inputValue.length >= 2) {
+                    factfinder.request.suggest({ query: inputValue });
+                } else {
+                    document.querySelector(`ff-suggest`).hideSelf()
+                }
+            })
+            function hideSuggest(){
+                document.querySelector(`ff-suggest`).hideSelf()
+            }
+            factfinder.response.subscribeSearch(() => {
+                hideSuggest()
+            })
+            window.onclick = function (event) {
+                const ffSuggest = document.querySelector(`ff-suggest`);
+                if (event.target.contains(ffSuggest) && event.target !== ffSuggest) {
+                    hideSuggest()
+                }
+            }
+        }, { once: true });
+
+    </script>
 </head>
 <body>
-
-<!-- Configure the connection to the FF-Search backend and a default query-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-></ff-communication>
-
 <input placeholder="Search..."
-       value="trou"
-       oninput="raiseSuggestEvent(this)"
-       onblur="hideSuggest()"/>
+       id="searchbox"/>
 
 
 <ff-suggest unresolved layout="list">
