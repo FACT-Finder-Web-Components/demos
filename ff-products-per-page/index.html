@@ -10,15 +10,23 @@
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <link rel="stylesheet" href="styles.css">
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.config.debug = true;
+
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+
+    </script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate
-></ff-communication>
 
 <ff-searchbox use-suggest="false">
     <input placeholder="Search..."/>
@@ -28,22 +36,21 @@
     <!-- Show the posible values in a simple dropwdown -->
     <div>
         <p>A products-per-page view as a dropdown:</p>
-        <ff-products-per-page-dropdown></ff-products-per-page-dropdown>
+        <ff-products-per-page-dropdown collapse-onblur="true"  values="12,24,36"></ff-products-per-page-dropdown>
     </div>
     <br>
     <div>
         <p>A second products-per-page view as a dropdown with show-selected="true".
             This time the selected value is present in the dropdown list:</p>
         <!-- When show-selected="true" is set then the selected value is visible in the dropdown list.-->
-        <ff-products-per-page-dropdown unresolved show-selected="true">
+        <ff-products-per-page-dropdown show-selected="true" collapse-onblur="true" values="12,24,36">
             <ff-products-per-page-item>
-                <div style="color: blue; font-weight: bold">{{value}}&nbsp;Produkte</div>
+                <div style="color: blue; font-weight: bold">{{value}}&nbsp;Products</div>
             </ff-products-per-page-item>
         </ff-products-per-page-dropdown>
 
         <p>You can decide if the dropdown collapses on a blur event. Default is 'false':</p>
-        <ff-products-per-page-dropdown
-                collapse-onblur="true"></ff-products-per-page-dropdown>
+        <ff-products-per-page-dropdown collapse-onblur="true" values="12,24,36"></ff-products-per-page-dropdown>
     </div>
 </div>
 <br>
@@ -51,18 +58,22 @@
 <!-- Or dispaly the products per page as a list-->
 <div>
     <p>An example of a list view for the products-per-page:</p>
-    <ff-products-per-page-list></ff-products-per-page-list>
+    <ff-products-per-page-list  opened values="12,24,36">
+        <ff-products-per-page-item>
+            <div>{{value}}&nbsp;Products</div>
+        </ff-products-per-page-item>
+    </ff-products-per-page-list>
 </div>
 
 <ff-record-list unresolved>
     <ff-record>
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-            {{record.Title}}
+        <img data-image="{{variantValues.0.ImageURL}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+            {{variantValues.0.Title}}
         </a>
 
-        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
         </div>
     </ff-record>
 </ff-record-list>
