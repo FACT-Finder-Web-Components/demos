@@ -5,43 +5,28 @@
     <title>Campaign Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
-
-    <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("result", function (result) {
-                if (result.timedOut) {
-                    alert("Search timeout! Try again later");
-                } else {
-                    // trim records for the demo
-                    if (result.records && result.records.length > 8) {
-                        result.records.splice(8, result.records.length);
-                    }
-                }
-
-            }, this);
-        });
-
-        function searchFor(query) {
-            const searchBox = document.querySelector("ff-searchbox");
-            searchBox.value = query;
-            searchBox.search();
-        }
-    </script>
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = "https://ng-search-web-components.fact-finder.de/fact-finder";
+            defs.api = "v5";
+            defs.channel = "demo-bergfreunde-en";
+            searchFor('boots')
+
+            function searchFor(query){
+                factfinder.request.search({ query }, { requestOptions: { origin: `searchImmediate` } });
+            }
+            document.querySelectorAll('.search-btn').forEach(target => target.addEventListener('click', (e) => {
+                searchFor(e.target.value)
+            }))
+
+        }, { once: true });
+    </script>
 </head>
 <body>
-<!-- basic communication configuration -->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="jacket"
-                  search-immediate>
-</ff-communication>
-
 <ff-searchbox use-suggest="false">
     <input placeholder="Search..."/>
 </ff-searchbox>
@@ -51,9 +36,9 @@
 </ff-searchbutton>
 
 <br>
-<button onclick="searchFor('jacket')">Search for 'jacket'</button>
-<button onclick="searchFor('shoe')">Search for 'Shoe'</button>
-<button onclick="searchFor('backpack')">Search for 'backpack'</button>
+<button class="search-btn" value="jacket">Search for 'jacket'</button>
+<button class="search-btn" value="shoe">Search for 'Shoe'</button>
+<button class="search-btn" value="backpack">Search for 'backpack'</button>
 
 <ff-campaign-feedbacktext unresolved label="below breadcrumb">
     <h2>This is a banner campaign configured in the backend and altered in code</h2>
@@ -135,13 +120,12 @@
 
 <ff-record-list unresolved>
     <ff-record>
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+        <img data-image="{{variantValues.0.ImageURL}}">
         <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
            data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
             {{record.Title}}
         </a>
-
-        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
         </div>
     </ff-record>
 </ff-record-list>
