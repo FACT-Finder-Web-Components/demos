@@ -5,40 +5,31 @@
     <title>Recommendation Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
-
     <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("result", function (result) {
-                if (result.timedOut) {
-                    alert("Search timeout! Try again later");
-                } else {
-                    if (result.records.length > 8) {
-                        result.records.splice(8, result.records.length);
-                    }
-                }
-            }, this);
-        });
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
 
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            //Add a handler to the search result and use the first product to build a recommendation.
-            resultDispatcher.subscribe("result", function (result) {
+            console.log(factfinder)
 
-                const recommendationElement = document.querySelector("ff-recommendation");
-                if (result.resultStatus === "nothingFound") {
-                    //reset recommendation
-                    recommendationElement.recordId = "";
-                } else if (result.resultStatus === "resultsFound") {
-                    const record = result.records[0];
-                    recommendationElement.recordId = record.ArticleNumber;
-                }
-            });
-        });
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.config.debug = true;
+
+            factfinder.response.subscribeRecommendation(
+                (sub) => {
+                    console.log('recommendation subscription event responded with: ', sub)
+                })
+
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
 
         function setRecommendationProduct(ffRecordElement) {
             const recommendationElement = document.querySelector("ff-recommendation");
-            recommendationElement.recordId = ffRecordElement.recordData.record.ArticleNumber;
+            // this will set atrribute record-id on ff-recommendation element to clicked product ArticleNumber and set recommendations
+            recommendationElement.recordId = ffRecordElement.recordData.variantValues[0].ArticleNumber;
         }
     </script>
 
@@ -47,14 +38,6 @@
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 </head>
 <body>
-<!-- basic communication configuration-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="backpack"
-                  search-immediate="true"
-></ff-communication>
 
 <ff-searchbox use-suggest="false">
     <input placeholder="Search..."/>
@@ -64,30 +47,30 @@
 <p><b>Info</b>: Click on a product in the <i>Search result</i> to reload the Recommendations for that
     product.</p>
 
-<ff-recommendation unresolved max-results="4">
+<ff-recommendation max-results=5>
     <div class="recommendationHeader">Recommendations</div>
     <ff-record-list unresolved>
         <ff-record style="max-width: 20%">
-            <img style="width: 170px;height: 170px" data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
+            <img style="width: 170px;height: 170px" data-image="{{variantValues.0.ImageURL}}">
+            <a data-anchor="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                {{variantValues.0.Title}}
             </a>
 
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span></div>
+            <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span></div>
         </ff-record>
     </ff-record-list>
 </ff-recommendation>
 
 <ff-record-list unresolved>
     <ff-record onclick="setRecommendationProduct(this)">
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-            {{record.Title}}
+        <img data-image="{{variantValues.0.ImageURL}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+            {{variantValues.0.Title}}
         </a>
 
-        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
         </div>
     </ff-record>
 </ff-record-list>
