@@ -18,11 +18,6 @@
 
             factfinder.config.debug = true;
 
-            factfinder.response.subscribeRecommendation(
-                (sub) => {
-                    console.log('recommendation subscription event responded with: ', sub)
-                })
-
             factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
         }, { once: true });
 
