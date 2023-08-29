@@ -5,20 +5,36 @@
     <title>ff-template Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
 
-    <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("result", function (result) {
-                if (result.timedOut) {
-                    alert("Search timeout! Try again later");
-                }
-            }, this);
-        });
-    </script>
+<!--    <script>-->
+<!--        document.addEventListener("ffReady", function (event) {-->
+<!--            const resultDispatcher = event.resultDispatcher;-->
+<!--            resultDispatcher.subscribe("result", function (result) {-->
+<!--                if (result.timedOut) {-->
+<!--                    alert("Search timeout! Try again later");-->
+<!--                }-->
+<!--            }, this);-->
+<!--        });-->
+<!--    </script>-->
 
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.config.debug = true;
+
+            // TODO: 'scope' attribute deosn't work. Fix in ff-template.js
+
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+    </script>
 
     <style>
         .example-separator {
@@ -72,7 +88,6 @@
         <p>{{product.description}}</p>
         <strong>{{product.info.price}} {{product.info.currency}}</strong>
         <p>Rating: {{product.info.rating}}/5</p>
-
     </ff-template>
 
 </div>
@@ -94,7 +109,7 @@
                         price: 100,
                         currency: "€"
                     },
-                    image: '<img src="defaultSocks.jpg" width="215" height="215">'
+                    image: '<img src="defaultSocks.jpg" width="215" height="215">',
                 }
             };
         }
@@ -123,14 +138,6 @@
 <h2>Template 4</h2>
 
 <div class="example">
-
-    <ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                      version="ng"
-                      api="v5"
-                      channel="demo-bergfreunde-en"
-                      default-query="backpack"
-                      search-immediate
-    ></ff-communication>
     <p>Access the values from the search result</p>
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..."/>
