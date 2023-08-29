@@ -5,51 +5,32 @@
     <title>Similar Products Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
-
-    <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("result", function (result) {
-                if (result.timedOut) {
-                    alert("Search timeout! Try again later");
-                }
-            }, this);
-
-            //Add a handler to the search result and use the first product for similar products.
-            resultDispatcher.subscribe("result", function (result) {
-                const similarProductsElement = document.querySelector("ff-similar-products");
-
-                if (result.resultStatus === "nothingFound") {
-                    //reset recommendation
-                    similarProductsElement.recordId = "";
-                } else {
-                    const record = result.records[0];
-                    similarProductsElement.recordId = record.id;
-                }
-            });
-        });
-
-        function setSimilarProductId(ffRecordElement) {
-            console.log("setSimilarproduct", ffRecordElement.recordData);
-            const similarProductsElement = document.querySelector("ff-similar-products");
-            similarProductsElement.recordId = ffRecordElement.recordData.id;
-        }
-    </script>
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        function setSimilarProductId(id) {
+            const similarProductsElement = document.querySelector("ff-similar-products");
+            similarProductsElement.recordId = id;
+        }
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+
+            factfinder.response.subscribeSearch((records) => {
+                if(records.hits.length>0){
+                    setSimilarProductId(records.hits[0].id)
+                }
+            })
+
+        }, { once: true });
+    </script>
 </head>
 <body>
-<!-- basic communication configuration-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate
-></ff-communication>
-
-
 <header>
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..."/>
@@ -71,27 +52,26 @@
 
     <ff-record-list unresolved>
         <ff-record style="max-width: 20%">
-            <img style="width: 170px;height: 170px" data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+            <img style="width: 170px;height: 170px" data-image="{{variantValues.0.ImageURL}}">
             <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
                 {{record.Title}}
             </a>
 
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
             </div>
         </ff-record>
     </ff-record-list>
 </ff-similar-products>
 
 <ff-record-list unresolved>
-    <ff-record onclick="setSimilarProductId(this)">
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+    <ff-record onclick="setSimilarProductId(this.recordData.id)">
+            <img data-image="{{variantValues.0.ImageURL}}">
             <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
                 {{record.Title}}
             </a>
-
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+            <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
             </div>
     </ff-record>
 </ff-record-list>
