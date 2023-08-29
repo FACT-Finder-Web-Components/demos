@@ -2,10 +2,7 @@ ff-campaign-advisor {
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
-    width: 760px;
     background-color: #00d4b4;
-    display: flex;
-    flex-flow: column;
 }
 
 ff-campaign-advisor-question {
