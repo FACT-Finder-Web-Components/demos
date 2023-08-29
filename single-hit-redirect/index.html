@@ -9,24 +9,35 @@
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
     <script>
-        document.addEventListener("WebComponentsReady", function () {
-            factfinder.communication.ResultDispatcher.subscribe('result', function(result) {
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.config.debug = true;
+
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+
+            factfinder.response.subscribeSearch((response) => {
                 const redirectOn = localStorage.getItem('ff_redirect_on');
                 const refererUrl = localStorage.getItem('ff_redirect_referer');
 
                 if (redirectOn !== '0' || refererUrl !== window.location.href) {
-                    if (result.resultArticleNumberStatus === 'resultsFound' && result.records && result.records.length === 1) {
+                    if (response.articleNumberSearch === true && response.totalHits === 1) {
                         localStorage.setItem('ff_redirect_on', 0);
-                        localStorage.setItem('ff_redirect_referer', window.location.href);
-                        const record = result.records[0].record;
-                        window.location.href = window.location.origin + record.Deeplink;
+                        localStorage.setItem('ff_redirect_referer', 'https://www.alpinetrek.co.uk');
+                        const hit = response.hits[0].variantValues[0];
+                        window.location.href = 'https://www.alpinetrek.co.uk' + hit.Deeplink;
                     }
                 } else {
                     localStorage.setItem('ff_redirect_on', 1);
                     localStorage.setItem('ff_redirect_referer', null);
                 }
-            });
-        });
+            })
+        }, { once: true });
     </script>
 </head>
 <body>
@@ -38,15 +49,8 @@
 
 <h1>Single Hit Redirect Demo</h1>
 <p>
-    Search for EAN '9327868039067' to be redirected to record page.
+    Search for article number '112-0653-0611' to be redirected to record page (example of: La Sportiva - Women's TX Short - Shorts)
 </p>
-
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  search-immediate
-></ff-communication>
 
 <ff-searchbox use-suggest="false">
     <input placeholder="Search..."/>
@@ -56,13 +60,12 @@
 
 <ff-record-list unresolved>
     <ff-record>
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-            {{record.Title}}
+        <img data-image="{{variantValues.0.ImageURL}}">
+        <a data-anchor="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}"
+           data-redirect="https://www.alpinetrek.co.uk{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+            {{variantValues.0.Title}}
         </a>
-
-        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+        <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
         </div>
     </ff-record>
 </ff-record-list>
