@@ -30,8 +30,6 @@
             defs.api = `v5`;
             defs.channel = `demo-bergfreunde-en`;
 
-            factfinder.config.debug = true;
-
             factfinder.response.subscribeSearch((e) => {
                 if (e.paging.currentPage !== page) {
                     page = e.paging.currentPage

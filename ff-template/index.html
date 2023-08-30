@@ -17,10 +17,6 @@
             defs.api = `v5`;
             defs.channel = `demo-bergfreunde-en`;
 
-            factfinder.config.debug = true;
-
-            // TODO: 'scope' attribute deosn't work. Fix in ff-template.js
-
             factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
         }, { once: true });
     </script>
