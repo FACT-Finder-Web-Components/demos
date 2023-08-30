@@ -133,10 +133,12 @@
     </ff-searchbox>
     <ff-searchbutton><button>Search</button></ff-searchbutton>
 
-    <ff-template unresolved id="demoTemplate4" scope="result">
+    <ff-template unresolved id="demoTemplate4" scope="search">
         <h2>Search Result:</h2>
-        <p>resultCount: {{resultCount}}</p>
-        <p>searchTime: {{searchTime}}</p>
+        <p>resultCount: {{totalHits}}</p>
+        <p>searchParams.query: {{searchParams.query}}</p>
+        <p>first result title (hits.0.variantValues.0.Title): {{hits.0.variantValues.0.Title}}</p>
+        <p>tookTotal: {{tookTotal}}</p>
     </ff-template>
 </div>
 </body>
