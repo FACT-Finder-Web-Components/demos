@@ -4,7 +4,37 @@
     <meta charset="UTF-8">
     <title>ff-compare Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
-    <!--load boilerplate at the start-->
+    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+    <style>
+        .content{
+            display: flex;
+            flex-direction: column;
+        }
+        .ffw-compare-diff {
+            color: red;
+            border: 1px solid red;
+        }
+
+        .ffw-compare-equal {
+            color: green;
+        }
+
+        .selected {
+            /*background: red;*/
+            border: 1px solid black;
+        }
+        .comparedRecord {
+            margin: 10px 0;
+            padding: 0;
+            border-left: 1px solid;
+        }
+
+        .comparedRecord:first-of-type {
+            border: none;
+        }
+    </style>
     <script>
         function resetCompare() {
             const records = document.querySelectorAll("#selectList > .selected");
@@ -19,7 +49,8 @@
             const ids = [];
             const records = document.querySelectorAll("#selectList > .selected");
             records.forEach(function (rec) {
-                ids.push(rec.recordData.record.ArticleNumber);
+                console.log(rec.recordData)
+                ids.push(rec.recordData.variantValues[0].ArticleNumber)
             });
             const compareElement = document.querySelector("#compareList");
             //FYI: this would work if the ff-compare has the 'auto-compare' attribute set to true, default is false
@@ -29,94 +60,66 @@
             document.querySelector("#compareList").style.display = 'inline-block';
         };
 
-        const toggleCompareRecord = function (rec) {
+        const toggleCompareRecord = (rec) => {
             rec.classList.toggle("selected");
         };
-
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
     </script>
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
-    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
-    <style>
-        .ffw-compare-diff {
-            color: red;
-            border: 1px solid red;
-        }
-
-        .ffw-compare-equal {
-            color: green;
-        }
-
-        .selected {
-            /*background: red;*/
-            border: 1px solid black;
-        }
-
-        .comparedRecord {
-            margin: 10px 0;
-            padding: 0;
-            border-left: 1px solid;
-        }
-
-        .comparedRecord:first-of-type {
-            border: none;
-        }
-    </style>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="jacke"
-                  search-immediate
-></ff-communication>
-
-<ff-searchbox use-suggest="false" unresolved>
-    <input placeholder="Search..."/>
-</ff-searchbox>
-<ff-record-list id="selectList" unresolved>
-    <p>
-    <h2>Select Records to compare</h2>
-    <button onclick="doCompare()">Compare</button>
-    </p>
-    <ff-record unresolved onclick="toggleCompareRecord(this)">
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}" data-image-onerror="../img_not_found.gif">
-        <div>
-            <!--<a href="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-action="redirect">-->
-            {{record.Title}}
-            <!--</a>-->
-            <div>Price: <strong>{{record.Price}} €</strong></div>
-        </div>
-    </ff-record>
-</ff-record-list>
-
-<ff-compare max-results="5" id="compareList" style="display: none" unresolved>
-    <div>
-        <h2>Compared Records</h2>
-        <p>(compared by the Field "Manufacturer")</p>
-        <button onclick="resetCompare()">Reset Compare</button>
-    </div>
-    <ff-record-list class="compareList" subscribe="false" unresolved>
-        <ff-record class="comparedRecord" unresolved>
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank"
-               style="background: lightgray">
-                {{record.Title}}
-            </a>
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}" data-image-onerror="../img_not_found.gif">
-
+<div class="content">
+    <ff-searchbox use-suggest="false" unresolved>
+        <input placeholder="Search..."/>
+    </ff-searchbox>
+    <ff-record-list id="selectList" unresolved>
+        <p>
+        <h2>Select Records to compare</h2>
+        <button onclick="doCompare()">Compare</button>
+        </p>
+        <ff-record unresolved onclick="toggleCompareRecord(this)">
+            <img data-image="{{variantValues.0.ImageURL}}" data-image-onerror="../img_not_found.gif">
             <div>
-                <div data-attribute="Price" style="background: lightgray">
-                    Price: <strong>{{record.Price}} €</strong>
-                </div>
-                <div data-attribute="Manufacturer">Manufacturer:{{record.Manufacturer}}</div>
-                <div data-attribute="RatingNotRounded" style="background: lightgray">
-                    Rating:{{record.RatingNotRounded}}
-                </div>
+                <!--<a href="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-action="redirect">-->
+                {{record.Title}}
+                <!--</a>-->
+                <div>Price: <strong>{{variantValues.0.Price}} €</strong></div>
             </div>
         </ff-record>
     </ff-record-list>
-</ff-compare>
+
+    <ff-compare max-results="5" id="compareList" style="display: none" unresolved>
+        <div>
+            <h2>Compared Records</h2>
+            <p>(compared by the Field "Manufacturer")</p>
+            <button onclick="resetCompare()">Reset Compare</button>
+        </div>
+        <ff-record-list class="compareList" subscribe="false" unresolved>
+            <ff-record class="comparedRecord" unresolved>
+                <a data-anchor="https://www.alpinetrek.co.uk{{values.Deeplink}}" data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank"
+                   style="background: lightgray">
+                    {{values.Title}}
+                </a>
+                <img data-image="{{values.ImageURL}}" data-image-onerror="../img_not_found.gif">
+
+                <div>
+                    <div data-attribute="Price" style="background: lightgray">
+                        Price: <strong>{{values.Price}} €</strong>
+                    </div>
+                    <div data-attribute="Manufacturer">Manufacturer:{{values.Manufacturer}}</div>
+                    <div data-attribute="RatingNotRounded" style="background: lightgray">
+                        Rating:{{values.RatingNotRounded}}
+                    </div>
+                </div>
+            </ff-record>
+        </ff-record-list>
+    </ff-compare>
+</div>
 
 </body>
 </html>
