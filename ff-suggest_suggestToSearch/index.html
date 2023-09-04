@@ -11,20 +11,23 @@
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+            factfinder.response.subscribeSearch(
+                () => {
+                    document.querySelector(`ff-suggest`).hideSelf()
+                })
+        }, { once: true });
+    </script>
 
 </head>
 <body>
 <h1>Use the search API for product suggestions</h1>
-<!-- Configure the connection to the FF-Search backend and a default query-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-
-                  use-url-parameter="false"
-                  default-query="trou"
-                  search-immediate
-></ff-communication>
 
 <ff-searchbox>
     <input placeholder="Search..."/>
