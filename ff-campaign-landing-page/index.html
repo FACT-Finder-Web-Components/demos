@@ -9,14 +9,17 @@
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.api = `v5`;
+            defs.channel = `demo-bergfreunde-en`;
+            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+    </script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-></ff-communication>
-
     <p>This landing page doesn't require a search and immediately displays the requested campaign.<br>The campaign
     consists of a feedback text and some pushed products</p>
 
@@ -31,13 +34,13 @@
         <span id="productCampaignCaption">Product Campaign</span>
         <ff-record-list unresolved subscribe="false">
             <ff-record style="max-width: 20%">
-                <img style="width: 170px; height: 170px" data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+                <img style="width: 170px; height: 170px" data-image="{{variantValues.0.ImageURL}}">
                 <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
                    data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
                     {{record.Title}}
                 </a>
 
-                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
+                <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
                 </div>
             </ff-record>
         </ff-record-list>
