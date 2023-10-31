@@ -2,35 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Parallel Channel Demo - Separate Lists</title>
+    <title>Secondary Channel Demo - Separate Lists</title>
     <link rel="stylesheet" href="../demo-styles.css">
 
     <script>
-        document.addEventListener(`ffReady`, function ({ eventAggregator, resultDispatcher }) {
-            const parallelChannelTopic = `search:parallelChannel`;
+        document.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
 
-            resultDispatcher.subscribe(parallelChannelTopic, response => {
-                document.querySelector(`#right-list`).records = response.searchResult.records;
-            });
-
-            document.querySelector(`#search-controls`)
-                .addEventListener(`before-search`, event => requestToParallelChannel(event.detail.query));
-
-            eventAggregator.addBeforeDispatchingCallback(event => {
-                if (event.searchImmediate === `true`) {
-                    requestToParallelChannel(event.query);
-                }
-            });
+            defs.url = `https://showcase.ff-labs.de/fact-finder`;
+            defs.channel = `Bergfreunde-en`;
 
 
-            function requestToParallelChannel(query) {
-                eventAggregator.addFFEvent({
-                    type: `search`,
-                    query,
-                    channel: `Bergfreunde-de`,
-                    topics: () => [parallelChannelTopic]
+            factfinder.request.before.search(info => {
+                factfinder.request.search(info.searchParams, {
+                    requestOptions: {
+                        channel: `Bergfreunde-de`,
+
+                        // Prevent the result from being automatically dispatched to subscribers.
+                        // We are populating the second record-list manually.
+                        requestOnly: true,
+
+                        // IMPORTANT: Request to secondary channel must not trigger the before.search handler again to prevent an infinite loop.
+                        skipBeforeHandlers: true,
+                    },
+
+                    // Opting out of unused data to optimize response time and bandwidth usage.
+                    searchControlParams: {
+                        useAsn: false,
+                        useCampaigns: false,
+                    },
+                }).then(searchResult => {
+                    // Populating the second record list with the result from the secondary channel.
+                    document.querySelector(`#right-list`).records = searchResult.hits;
                 });
-            }
+            });
+
+            factfinder.request.search({ query: `shirt` }, { requestOptions: { origin: `searchImmediate` } });
         });
     </script>
 
@@ -57,48 +64,35 @@
 
 <body>
 
-
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
-                  version="ng"
-                  api="v4"
-                  channel="Bergfreunde-en"
-                  default-query="shirt"
-                  search-immediate>
-</ff-communication>
-
-
 <div id="search-controls">
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..." autofocus>
+        <ff-searchbutton>
+            <button>Search</button>
+        </ff-searchbutton>
     </ff-searchbox>
-
-    <ff-searchbutton>
-        <button>Search</button>
-    </ff-searchbutton>
 </div>
 
 <div id="main">
     <div id="left">
         <ff-record-list>
             <ff-record>
-                <div><img data-image></div>
-                <div>{{record.Title}}</div>
-                <div>{{record.Price}}</div>
+                <div><img data-image="{{variantValues.0.ImageURL}}"></div>
+                <div>{{variantValues.0.Title}}</div>
+                <div>{{variantValues.0.Price}}</div>
             </ff-record>
         </ff-record-list>
     </div>
     <div id="right">
         <ff-record-list id="right-list" subscribe="false">
             <ff-record>
-                <div><img data-image></div>
-                <div>{{record.Title}}</div>
-                <div>{{record.Price}}</div>
+                <div><img data-image="{{variantValues.0.ImageURL}}"></div>
+                <div>{{variantValues.0.Title}}</div>
+                <div>{{variantValues.0.Price}}</div>
             </ff-record>
         </ff-record-list>
     </div>
 </div>
-
-
 
 </body>
 </html>

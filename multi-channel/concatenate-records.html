@@ -91,84 +91,78 @@
     </style>
 
     <script>
-        document.addEventListener(`ffReady`, event => {
-            const factfinder = event.factfinder;
-
+        document.addEventListener(`ffCoreReady`, ({ factfinder }) => {
             // List of secondary channels that shall be queried with every search request.
             // Any number of channels works.
             // Results will be appended to the primary channel's results in the order of this list.
             const secondaryChannels = [
                 `Bergfreunde-de`,
             ];
-            const isSecondaryChannel = channel => secondaryChannels.includes(channel);
+
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://showcase.ff-labs.de/fact-finder`;
+            defs.channel = `Bergfreunde-en`;
 
 
-            factfinder.communication.EventAggregator.addBeforeHistoryPushCallback((response, event, url) => {
-                // Primary channel handler
+            // The before.search handler is set up to only run for the main channel's initial request.
+            // The initial request will be cancelled and reissued together with requests to all secondary channels.
+            // Cancelling and reissuing is necessary to prevent the initial request's response to get dispatched
+            // to the response pipeline before the secondary channels' requests return.
 
-                if (isSecondaryChannel(event.channel)) return;
+            factfinder.request.before.search(info => {
+                Promise.all([defs.channel, ...secondaryChannels].map(async channel => {
+                    const searchOptions = {
+                        ...info.searchOptions,
+                        requestOptions: {
+                            ...info.searchOptions.requestOptions,
+                            channel,
 
+                            // Prevents automatic dispatching to the response pipeline. We are going to dispatch
+                            // our custom response manually.
+                            requestOnly: true,
 
-                const { decodeDict, urlStringToDict } = factfinder.common;
-                // Extracting 'cancel' property to prevent a warning from being emitted further down the line.
-                const { cancel, ...eventProps } = event;
+                            // IMPORTANT: As we are issuing search requests from the before.search handler,
+                            // we must prevent that those requests trigger the handler again which would cause an infinite loop.
+                            skipBeforeHandlers: true,
+                        },
+                    };
 
-                const secondaryEvent = {
-                    ...eventProps,
-                    ...decodeDict(urlStringToDict(url)),
-                };
+                    if (channel !== defs.channel) {
+                        searchOptions.searchControlParams = {
+                            ...searchOptions.searchControlParams,
 
-                Promise.all(secondaryChannels.map(channel => requestToSecondaryChannel(secondaryEvent, channel)))
-                    .then(([...responses]) => {
-                        const secondaryRecords = responses.reduce((records, resp) => records.concat(resp.secondaryChannelResult.records), []);
-                        const combinedRecords = response.searchResult.records.concat(secondaryRecords);
+                            // Optimizations to reduce workload on FactFinder, bandwidth usage and response times.
+                            // We only apply these to the secondary channels as we need the main channel's full response.
+                            useAsn: false,
+                            useCampaigns: false,
+                        };
+                    }
 
-                        const recList = document.querySelector(`ff-record-list`);
-                        recList.records = combinedRecords;
-                    });
-            });
+                    const searchResult = await factfinder.request.search(info.searchParams, searchOptions);
 
-            factfinder.communication.EventAggregator.addBeforeHistoryPushCallback((response, event) => {
-                // Secondary channel handler
+                    // OPTIONAL: Add data to identify the record's origin. For highlighting in the HTML template.
+                    searchResult.hits.forEach(hit => hit._secondaryChannel = channel !== defs.channel);
 
-                if (!isSecondaryChannel(event.channel)) return;
+                    return searchResult;
+                })).then(([...results]) => {
 
+                    const mainResult = results[0];
+                    mainResult.hits = results.flatMap(res => res.hits);
 
-                // Renaming 'searchResult' prevents secondary channel results from overwriting 'currentSearchResult' which shall always contain the primary channel's result.
-                response.secondaryChannelResult = response.searchResult;
-                delete response.searchResult;
+                    // Starts the response pipeline with our custom response at the earliest entry point.
+                    // This is the same entry point a direct response from FactFinder would use.
+                    factfinder.response.dispatch.search(mainResult);
+                });
 
-                // Specifying 'topics' prevents the result from being auto-dispatched to the WebComponents' default topics.
-                // For the secondary channels, we don't want the result to be auto-dispatched to any topic because we will do it manually.
-                event.topics = () => [];
-
-                // Prevent the addition of a browser history entry.
+                // Returning `false` cancels the request pipeline and no request will be sent.
+                // Instead, we reissue the request above.
                 return false;
             });
+
+
+            factfinder.request.search({ query: `shirt` }, { requestOptions: { origin: `searchImmediate` } });
         });
-
-
-        function requestToSecondaryChannel(event, channel) {
-            return new Promise(resolve => {
-                factfinder.communication.EventAggregator.addFFEvent({
-                    ...event,
-                    type: `search`,
-                    channel,
-
-                    // Optimizations to reduce workload on FACT-Finder and bandwidth usage.
-                    useAsn: false,
-                    useCampaigns: false,
-
-                    success: resolve,
-                });
-            }).then(response => {
-                // OPTIONAL: Add data to identify the record's origin. For highlighting in the HTML template.
-                response.secondaryChannelResult.records.forEach(rec => {
-                    rec.record._channel = response.secondaryChannelResult.channel;
-                });
-                return response;
-            });
-        }
     </script>
 
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
@@ -177,16 +171,6 @@
 </head>
 
 <body>
-
-<ff-communication
-        url="https://showcase.ff-labs.de/fact-finder"
-        version="ng"
-        api="v4"
-        channel="Bergfreunde-en"
-        default-query="shirt"
-        search-immediate
-></ff-communication>
-
 
 <div class="searchbar">
     <ff-searchbox use-suggest="false" unresolved>
@@ -213,29 +197,27 @@
                 <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
                 <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
             </ff-paging>
-            <ff-products-per-page-list unresolved></ff-products-per-page-list>
+            <ff-products-per-page-list values="12,24,36" default-value="12" unresolved></ff-products-per-page-list>
         </div>
 
-        <!-- Set subscribe="false" to avoid auto-rendering after the primary channel's request returns. -->
-        <!-- We only want to render the concatenated result which we dispatch manually. -->
-        <ff-record-list subscribe="false" unresolved>
+        <ff-record-list unresolved>
             <ff-record>
                 <div class="record-img">
-                    <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+                    <img data-image="{{variantValues.0.ImageURL}}">
                 </div>
                 <div class="record-product-info">
                     <h3 class="record-product-name">
-                        {{record.Title}}
+                        {{variantValues.0.Title}}
                     </h3>
-                    <div class="record-product-brand">{{record.Manufacturer}}</div>
-                    <div class="record-product-price">{{record.Price}}</div>
+                    <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                    <div class="record-product-price">{{variantValues.0.Price}}</div>
                 </div>
                 <div class="record-product-add-to-cart">
                     <button>Add to Cart</button>
                 </div>
-                {{#record._channel}}
+                {{#_secondaryChannel}}
                 <div class="tag-secondary">From secondary channel</div>
-                {{/record._channel}}
+                {{/_secondaryChannel}}
             </ff-record>
         </ff-record-list>
     </div>
