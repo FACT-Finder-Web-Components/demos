@@ -10,69 +10,92 @@
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <script>
-        function setSimilarProductId(id) {
-            const similarProductsElement = document.querySelector("ff-similar-products");
-            similarProductsElement.recordId = id;
-        }
         window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
             const defs = factfinder.config.defaults.general;
-            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
-            defs.api = `v5`;
-            defs.channel = `demo-bergfreunde-en`;
-            factfinder.request.search({ query: `trousers` }, { requestOptions: { origin: `searchImmediate` } });
 
-            factfinder.response.subscribeSearch((records) => {
-                if(records.hits.length>0){
-                    setSimilarProductId(records.hits[0].id)
-                }
-            })
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.channel = `demo-bergfreunde-en`;
+
+
+            factfinder.response.subscribeSearch(result => {
+                if (result.hits.length === 0) return;
+
+                // Must pick the correct product ID depending on ff-similar-products' `id-type` setting.
+                setSimilarProductId(`1`, result.hits[0].id);
+                setSimilarProductId(`2`, result.hits[1].variantValues[0].ArticleNumber);
+            });
+
+            factfinder.request.search({ query: `camping` }, { requestOptions: { origin: `searchImmediate` } });
 
         }, { once: true });
+
+        function setSimilarProductId(target, id) {
+            const similarProductsElement = document.querySelector(`ff-similar-products#similar${target}`);
+            similarProductsElement.recordId = id;
+        }
     </script>
 </head>
+
 <body>
 <header>
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..."/>
+        <ff-searchbutton><button>Search</button></ff-searchbutton>
     </ff-searchbox>
 
-    <ff-searchbutton><button>Search</button></ff-searchbutton>
     <p>
-        Search for 'trousers' to see results.
+        Search for 'camping' to see results.
         <br>
-        <b>INFO</b>: Click on a product in the <i>search results</i> to set the id for the
-        similar-products service.
+        <strong>INFO</strong>: Click on a product in the <em>search results</em> to set the id for the similar-products service.
     </p>
 </header>
 
-<ff-similar-products max-results="4" unresolved id-type="id">
-    <div class="similarProductsHeader">
-        Similar Products
-    </div>
+<!-- `id` is used by custom script to set the product ID. -->
+<!-- There are two possible values for `id-type`: `id` and `productNumber`. Use whichever is more suitable to your integration. -->
+<ff-similar-products id="similar1" max-results="4" id-type="id" unresolved>
+    <div class="similarProductsHeader">Similar Products 1</div>
 
-    <ff-record-list unresolved>
+    <!-- Use subscribe="false" to prevent ff-record-list to subscribe to regular search results. -->
+    <ff-record-list subscribe="false" unresolved>
         <ff-record style="max-width: 20%">
             <img style="width: 170px;height: 170px" data-image="{{variantValues.0.ImageURL}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
-            </a>
-
-            <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
+            <div>{{variantValues.0.Title}}</div>
+            <div class="priceContainer">
+                <span class="brand">{{variantValues.0.Manufacturer}}</span>
+                <span class="price">{{variantValues.0.Price}} €</span>
             </div>
         </ff-record>
     </ff-record-list>
 </ff-similar-products>
 
-<ff-record-list unresolved>
-    <ff-record onclick="setSimilarProductId(this.recordData.id)">
-            <img data-image="{{variantValues.0.ImageURL}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
-            </a>
-            <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{variantValues.0.Price}} €</span>
+<ff-similar-products id="similar2" max-results="4" id-type="productNumber" unresolved>
+    <div class="similarProductsHeader">Similar Products 2</div>
+
+    <ff-record-list subscribe="false" unresolved>
+        <ff-record style="max-width: 20%">
+            <img style="width: 170px;height: 170px" data-image="{{variantValues.0.ImageURL}}">
+            <div>{{variantValues.0.Title}}</div>
+            <div class="priceContainer">
+                <span class="brand">{{variantValues.0.Manufacturer}}</span>
+                <span class="price">{{variantValues.0.Price}} €</span>
             </div>
+        </ff-record>
+    </ff-record-list>
+</ff-similar-products>
+
+
+<ff-record-list unresolved>
+    <ff-record>
+        <img data-image="{{variantValues.0.ImageURL}}">
+        <div>{{variantValues.0.Title}}</div>
+        <div class="priceContainer">
+            <span class="brand">{{variantValues.0.Manufacturer}}</span>
+            <span class="price">{{variantValues.0.Price}} €</span>
+        </div>
+        <div>
+            <button onclick="setSimilarProductId(`1`, `{{id}}`)">Similar 1</button>
+            <button onclick="setSimilarProductId(`2`, `{{variantValues.0.ArticleNumber}}`)">Similar 2</button>
+        </div>
     </ff-record>
 </ff-record-list>
 </body>
