@@ -9,6 +9,21 @@
 
 }
 
+.searchbox-section {
+    display: flex;
+}
+.suggest-section {
+    display: flex;
+}
+.suggest-container {
+    width: 50%;
+    padding: 4px;
+}
+
+ff-suggest {
+    margin-top: 10px;
+}
+
 ff-suggest .ffw-suggestContainer {
     max-width: 700px;
     border: 1px solid #EEEEEE;
@@ -80,9 +95,9 @@ ff-suggest-item[type="productName"] img {
 }
 
 .product-right {
-    width: 100px;
-    position: relative;
-    float: right;
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
 }
 
 .product-price {
@@ -109,8 +124,4 @@ ff-suggest-item {
     padding-left: 13px;
     padding-bottom: 5px;
     padding-top: 5px;
-}
-
-#suggest2 {
-    margin-left: 300px;
 }

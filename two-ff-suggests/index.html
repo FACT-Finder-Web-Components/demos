@@ -11,175 +11,140 @@
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const sb1 = document.querySelector("#searchbox1");
-            const sb2 = document.querySelector("#searchbox2");
+        document.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
 
-            const suggest1 = document.querySelector("#suggest1");
-            const suggest2 = document.querySelector("#suggest2");
-
-            function onfocusSuggest1() {
-                console.log("SearchBox 1 onfocus handler called");
-
-                unsubscribeSuggest(suggest2);
-                subscribeSuggest(suggest1, sb1);
-                sb1.setAttribute("use-suggest", "true");
-                sb2.setAttribute("use-suggest", "false");
-            }
-
-            function onfocusSuggest2() {
-                console.log("SearchBox 2 onfocus handler called");
-
-                unsubscribeSuggest(suggest1);
-                subscribeSuggest(suggest2, sb2);
-                sb2.setAttribute("use-suggest", "true");
-                sb1.setAttribute("use-suggest", "false");
-            }
-
-            sb1.onfocus = onfocusSuggest1;
-            sb2.onfocus = onfocusSuggest2;
-
-            // Remove the suggest from the data flow so it does not receive data anymore
-            function unsubscribeSuggest(suggestElement) {
-                // Check if element is already listening
-                // Be careful, "_suggestSubscriptionKey" is an internal property of the component and may be a subject of change in future releases
-                if (suggestElement._suggestSubscriptionKey) {
-                    factfinder.communication.ResultDispatcher.unsubscribe("suggest", suggestElement._suggestSubscriptionKey);
-                    // Reset current key to default value
-                    suggestElement._suggestSubscriptionKey = undefined;
-                }
-            }
-
-            // Add the suggest to data flow so it receives data again
-            function subscribeSuggest(suggestElement, searchBoxElement) {
-                // Check if element is NOT listening already
-                // !!! CAUTION !!!
-                // "_suggestSubscriptionKey" is an internal property of the component and is subject to change without prior notice
-                // !!! CAUTION !!!
-                if (!suggestElement._suggestSubscriptionKey) {
-                    // add the subscription key to the element
-                    suggestElement._suggestSubscriptionKey = factfinder.communication.ResultDispatcher.subscribe("suggest", function (suggestions, ffEvent) {
-                        const currentQuery = searchBoxElement.value;
-                        if (ffEvent && factfinder.common.fixedDecodeURIComponent(ffEvent.query) !== currentQuery)
-                            return;
-                        suggestElement.suggestItems = suggestions || [];
-                    }, suggestElement);
-                }
-            }
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.channel = `demo-bergfreunde-en`;
         });
     </script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate
-></ff-communication>
 
-<ff-searchbox suggest-onfocus="false" hide-suggest-onblur="true">
-    <input id="searchbox1"
-           placeholder="Search..."/>
-</ff-searchbox>
+<div class="searchbox-section">
+    <div>
+        <label>Search box 1</label>
+        <ff-searchbox id="searchbox1">
+            <input placeholder="Search..."/>
+        </ff-searchbox>
+    </div>
+    <div>
+        <label>Search box 2</label>
+        <ff-searchbox id="searchbox2">
+            <input placeholder="Search..."/>
+        </ff-searchbox>
+    </div>
+    <div>
+        <label>Search box 3</label>
+        <ff-searchbox id="searchbox3">
+            <input placeholder="Search..."/>
+        </ff-searchbox>
+    </div>
+</div>
 
-<ff-searchbox suggest-onfocus="false" hide-suggest-onblur="true">
-    <input id="searchbox2"
-           placeholder="Search..."/>
-</ff-searchbox>
+<div class="suggest-section">
+    <div class="suggest-container">
+        <div>Suggest 1 - listens to search boxes 1 & 2.</div>
 
-<ff-suggest unresolved id="suggest1" layout="list">
-    <!-- You can define different elements which are displayed in the suggest box -->
-    <section class="searchTermContainer">
-        <div data-container="searchTerm">
-            <p class="containerCaption">Search terms</p>
-            <ff-suggest-item type="searchTerm">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
+        <!-- With the for-searchbox attribute you specify which ff-searchbox this ff-suggest will react to. -->
+        <ff-suggest id="suggest1" for-searchbox="searchbox1,searchbox2" layout="list" unresolved>
+            <!-- You can define different elements which are displayed in the suggest box -->
+            <section class="searchTermContainer">
+                <div data-container="searchTerm">
+                    <p class="containerCaption">Search terms</p>
+                    <ff-suggest-item type="searchTerm">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
 
-        <div data-container="category">
-            <p class="containerCaption">Categories</p>
-            <ff-suggest-item type="category">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
+                <div data-container="category">
+                    <p class="containerCaption">Categories</p>
+                    <ff-suggest-item type="category">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
 
-        <div data-container="brand">
-            <p class="containerCaption">Brands</p>
-            <ff-suggest-item type="brand">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-    </section>
+                <div data-container="brand">
+                    <p class="containerCaption">Brands</p>
+                    <ff-suggest-item type="brand">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+            </section>
 
-    <section class="productsContainer">
-        <div data-container="productName">
-            <p class="containerCaption">Suggested products</p>
-            <div>
-                <ff-suggest-item type="productName">
-                    <img data-image>
-                    <div class="product-center">
-                        <div class="product-name">{{{name}}}</div>
-                        <div>Shipping</div>
-                        <div>Rating</div>
+            <section class="productsContainer">
+                <div data-container="productName">
+                    <p class="containerCaption">Suggested products</p>
+                    <div>
+                        <ff-suggest-item type="productName">
+                            <img data-image>
+                            <div class="product-center">
+                                <div class="product-name">{{{name}}}</div>
+                                <div>Shipping</div>
+                                <div>Rating</div>
+                            </div>
+                            <!-- Price and availability-->
+                            <div class="product-right">
+                                <div class="product-price">{{attributes.Price}}€</div>
+                                <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                            </div>
+                        </ff-suggest-item>
                     </div>
-                    <!-- Price and availability-->
-                    <div class="product-right">
-                        <div class="product-price">{{attributes.Price}}€</div>
-                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                </div>
+            </section>
+        </ff-suggest>
+    </div>
+
+    <div class="suggest-container">
+        <div>Suggest 2 - listens to all search boxes</div>
+        <ff-suggest id="suggest2" layout="block" unresolved>
+            <!-- You can define different elements which are displayed in the suggest box -->
+            <section class="searchTermContainer">
+                <div data-container="searchTerm">
+                    <p class="containerCaption">Search terms</p>
+                    <ff-suggest-item type="searchTerm">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+
+                <div data-container="category">
+                    <p class="containerCaption">Categories</p>
+                    <ff-suggest-item type="category">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+
+                <div data-container="brand">
+                    <p class="containerCaption">Brands</p>
+                    <ff-suggest-item type="brand">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+            </section>
+
+            <section class="productsContainer">
+                <div data-container="productName">
+                    <p class="containerCaption">Suggested products</p>
+                    <div>
+                        <ff-suggest-item type="productName">
+                            <img data-image>
+                            <div class="product-center">
+                                <div class="product-name">{{{name}}}</div>
+                                <div>Shipping</div>
+                                <div>Rating</div>
+                            </div>
+                            <!-- Price and availability-->
+                            <div class="product-right">
+                                <div class="product-price">{{attributes.Price}}€</div>
+                                <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
+                            </div>
+                        </ff-suggest-item>
                     </div>
-                </ff-suggest-item>
-            </div>
-        </div>
-    </section>
-</ff-suggest>
+                </div>
+            </section>
+        </ff-suggest>
+    </div>
+</div>
 
-<ff-suggest unresolved id="suggest2" layout="list">
-    <!-- You can define different elements which are displayed in the suggest box -->
-    <section class="searchTermContainer">
-        <div data-container="searchTerm">
-            <p class="containerCaption">Search terms</p>
-            <ff-suggest-item type="searchTerm">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-
-        <div data-container="category">
-            <p class="containerCaption">Categories</p>
-            <ff-suggest-item type="category">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-
-        <div data-container="brand">
-            <p class="containerCaption">Brands</p>
-            <ff-suggest-item type="brand">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-    </section>
-
-    <section class="productsContainer">
-        <div data-container="productName">
-            <p class="containerCaption">Suggested products</p>
-            <div>
-                <ff-suggest-item type="productName">
-                    <img data-image>
-                    <div class="product-center">
-                        <div class="product-name">{{{name}}}</div>
-                        <div>Shipping</div>
-                        <div>Rating</div>
-                    </div>
-                    <!-- Price and availability-->
-                    <div class="product-right">
-                        <div class="product-price">{{attributes.Price}}€</div>
-                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
-                    </div>
-                </ff-suggest-item>
-            </div>
-        </div>
-    </section>
-</ff-suggest>
 </body>
 </html>
