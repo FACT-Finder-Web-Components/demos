@@ -5,56 +5,59 @@
     <title>Two Channel Suggest Demo</title>
     <link rel="stylesheet" href="../assets/demo-styles.css">
 
-    <script>
-        const cmsChannel = `Bergfreunde-de`;
-
-        document.addEventListener(`ffReady`, ({eventAggregator}) => {
-            eventAggregator.addBeforeDispatchingCallback(event => {
-                if (event.type === `suggest` && event.channel !== cmsChannel) {
-                    const cmsResponse = new Promise((resolve) => {
-                        // delayed to prioritize product channel
-                        setTimeout(() => {
-                            eventAggregator.addFFEvent({
-                                ...event,
-                                channel: cmsChannel,
-                                success: resolve,
-                                // custom topic set to not dispatch directly to ff-suggest
-                                topics: () => [`cms-suggest`],
-                            });
-                        });
-                    });
-                    const productResponse = new Promise((resolve) => {
-                       event.success = resolve;
-                    });
-
-                    Promise.all([productResponse, cmsResponse]).then(([productSuggestions, cmsSuggestions]) => {
-                        const contentSuggestions = cmsSuggestions
-                            .filter(s => s.type === `productName`)
-                            .map(s => ({...s, type: `content`}));
-                        document.querySelector(`ff-suggest`).suggestItems = productSuggestions.concat(contentSuggestions);
-                    });
-                }
-            });
-        });
-    </script>
-
     <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
     <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        const cmsChannel = `Bergfreunde-de`;
+
+        document.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+
+            defs.url = `https://showcase.ff-labs.de/fact-finder`;
+            defs.channel = `Bergfreunde-en`;
+
+
+            factfinder.request.before.suggest(({ suggestParams, requestOptions }) => {
+                const opts = {
+                    ...requestOptions,
+
+                    // Stops the pipeline after data is received from FactFinder.
+                    // We will start the response pipeline manually.
+                    requestOnly: true,
+
+                    // IMPORTANT: As we are issuing suggest requests from the before.suggest handler here,
+                    // we must prevent that those requests trigger the handler again which would cause an infinite loop.
+                    skipBeforeHandlers: true,
+                };
+
+                Promise.all([
+                    factfinder.request.suggest(suggestParams, opts),
+                    factfinder.request.suggest(suggestParams, { ...opts, channel: cmsChannel }),
+
+                ]).then(([ productResponse, cmsResponse ]) => {
+                    const cmsSuggestions = cmsResponse.suggestions
+                        .filter(s => s.type === `productName`)
+                        .map(s => ({ ...s, type: `content` }));
+
+                    // Merge the two responses as you require.
+                    productResponse.suggestions.push(...cmsSuggestions);
+
+                    // Start the response pipeline at the earliest point after receiving data from FactFinder.
+                    // All subscribers to the pipeline will be invoked.
+                    // We pass the original suggestParams and requestOptions to give this pipeline the same format as the original suggest request.
+                    factfinder.response.dispatch.suggest(productResponse, { suggestParams, requestOptions });
+                });
+
+                // Interrupt the request pipeline. This pipeline will not issue a request to FactFinder. We do it manually above.
+                return false;
+            });
+
+        }, { once: true });
+    </script>
 </head>
 <body>
-
-<ff-communication
-        url="https://showcase.ff-labs.de/fact-finder"
-        version="ng"
-        api="v4"
-        channel="Bergfreunde-en"
-
-        currency-code="EUR"
-        currency-country-code="de-DE"
-
-        default-query="wome"
-></ff-communication>
 
 <div class="searchbar">
     <ff-searchbox>
@@ -91,7 +94,7 @@
             </div>
 
             <div data-container="content">
-                <h2 class="container-caption">Content</h2>
+                <h2 class="container-caption">Content (from CMS channel)</h2>
                 <ff-suggest-item type="content">
                     <span>{{{name}}}</span>
                 </ff-suggest-item>
