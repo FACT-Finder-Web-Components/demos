@@ -526,12 +526,16 @@ ff-asn-group-slider .ffw-sliderSection {
     margin-top: 5px;
 }
 
-ff-slider-one-touch {
+ff-slider[one-touch] {
     margin: 30px 2px 12px;
 }
 
 ff-asn-group-slider.one-touch-slider .ffw-sliderSection {
     pointer-events: none;
+}
+
+ff-slider-control {
+    margin-bottom: 10px;
 }
 
 ff-slider-control .slider-inputs {
@@ -548,29 +552,24 @@ ff-slider-control input {
     text-align: center;
 }
 
-ff-slider-one-touch {
-    margin-top: 30px;
-    margin-bottom: 12px;
-}
-
-ff-slider-one-touch .ffw-triangle {
+ff-slider[one-touch] .ffw-triangle {
     border-color: transparent transparent #4bbee9;
     opacity: .17;
 }
 
-ff-slider-one-touch .ffw-line {
+ff-slider[one-touch] .ffw-line {
     height: 18px;
     background-color: #ededed;
     box-sizing: content-box;
 }
 
-ff-slider-one-touch .ffw-selected-range {
+ff-slider[one-touch] .ffw-selected-range {
     height: 18px;
     background-color: #4bbee9;
     box-sizing: content-box;
 }
 
-ff-slider-one-touch .ffw-slider-button {
+ff-slider[one-touch] .ffw-slider-button {
     width: 2px;
     height: 16px;
     border: 8px solid #565656;
@@ -579,7 +578,7 @@ ff-slider-one-touch .ffw-slider-button {
     z-index: 1000;
 }
 
-ff-slider {
+ff-slider:not([one-touch]) {
     margin: 70px 2px 12px;
     background-color: #4bbee9;
 }
