@@ -19,29 +19,28 @@
         }
 
         ff-campaign-pushed-products {
-            border: 1px solid black;
+            border: 2px solid black;
+            margin-top: 2rem;
+            margin-bottom: 4rem;
+            padding: .5rem;
         }
 
         [unresolved] {
             opacity: 0;
         }
     </style>
+
+    <script>
+        window.addEventListener(`ffCoreReady`, ({ factfinder }) => {
+            const defs = factfinder.config.defaults.general;
+            defs.url = `https://ng-search-web-components.fact-finder.de/fact-finder`;
+            defs.channel = `demo-bergfreunde-en`;
+
+            factfinder.request.search({ query: `backpack` }, { requestOptions: { origin: `searchImmediate` } });
+        }, { once: true });
+    </script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  only-search-params
-                  currency-code="EUR"
-                  currency-country-code="en-GB"
-                  default-query="backpack"
-                  search-immediate
->
-    <ff-middleware>
-        <ff-product-teaser-campaign-processor></ff-product-teaser-campaign-processor>
-    </ff-middleware>
-</ff-communication>
 
 <ff-searchbox use-suggest="false">
     <input placeholder="Search..."/>
@@ -50,17 +49,17 @@
 <ff-campaign-pushed-products unresolved>
     <ff-record-list subscribe="false">
         <ff-record add-cart-click>
-            <img data-image
+            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}"
                  data-image-onerror="defaultSocks.jpg"
-                 data-track="">
+                 data-track>
             <div>
-                <span data-track="cartClick" data-track="">
-                    {{record.Title}}
+                <span data-track="cartClick">
+                    {{variantValues.0.Title}}
                 </span>
-                <div>Price: <strong>{{record.Price}}</strong></div>
-                <a data-redirect="{{record.Deeplink}}"
+                <div>Price: <strong>{{variantValues.0.Price}}</strong></div>
+                <a data-redirect="{{variantValues.0.Deeplink}}"
                    data-redirect-target="_blank"
-                   data-anchor="{{record.Deeplink}}">
+                   data-anchor="{{variantValues.0.Deeplink}}">
                     Shop
                 </a>
             </div>
@@ -70,18 +69,18 @@
 
 <ff-record-list unresolved>
     <ff-record add-cart-click>
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}"
+        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}"
              data-image-onerror="defaultSocks.jpg"
-             data-track="">
+             data-track>
         <div>
-            <span data-track="cartClick" data-track="">
-                {{record.Title}}
+            <span data-track="cartClick">
+                {{variantValues.0.Title}}
             </span>
-            <div>Price: <strong>{{record.Price}}</strong></div>
+            <div>Price: <strong>{{variantValues.0.Price}}</strong></div>
 
-            <a data-redirect="https://www.bergfreunde.de{{record.Deeplink}}"
+            <a data-redirect="https://www.bergfreunde.de{{variantValues.0.Deeplink}}"
                data-redirect-target="_blank"
-               data-anchor="https://www.bergfreunde.de{{record.Deeplink}}">
+               data-anchor="https://www.bergfreunde.de{{variantValues.0.Deeplink}}">
                 Shop
             </a>
         </div>
