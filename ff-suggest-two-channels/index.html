@@ -6,33 +6,59 @@
     <link rel="stylesheet" href="../assets/demo-styles.css">
 
     <script>
-        const cmsChannel = `Bergfreunde-de`;
+        document.addEventListener(`ffReady`, ({ eventAggregator }) => {
 
-        document.addEventListener(`ffReady`, ({eventAggregator}) => {
             eventAggregator.addBeforeDispatchingCallback(event => {
-                if (event.type === `suggest` && event.channel !== cmsChannel) {
-                    const cmsResponse = new Promise((resolve) => {
-                        // delayed to prioritize product channel
-                        setTimeout(() => {
-                            eventAggregator.addFFEvent({
-                                ...event,
-                                channel: cmsChannel,
-                                success: resolve,
-                                // custom topic set to not dispatch directly to ff-suggest
-                                topics: () => [`cms-suggest`],
-                            });
-                        });
-                    });
-                    const productResponse = new Promise((resolve) => {
-                       event.success = resolve;
-                    });
+                if (event.type !== `suggest`) return;
 
-                    Promise.all([productResponse, cmsResponse]).then(([productSuggestions, cmsSuggestions]) => {
-                        const contentSuggestions = cmsSuggestions
-                            .filter(s => s.type === `productName`)
-                            .map(s => ({...s, type: `content`}));
-                        document.querySelector(`ff-suggest`).suggestItems = productSuggestions.concat(contentSuggestions);
+                const suggestRequest = new Promise((resolve) => {
+                    // Specify custom topic to prevent dispatch of not yet merged result.
+                    event.topics = () => [`customSuggest`];
+
+                    event.success = resolve;
+                });
+
+                const searchRequest = new Promise((resolve) => {
+                    eventAggregator.addFFEvent({
+                        type: `search`,
+                        query: event.query,
+
+                        // Set custom topic to prevent dispatching to ff-record-list.
+                        topics: () => [`searchFromSuggest`],
+
+                        useAsn: false,
+                        useAtlasAi: false,
+                        usePersonalization: false,
+                        productsPerPage: 5,
+
+                        log: `suggest`,
+                        origin: `suggest`,
+
+                        success: resolve,
                     });
+                });
+
+                Promise.all([suggestRequest, searchRequest]).then(([suggestResponse, searchResponse]) => {
+                    const suggestions = suggestResponse.suggestions;
+                    const suggestionsFromSearch = searchResultToSuggestions(searchResponse.searchResult);
+
+                    document.querySelector(`ff-suggest`).suggestItems = suggestions.concat(suggestionsFromSearch);
+                });
+
+
+                function searchResultToSuggestions(result) {
+                    return result.records.map(product => ({
+                        attributes: {
+                            deeplink: product.record[result.fieldRoles.deeplink],
+                            price: product.record[result.fieldRoles.price]
+                        },
+                        name: product.record[result.fieldRoles.productName],
+                        hitCount: 0,
+                        image: product.record[result.fieldRoles.imageUrl],
+                        type: `productName`,
+
+                        isCampaign: !!product.record.__FFCampaign__,
+                    }));
                 }
             });
         });
@@ -107,6 +133,9 @@
                             <img data-image>
                         </div>
                         <div class="product-info">
+                            {{#isCampaign}}
+                            <div><< CAMPAIGN >></div>
+                            {{/isCampaign}}
                             <div class="product-name">{{{name}}}</div>
                         </div>
                     </ff-suggest-item>
