@@ -40,6 +40,11 @@ nav.demo-variations a:not([href]) {
     cursor: default;
 }
 
+.ffw-query {
+    font-weight: bold;
+    color: #2372bd;
+}
+
 
 /*
     ff-searchbox
@@ -298,7 +303,6 @@ ff-suggest-item .product-info {
 ff-suggest-item .product-info .product-name {
     height: 3em;
     overflow: hidden;
-    font-weight: bold;
 }
 
 ff-suggest .all-results-container ff-searchbutton button {
@@ -314,11 +318,9 @@ ff-suggest .all-results-container ff-searchbutton button {
     cursor: pointer;
 }
 
-ff-suggest-item span.ffw-query {
-    font-weight: bold;
-    color: #2372bd;
+.ffw-highlight-suggest-item {
+    background-color: lightgray;
 }
-
 
 /*
     ff-asn
