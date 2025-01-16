@@ -5,37 +5,48 @@
     <title>Suggest Demo</title>
     <link rel="stylesheet" href="../assets/demo-styles.css">
 
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <script>
-        document.addEventListener(`ffCommunicationReady`, ({ factfinder }) => {
-            factfinder.communication.EventAggregator.addBeforeDispatchingCallback(event => {
-                if (event.type === `search`) {
-                    document.querySelector(`ff-suggest`).hideSelf();
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            factfinder.request.before.search(requestInfoSearch => {
+                if (requestInfoSearch.searchOptions.requestOptions.origin?.tagName === `FF-SEARCHBOX`) {
+                    console.log(`In this demo we want to see ff-suggest. Therefore, we block searches that come through the search box.`);
+                    return false;
                 }
+            });
+
+            factfinder.routing.setNavigateListener((url, origin) => {
+                alert(`At this point, because the clicked item has a 'deeplink' field, Web Components would navigate to '${url}'.`);
+
+                // But we cancel here because it is just a demo.
+                return false;
             });
         });
     </script>
 </head>
 <body>
 
-<ff-communication
-        url="https://ng-search-web-components.fact-finder.de/fact-finder"
-        version="ng"
-        api="v5"
-        channel="demo-bergfreunde-en"
-
-        currency-code="EUR"
-        currency-country-code="de-DE"
-
-        default-query="backp"
-></ff-communication>
-
 <div class="searchbar">
-    <ff-searchbox hide-suggest-onblur="false">
-        <input placeholder="Search..." />
+    <ff-searchbox>
+        <input placeholder="Suggest only..." value="backp" />
         <ff-searchbutton>
             <button>
                 <span class="icon-search"></span>
@@ -44,7 +55,7 @@
     </ff-searchbox>
 
 
-    <ff-suggest layout="block" hide-onblur="true" unresolved>
+    <ff-suggest layout="block" hide-onblur="false" unresolved>
         <section id="searchContainer" class="search-terms-container">
             <div data-container="searchTerm">
                 <h2 class="container-caption">Search terms</h2>
@@ -92,46 +103,26 @@
 </div>
 
 <ff-record-list unresolved>
-    <ff-record>
-        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-            <div class="record-img">
-                <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+    <template data-role="record">
+        <ff-record>
+            <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                <div class="record-img">
+                    <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                </div>
+                <div class="record-product-info">
+                    <h3 class="record-product-name">
+                        {{variantValues.0.Title}}
+                    </h3>
+                    <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                    <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                </div>
+            </a>
+            <div class="record-product-add-to-cart">
+                <button onclick="addToCart(event)">Add to Cart</button>
             </div>
-            <div class="record-product-info">
-                <h3 class="record-product-name">
-                    {{record.Title}}
-                </h3>
-                <div class="record-product-brand">{{record.Manufacturer}}</div>
-                <div class="record-product-price">{{record.Price}}</div>
-            </div>
-        </a>
-        <div class="record-product-add-to-cart">
-            <button>Add to Cart</button>
-        </div>
-    </ff-record>
+        </ff-record>
+    </template>
 </ff-record-list>
-
-<script>
-    document.querySelector("ff-suggest").addEventListener("suggest-item-clicked", e => {
-        // Reference to the clicked ff-suggest-item HTML element
-        const ffSuggestItem = e.detail.element;
-        // Reference to the suggest item's underlying data
-        const suggestionData = e.detail.suggestion;
-
-        // Check if the ffSuggestItem matches the desired type for which you want to override the action
-        if (suggestionData.type === "productName") {
-            // Tell the suggest-item to skip its default action
-            ffSuggestItem.ffPreventDefault = true;
-
-            // The fields contained in "attributes" must be configured in the FACT-Finder UI.
-            // Here we have "deeplink" which corresponds to the configured field role.
-            // Note that the suggest's attributes use the KEYS from the field role mapping. This allows you to have stable attribute names without being forced to manually configure the field role mapping during WebComponents initialisation.
-            const deeplink = suggestionData.attributes["deeplink"];
-
-            window.open("https://www.alpinetrek.co.uk" + deeplink, "_blank");
-        }
-    });
-</script>
 </body>
 </html>
