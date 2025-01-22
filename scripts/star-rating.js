@@ -1,21 +1,24 @@
-document.addEventListener('ffReady', ({resultDispatcher}) => {
-    resultDispatcher.addCallback('asn', addRatingInfo);
+document.addEventListener('ffCoreReady', ({factfinder}) => {
+    factfinder.response.transformSearch(addRatingInfo);
 });
 
-function addRatingInfo(groups) {
-    if (!groups) return;
+function addRatingInfo(searchResult) {
+    const {facets = []} = searchResult;
 
-    groups.filter(group => group.name === "Rating").forEach(group => {
-        group.elements.concat(group.selectedElements).forEach(el => {
-            const offset = el.name.match(/^< \d/) ? -1 : 0;
-            const rating = parseInt(el.name.match(/\d+(\.\d+)?/g)[0]) + offset;
-            el._stars = ratingToStars(rating);
+    facets.filter(facet => facet.name === "Rating")
+        .forEach(({elements, selectedElements}) => {
+            elements.concat(selectedElements).forEach(el => {
+                const offset = el.text.match(/^< \d/) ? -1 : 0;
+                const rating = parseInt(el.text.match(/\d+(\.\d+)?/g)[0]) + offset;
+                el._stars = ratingToStars(rating);
+            });
         });
-    });
 
-    function ratingToStars(rating) {
-        return Array.from({length: 5}, (_, i) => ({
-            class: i < rating ? "star-bright" : "star-dim"
-        }));
-    }
+    return searchResult;
+}
+
+function ratingToStars(rating) {
+    return Array.from({length: 5}, (_, i) => ({
+        class: i < rating ? "star-bright" : "star-dim",
+    }));
 }

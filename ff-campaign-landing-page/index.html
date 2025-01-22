@@ -5,17 +5,41 @@
     <title>Landing Page Campaign Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
 
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    fieldRoles: {
+                        brand: `Manufacturer`,
+                        deeplink: `Deeplink`,
+                        description: `Description`,
+                        ean: `EAN`,
+                        imageUrl: `ImageURL`,
+                        masterId: `MasterArticleNumber`,
+                        price: `Price`,
+                        productName: `Title`,
+                        productNumber: `ArticleNumber`,
+                    },
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+        });
+    </script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-></ff-communication>
 
     <p>This landing page doesn't require a search and immediately displays the requested campaign.<br>The campaign
     consists of a feedback text and some pushed products</p>
@@ -30,16 +54,21 @@
     <ff-campaign-pushed-products is-landing-page-campaign unresolved>
         <span id="productCampaignCaption">Product Campaign</span>
         <ff-record-list unresolved subscribe="false">
-            <ff-record style="max-width: 20%">
-                <img style="width: 170px; height: 170px" data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-                <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-                   data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                    {{record.Title}}
-                </a>
+            <template data-role="record">
+                <ff-record style="max-width: 20%">
+                    <img style="width: 170px; height: 170px" data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                    <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                       data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                       data-redirect-target="_blank">
+                        {{variantValues.0.Title}}
+                    </a>
 
-                <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-                </div>
-            </ff-record>
+                    <div class="priceContainer">
+                        <span class="brand">{{variantValues.0.Manufacturer}}</span>
+                        <span class="price">{{$ variantValues.0.Price}}</span>
+                    </div>
+                </ff-record>
+            </template>
         </ff-record-list>
     </ff-campaign-pushed-products>
 

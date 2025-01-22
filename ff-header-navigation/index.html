@@ -5,8 +5,6 @@
     <title>ff-header-navigation Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
 
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
     <style>
         body {
@@ -105,12 +103,27 @@
         }
     </style>
 </head>
+<script>
+    document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+        init({
+            ff: {
+                url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                channel: `demo-bergfreunde-en`,
+                apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+            },
+            appConfig: {
+                formatting: {
+                    locale: `de-DE`,
+                    formatOptions: {
+                        style: `currency`,
+                        currency: `EUR`,
+                    },
+                },
+            },
+        });
+    });
+</script>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-></ff-communication>
 
 <div id="header-wrapper">
     <ff-header-navigation></ff-header-navigation>
@@ -118,31 +131,33 @@
 
 
 <ff-record-list unresolved id="test-list" subscribe="true" class="demo-record-list">
-    <ff-record>
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}"
-             data-image-onerror="../img_not_found.gif"
-             data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-             data-redirect-target="_self">
+    <template data-role="record">
+        <ff-record>
+            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}"
+                 data-image-onerror="../img_not_found.gif"
+                 data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                 data-redirect-target="_self">
 
-        <div data-track>
-            <span id="title"
-                  data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}">
-                {{record.Title}}
-            </span>
+            <div data-track>
+                <span id="title"
+                      data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}">
+                    {{variantValues.0.Title}}
+                </span>
 
-            <div>Price: <strong>{{record.Price}} €</strong></div>
+                <div>Price: <strong>{{$ variantValues.0.Price}}</strong></div>
 
-            <a data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect-target="_self"
-               data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               onclick="return false;">
+                <a data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                   data-redirect-target="_self"
+                   data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                   onclick="return false;">
 
                 <span data-track="productClick">
                     Go to Shop page
                 </span>
-            </a>
-        </div>
-    </ff-record>
+                </a>
+            </div>
+        </ff-record>
+    </template>
 </ff-record-list>
 </body>
 </html>

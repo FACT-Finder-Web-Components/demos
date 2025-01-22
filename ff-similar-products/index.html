@@ -7,58 +7,50 @@
     <link rel="stylesheet" href="styles.css">
 
     <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("result", function (result) {
-                if (result.timedOut) {
-                    alert("Search timeout! Try again later");
-                }
-            }, this);
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
 
-            //Add a handler to the search result and use the first product for similar products.
-            resultDispatcher.subscribe("result", function (result) {
-                const similarProductsElement = document.querySelector("ff-similar-products");
+            initialSearch({query: `trousers`});
 
-                if (result.resultStatus === "nothingFound") {
-                    //reset recommendation
-                    similarProductsElement.recordId = "";
-                } else {
-                    const record = result.records[0];
-                    similarProductsElement.recordId = record.id;
+            factfinder.response.subscribeSearch(result => {
+                const productRecord = result.hits.find(hit => hit.id); // skip teasers
+                if (productRecord) {
+                    document.querySelector(`ff-similar-products`).productId = productRecord.id;
                 }
             });
         });
 
         function setSimilarProductId(ffRecordElement) {
-            console.log("setSimilarproduct", ffRecordElement.recordData);
-            const similarProductsElement = document.querySelector("ff-similar-products");
-            similarProductsElement.recordId = ffRecordElement.recordData.id;
+            if (ffRecordElement.recordData.id) { // skip teasers
+                document.querySelector(`ff-similar-products`).productId = ffRecordElement.recordData.id;
+            }
         }
     </script>
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 </head>
 <body>
-<!-- basic communication configuration-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate
-></ff-communication>
-
-
 <header>
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..."/>
+        <ff-searchbutton><button>Search</button></ff-searchbutton>
     </ff-searchbox>
 
-    <ff-searchbutton><button>Search</button></ff-searchbutton>
     <p>
-        Search for 'trousers' to see results.
-        <br>
         <b>INFO</b>: Click on a product in the <i>search results</i> to set the id for the
         similar-products service.
     </p>
@@ -70,30 +62,38 @@
     </div>
 
     <ff-record-list unresolved>
-        <ff-record style="max-width: 20%">
-            <img style="width: 170px;height: 170px" data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
-            </a>
+        <template data-role="record">
+            <ff-record style="max-width: 20%">
+                <img style="width: 170px;height: 170px" data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                   data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                    {{variantValues.0.Title}}
+                </a>
 
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-            </div>
-        </ff-record>
+                <div class="priceContainer">
+                    <span class="brand">{{variantValues.0.Manufacturer}}</span>
+                    <span class="price">{{$ variantValues.0.Price}}</span>
+                </div>
+            </ff-record>
+        </template>
     </ff-record-list>
 </ff-similar-products>
 
 <ff-record-list unresolved>
-    <ff-record onclick="setSimilarProductId(this)">
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
-            </a>
+    <template data-role="record">
+        <ff-record onclick="setSimilarProductId(this)">
+                <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                   data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                    {{variantValues.0.Title}}
+                </a>
 
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-            </div>
-    </ff-record>
+                <div class="priceContainer">
+                    <span class="brand">{{variantValues.0.Manufacturer}}</span>
+                    <span class="price">{{$ variantValues.0.Price}}</span>
+                </div>
+        </ff-record>
+    </template>
 </ff-record-list>
 </body>
 </html>
