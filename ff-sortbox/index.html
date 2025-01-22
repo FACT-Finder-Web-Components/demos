@@ -5,8 +5,6 @@
     <title>Sortbox Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
 
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <link rel="stylesheet" href="styles.css">
@@ -15,34 +13,45 @@
         function toggleSortbox(cssSelector) {
             document.querySelector(cssSelector).toggle();
         }
+
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            initialSearch({query: "trousers"});
+        });
     </script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate
-></ff-communication>
-
-
 <ff-searchbox use-suggest="false">
     <input placeholder="Search..."/>
+    <ff-searchbutton>
+        <button>Search</button>
+    </ff-searchbutton>
 </ff-searchbox>
-
-<ff-searchbutton>
-    <button>Search</button>
-</ff-searchbutton>
 
 <div style="display: flex;flex-wrap: wrap;justify-content: space-around">
     <div class="sortboxContainer">
         <ff-sortbox unresolved id="sortbox2"></ff-sortbox>
-        <div> This sortbox defaults to the standard layout and does not collapse onblur.</div>
+        <div> This sortbox defaults to the standard layout and collapses onblur.</div>
     </div>
 
     <div class="sortboxContainer">
-        <ff-sortbox unresolved id="sortbox1" collapse-onblur="true">
+        <ff-sortbox unresolved id="sortbox1" collapse-onblur="false">
             <!--
             key "default.template" is a pseudo key used to specify a default template for all sortbox items
             -->
@@ -52,25 +61,25 @@
 
             <!--
             this key is related to data returned by FACT-Finder its always FIELDNAME.ORDER
-            except for relevance its "null.desc"
+            except for relevance its "Relevancy.desc"
             -->
             <ff-sortbox-item key="Price.asc">
                 <span style="font-size: 18px">Overridden for: {{description}}</span>
             </ff-sortbox-item>
 
             <!--override relevance layout -->
-            <ff-sortbox-item key="null.desc">
+            <ff-sortbox-item key="Relevancy.desc">
                 Relevance
             </ff-sortbox-item>
         </ff-sortbox>
-        <div> This sortbox will collapse if you click somewhere else on the site.</div>
+        <div>This sortbox will not collapse if you click somewhere else on the site.</div>
     </div>
 
     <div class="sortboxContainer">
         <div class="sortBoxCaption" onclick="toggleSortbox('#sortbox3');">
             Custom Caption Sorting:
         </div>
-        <ff-sortbox unresolved show-selected="true" show-selected-first="true" id="sortbox3"></ff-sortbox>
+        <ff-sortbox unresolved show-selected show-selected-first collapse-onblur="false" id="sortbox3"></ff-sortbox>
         <div> This sortbox always shows the selected item at position 1 in the dropdown.</div>
     </div>
 
@@ -78,22 +87,24 @@
         <div class="sortBoxCaption" onclick="toggleSortbox('#sortbox4');">
             Sort by...
         </div>
-        <ff-sortbox unresolved show-selected="true" id="sortbox4"></ff-sortbox>
+        <ff-sortbox unresolved show-selected collapse-onblur="false" id="sortbox4"></ff-sortbox>
         <div>This sortbox always keeps the order of items in its dropdown.</div>
     </div>
 </div>
 
 <ff-record-list unresolved>
-    <ff-record>
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-            {{record.Title}}
-        </a>
+    <template data-role="record">
+        <ff-record>
+            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+            <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                {{variantValues.0.Title}}
+            </a>
 
-        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-        </div>
-    </ff-record>
+            <div class="priceContainer"><span class="brand">{{variantValues.0.Manufacturer}}</span> <span class="price">{{$ variantValues.0.Price}}</span>
+            </div>
+        </ff-record>
+    </template>
 </ff-record-list>
 </body>
 </html>

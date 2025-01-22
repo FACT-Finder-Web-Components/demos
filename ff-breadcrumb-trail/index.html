@@ -8,8 +8,6 @@
     <script type="module" src="../scripts/star-rating.js"></script>
     <script type="module" src="../scripts/color-facet.js"></script>
 
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <style>
@@ -45,7 +43,36 @@
             flex-wrap: wrap;
             justify-content: space-around;
         }
+
+        ff-breadcrumb-trail-item {
+            border: 1px solid black;
+            padding: 2px 4px;
+            margin-bottom: 4px;
+        }
     </style>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            initialSearch({ query: `jacket` });
+        });
+    </script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" display="none">
@@ -67,14 +94,7 @@
     <!-- use with viewBox="2 2 12 12" -->
     <path id="icon-check" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
 </svg>
-<!-- Configure the connection to the FF-Search backend and a default query-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="sale"
-                  search-immediate
-></ff-communication>
+
 
 <div class="searchbar">
     <ff-searchbox use-suggest="false">
@@ -89,231 +109,7 @@
 
 <main>
     <div class="filters">
-        <ff-asn searchable-from="11" unresolved>
-
-            <ff-asn-group for-group="all">
-                <div slot="filterSearch">
-                    <input placeholder="Search group...">
-                    <svg class="svg-search" viewBox="0 0 30 30"><use xlink:href="#search"></use></svg>
-                </div>
-
-                <ff-asn-group-element>
-                    <div slot="selected">
-                        <span class="checkbox">
-                            <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
-                        </span>
-                        {{{element.name}}}&nbsp;{{group.unit}}
-                    </div>
-
-                    <div slot="unselected">
-                        <span class="checkbox"></span>
-                        <span>{{{element.name}}}&nbsp;{{group.unit}}</span>
-                        <span>({{element.recordCount}})</span>
-                    </div>
-                </ff-asn-group-element>
-
-                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
-
-                <div data-container="detailedLinks">
-                    <div data-content="detailedLinks"></div>
-                </div>
-
-                <div data-container="hiddenLinks">
-                    <div data-content="hiddenLinks"></div>
-                </div>
-
-                <div data-container="showMore">
-                    <svg viewBox="0 0 330 330"><use xlink:href="#icon-angle-down"></use></svg>
-                    <span>Show More</span>
-                </div>
-                <div data-container="showLess">
-                    <svg viewBox="0 0 330 330"><use xlink:href="#icon-angle-up"></use></svg>
-                    <span>Show Less</span>
-                </div>
-
-                <div data-container="removeFilter">
-                    <svg viewBox="3 3 10 10"><use xlink:href="#icon-cross"></use></svg>
-                    <span>Reset Filter</span>
-                </div>
-            </ff-asn-group>
-
-            <ff-asn-group filter-style="TREE" collapsible="false" not-searchable opened>
-                <ff-asn-group-element>
-                    <div slot="selected">{{{element.name}}}&nbsp;{{group.unit}}</div>
-                    <div slot="unselected">
-                        <p>{{{element.name}}}&nbsp;{{group.unit}} <span class="count">({{element.recordCount}})</span>
-                        </p>
-                    </div>
-                </ff-asn-group-element>
-
-                <div slot="groupCaption"><div>{{group.name}}</div></div>
-
-                <div data-container="showMore">
-                    <svg viewBox="0 0 330 330"><use xlink:href="#icon-angle-down"></use></svg>
-                    <span>Show More</span>
-                </div>
-                <div data-container="showLess">
-                    <svg viewBox="0 0 330 330"><use xlink:href="#icon-angle-up"></use></svg>
-                    <span>Show Less</span>
-                </div>
-
-                <div data-container="removeFilter">
-                    <svg viewBox="3 3 10 10"><use xlink:href="#icon-cross"></use></svg>
-                    <span>Reset Filter</span>
-                </div>
-            </ff-asn-group>
-            <ff-asn-group filter-style="DEFAULT">
-                <div slot="filterSearch">
-                    <input placeholder="Search group...">
-                    <svg class="svg-search" viewBox="0 0 30 30"><use xlink:href="#search"></use></svg>
-                </div>
-
-                <ff-asn-group-element>
-                    <div slot="selected">
-                        <span class="circle"></span> {{{element.name}}}&nbsp;{{group.unit}}
-                    </div>
-
-                    <div slot="unselected">
-                        <span class="circle"></span>
-                        <span>{{{element.name}}}&nbsp;{{group.unit}}</span>
-                        <span>({{element.recordCount}})</span>
-                    </div>
-                </ff-asn-group-element>
-
-                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
-
-                <div data-container="detailedLinks">
-                    <div data-content="detailedLinks"></div>
-                </div>
-                <div data-container="hiddenLinks">
-                    <div data-content="hiddenLinks"></div>
-                </div>
-
-                <div data-container="showMore">
-                    <svg viewBox="0 0 330 330"><use xlink:href="#icon-angle-down"></use></svg>
-                    <span>Show More</span>
-                </div>
-                <div data-container="showLess">
-                    <svg viewBox="0 0 330 330"><use xlink:href="#icon-angle-up"></use></svg>
-                    <span>Show Less</span>
-                </div>
-
-                <div data-container="removeFilter">
-                    <svg viewBox="3 3 10 10"><use xlink:href="#icon-cross"></use></svg>
-                    <span>Reset Filter</span>
-                </div>
-            </ff-asn-group>
-
-            <ff-asn-group for-group="Rating">
-                <ff-asn-group-element>
-                    <div slot="selected">
-                        <span class="checkbox">
-                            <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
-                        </span>
-                        <span class="stars">
-                            {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
-                        </span>
-                    </div>
-
-                    <div slot="unselected">
-                        <span class="checkbox"></span>
-                        <span class="stars">
-                            {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
-                        </span>
-                        <span class="count">({{element.recordCount}})</span>
-                    </div>
-                </ff-asn-group-element>
-
-                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
-
-                <div data-container="detailedLinks">
-                    <div data-content="detailedLinks"></div>
-                </div>
-
-                <div data-container="hiddenLinks">
-                    <div data-content="hiddenLinks"></div>
-                </div>
-
-                <div data-container="removeFilter">
-                    <svg viewBox="3 3 10 10"><use xlink:href="#icon-cross"></use></svg>
-                    <span>Reset Filter</span>
-                </div>
-            </ff-asn-group>
-
-            <ff-asn-group for-group="BaseColor" not-searchable>
-                <ff-asn-group-element>
-                    <div slot="selected">
-                        <span class="checkbox">
-                            <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
-                        </span>
-                        <span class="color-circle" style="background-color: {{element._color}}"> </span>
-                        {{{element.name}}}
-                    </div>
-
-                    <div slot="unselected">
-                        <span class="checkbox"></span>
-                        <span class="color-circle" style="background-color: {{element._color}}"> </span>
-                        <span>{{{element.name}}}</span>
-                        <span>({{element.recordCount}})</span>
-                    </div>
-                </ff-asn-group-element>
-
-                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
-
-                <div data-container="detailedLinks">
-                    <div data-content="detailedLinks"></div>
-                </div>
-
-                <div data-container="hiddenLinks">
-                    <div data-content="hiddenLinks"></div>
-                </div>
-
-                <div data-container="removeFilter">
-                    <svg viewBox="3 3 10 10"><use xlink:href="#icon-cross"></use></svg>
-                    <span>Reset Filter</span>
-                </div>
-            </ff-asn-group>
-
-            <ff-asn-group-slider for-group="Price" class="one-touch-slider" opened>
-                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
-
-                <div data-container="removeFilter">
-                    <svg viewBox="3 3 10 10"><use xlink:href="#icon-cross"></use></svg>
-                    <span>Reset Filter</span>
-                </div>
-
-                <ff-slider-control submit-on-input="true">
-                    <div class="slider-inputs">
-                        <input data-control='1'>
-                        <input data-control='2'>
-                    </div>
-
-                    <ff-slider-one-touch></ff-slider-one-touch>
-                </ff-slider-control>
-            </ff-asn-group-slider>
-
-            <ff-asn-group-slider>
-                <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
-
-                <div data-container="removeFilter">
-                    <svg viewBox="3 3 10 10"><use xlink:href="#icon-cross"></use></svg>
-                    <span>Reset Filter</span>
-                </div>
-
-                <ff-slider-control submit-on-input="true">
-                    <input data-control='1'
-                           style="position: absolute; left: 15px;top:12px;">
-                    <input data-control='2'
-                           style="position: absolute; right: 15px;top:12px;">
-
-                    <ff-slider current-min-value="0">
-                        <div slot="slider1"></div>
-                        <div slot="slider2"></div>
-                    </ff-slider>
-                </ff-slider-control>
-            </ff-asn-group-slider>
-
-        </ff-asn>
+        <ff-asn></ff-asn>
     </div>
 
     <div class="bct-examples">
@@ -326,7 +122,7 @@
 
         <div class="bct-example">
             <h3>Example 2:</h3>
-            <p class="bct-example-description">Custom separator ⇒</p>
+            <p class="bct-example-description">Custom separator (⇒), default item template</p>
             <ff-breadcrumb-trail unresolved>
                 <span data-separator>⇒</span>
             </ff-breadcrumb-trail>
@@ -334,24 +130,26 @@
 
         <div class="bct-example advisor-example">
             <h3>Example 3:</h3>
-            <p class="bct-example-description">Custom item templates with interpreted HTML</p>
+            <p class="bct-example-description">Custom item templates with interpreted HTML.<br>
+            Click on Advisor Campaign below.</p>
+
             <ff-breadcrumb-trail unresolved>
                 <!-- The search item is the content of the search box -->
                 <!-- Be careful to not use triple curly braces here because it would open the door to Cross Site Scripting!
                      The contents of `text` can be provided through the `query` URL parameter and {{{text}}} would be interpreted as HTML.
                      This potentially runs arbitrary JavaScript. -->
                 <ff-breadcrumb-trail-item type="search">
-                    <span>SEARCH TERM: {{text}}</span>
+                    <span>SEARCH TERM: {{item.text}}</span>
                 </ff-breadcrumb-trail-item>
 
                 <!-- Filter items are set by the URL or by the ASN -->
                 <ff-breadcrumb-trail-item type="filter">
-                    <span>FILTER: {{text}}</span>
+                    <span>FILTER: {{$bctFilter}}</span>
                 </ff-breadcrumb-trail-item>
 
                 <!-- Advisor items are included in the breadcrumb when an advisor-campaign is selected -->
                 <ff-breadcrumb-trail-item type="advisor">
-                    <span>ADVISOR: {{{text}}}</span>
+                    <span>ADVISOR: {{{item.text}}}</span>
                 </ff-breadcrumb-trail-item>
             </ff-breadcrumb-trail>
         </div>
@@ -359,7 +157,7 @@
 
         <ff-campaign-advisor unresolved>
             <hr>
-            <em>Advisor Campaign</em>
+            <h4>Advisor Campaign</h4>
             <ff-campaign-advisor-question>
                 <div><h1 data-question>{{{text}}}</h1></div>
                 <div class="advisor-answers">

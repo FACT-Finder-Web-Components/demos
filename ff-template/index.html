@@ -5,19 +5,6 @@
     <title>ff-template Demo</title>
     <link rel="stylesheet" href="../demo-styles.css">
 
-    <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("result", function (result) {
-                if (result.timedOut) {
-                    alert("Search timeout! Try again later");
-                }
-            }, this);
-        });
-    </script>
-
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <style>
@@ -26,6 +13,28 @@
             border-bottom: 1px dotted #555;
         }
     </style>
+    <script>
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            initialSearch({query: `backpack`});
+        });
+    </script>
 </head>
 <body>
 <h2>Template 1</h2>
@@ -54,8 +63,8 @@
             const tmp = document.querySelector("#demoTemplate2");
             tmp.data = {
                 product: {
-                    name: "Super awsome Product",
-                    description: "This Product is super awsome! Go buy it!",
+                    name: "Super awesome Product",
+                    description: "This Product is super awesome! Go buy it!",
                     info: {
                         rating: 5,
                         price: 100,
@@ -123,24 +132,16 @@
 <h2>Template 4</h2>
 
 <div class="example">
-
-    <ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                      version="ng"
-                      api="v5"
-                      channel="demo-bergfreunde-en"
-                      default-query="backpack"
-                      search-immediate
-    ></ff-communication>
     <p>Access the values from the search result</p>
     <ff-searchbox use-suggest="false">
         <input placeholder="Search..."/>
+        <ff-searchbutton><button>Search</button></ff-searchbutton>
     </ff-searchbox>
-    <ff-searchbutton><button>Search</button></ff-searchbutton>
 
-    <ff-template unresolved id="demoTemplate4" scope="result">
+    <ff-template unresolved id="demoTemplate4" scope="Search">
         <h2>Search Result:</h2>
-        <p>resultCount: {{resultCount}}</p>
-        <p>searchTime: {{searchTime}}</p>
+        <p>Total hits: {{totalHits}}</p>
+        <p>Total took: {{tookTotal}} ms</p>
     </ff-template>
 </div>
 </body>

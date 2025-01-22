@@ -27,6 +27,10 @@ ff-campaign-advisor-answer h2 {
     text-align: center;
 }
 
+ff-campaign-advisor-answer img {
+    max-width: 100%;
+}
+
 ff-campaign-feedbacktext {
     width: 800px;
     margin-left: auto;

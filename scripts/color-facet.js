@@ -28,19 +28,23 @@ export const ColorMaps = {
     "gelb": "yellow",
 };
 
-document.addEventListener('ffReady', ({resultDispatcher}) => {
-    resultDispatcher.addCallback('asn', asnColors);
+document.addEventListener('ffCoreReady', ({factfinder}) => {
+    factfinder.response.transformSearch(asnColors);
 });
 
-function asnColors(groups) {
-    if (!groups) return;
+function asnColors(searchResult) {
+    const {facets = []} = searchResult;
 
-    groups.filter(group => group.associatedFieldName === "BaseColor").forEach(group => {
-        group.elements.concat(group.selectedElements).forEach(el => {
-            el._color = colorToCSS(el.name);
+    facets.filter(facet => facet.associatedFieldName === "BaseColor")
+        .forEach(({elements, selectedElements}) => {
+            elements.concat(selectedElements).forEach(el => {
+                el._color = colorToCSS(el.text);
+            });
         });
-    });
+
+    return searchResult;
 }
+
 function colorToCSS(color) {
-    return ColorMaps[(color || ``).toLowerCase()] || color;
+    return ColorMaps[(color ?? ``).toLowerCase()] ?? color;
 }

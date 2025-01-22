@@ -6,65 +6,59 @@
     <link rel="stylesheet" href="../demo-styles.css">
     <link rel="stylesheet" href="styles.css">
 
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
     <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("result", function (result) {
-                if (result.timedOut) {
-                    alert("Search timeout! Try again later");
-                } else {
-                    // trim records for the demo
-                    if (result.records && result.records.length > 8) {
-                        result.records.splice(8, result.records.length);
-                    }
-                }
-
-            }, this);
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
         });
 
         function searchFor(query) {
-            const searchBox = document.querySelector("ff-searchbox");
+            const searchBox = document.querySelector(`ff-searchbox`);
             searchBox.value = query;
             searchBox.search();
         }
     </script>
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
-    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 </head>
 <body>
-<!-- basic communication configuration -->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="jacket"
-                  search-immediate>
-</ff-communication>
 
 <ff-searchbox use-suggest="false">
     <input placeholder="Search..."/>
+    <ff-searchbutton>
+        <button>Search</button>
+    </ff-searchbutton>
 </ff-searchbox>
 
-<ff-searchbutton>
-    <button>Search</button>
-</ff-searchbutton>
-
-<br>
-<button onclick="searchFor('jacket')">Search for 'jacket'</button>
-<button onclick="searchFor('shoe')">Search for 'Shoe'</button>
-<button onclick="searchFor('backpack')">Search for 'backpack'</button>
-
-<ff-campaign-feedbacktext unresolved label="below breadcrumb">
-    <h2>This is a banner campaign configured in the backend and altered in code</h2>
+<ff-campaign-feedbacktext unresolved label="below searchbox">
+    <p>This is a banner campaign configured in the FactFinder UI. Its label is "below searchbox".</p>
     {{{text}}}
 </ff-campaign-feedbacktext>
 
-<ff-campaign-advisor unresolved not="Advisor Schuhe">
+<br>
+<button onclick="searchFor('jacket')">Search for 'jacket'</button>
+<button onclick="searchFor('shirts')">Search for 'shirts'</button>
+<button onclick="searchFor('backpack')">Search for 'backpack'</button>
+
+<ff-campaign-advisor unresolved name="Jackets">
+    <p> The "Jackets" advisor campaign.</p>
     <ff-campaign-advisor-question>
         <span><h1 data-question>{{{text}}}</h1></span>
-        <!--OR when HTML-->
-        <!--{{{text}}}-->
+        <!--OR when plain text-->
+        <!-- {{text}} -->
         <div class="answers">
             <ff-campaign-advisor-answer>
                 {{{text}}}
@@ -73,10 +67,10 @@
     </ff-campaign-advisor-question>
 </ff-campaign-advisor>
 
-<!-- For the campaign 'Schuhe' use this advisor-->
-<ff-campaign-advisor unresolved name="Advisor Schuhe">
+<!-- For the campaign 'Shirts' use this advisor-->
+<ff-campaign-advisor unresolved not="Jackets">
     <style>
-        .shoes-answers {
+        .gifts-answers {
             background-color: #0d47a1;
             color: white;
             font-weight: bold;
@@ -87,24 +81,21 @@
             margin: 20px;
             padding: 10px;
         }
-
-        .shoes-answers-box {
+        .gifts-answers-box {
             margin-left: auto;
             margin-right: auto;
             width: 500px;
         }
     </style>
 
+    <p>Any advisor campaign except the one named "Jackets"</p>
+
     <ff-campaign-advisor-question>
-        <span><h1 data-question>{{text}}</h1></span>
-        <div class="shoes-answers-box">
-            <!--
-                In this campaign the values defined for an campaign answer are just plain text. So you don't need
-                to render it as HTML and can style it here.
-            -->
-            <ff-campaign-advisor-answer>
-                <div class="shoes-answers">
-                    {{text}}
+        <span><h1 data-question>{{{text}}}</h1></span>
+        <div class="gifts-answers-box">
+            <ff-campaign-advisor-answer class="gifts-answers">
+                <div>
+                    {{{text}}}
                 </div>
             </ff-campaign-advisor-answer>
         </div>
@@ -127,23 +118,29 @@
         text-align: center;
     }
 </style>
-<ff-campaign-feedbacktext unresolved label="above products">
+<ff-campaign-feedbacktext unresolved label="above search result">
     <div class="aboveProductsFeedback">
-        {{text}}
+    <p>Banner campaign labelled "above search result"</p>
+        {{{text}}}
     </div>
 </ff-campaign-feedbacktext>
 
 <ff-record-list unresolved>
-    <ff-record>
-        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-            {{record.Title}}
-        </a>
+    <template data-role="record">
+        <ff-record>
+            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+            <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}"
+               data-redirect-target="_blank">
+                {{variantValues.0.Title}}
+            </a>
 
-        <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-        </div>
-    </ff-record>
+            <div class="priceContainer">
+                <span class="brand">{{variantValues.0.Manufacturer}}</span>
+                <span class="price">{{$ variantValues.0.Price}}</span>
+            </div>
+        </ff-record>
+    </template>
 </ff-record-list>
 </body>
 </html>
