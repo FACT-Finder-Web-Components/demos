@@ -528,10 +528,6 @@ ff-asn-group-slider .ffw-sliderSection {
     margin-top: 5px;
 }
 
-ff-slider-one-touch {
-    margin: 30px 2px 12px;
-}
-
 ff-asn-group-slider.one-touch-slider .ffw-sliderSection {
     pointer-events: none;
 }
@@ -550,50 +546,29 @@ ff-slider-control input {
     text-align: center;
 }
 
-ff-slider-one-touch {
-    margin-top: 30px;
-    margin-bottom: 12px;
+ff-slider .ffw-slider-container {
+    height: 68px;
 }
 
-ff-slider-one-touch .ffw-triangle {
-    border-color: transparent transparent #4bbee9;
-    opacity: .17;
-}
-
-ff-slider-one-touch .ffw-line {
+ff-slider .ffw-line {
     height: 18px;
     background-color: #ededed;
     box-sizing: content-box;
 }
 
-ff-slider-one-touch .ffw-selected-range {
+ff-slider .ffw-selected-range {
     height: 18px;
     background-color: #4bbee9;
     box-sizing: content-box;
 }
 
-ff-slider-one-touch .ffw-slider-button {
+ff-slider .ffw-slider-button {
     width: 2px;
     height: 16px;
     border: 8px solid #565656;
     box-sizing: content-box;
     background-color: #9d9d9d;
     z-index: 1000;
-}
-
-ff-slider {
-    margin: 70px 2px 12px;
-    background-color: #4bbee9;
-}
-
-ff-slider [slot^=slider] {
-    height: 25px;
-    width: 25px;
-    box-sizing: border-box;
-    border: 1px solid #4bbee9;
-    border-radius: 50%;
-    background-color: #fff;
-    margin-top: -10px;  /* this value is calculated from the button's height and the slider bar's default thickness */
 }
 
 .stars {
