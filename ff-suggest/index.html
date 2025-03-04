@@ -56,49 +56,51 @@
 
 
     <ff-suggest layout="block" hide-onblur="false" unresolved>
-        <section id="searchContainer" class="search-terms-container">
-            <div data-container="searchTerm">
-                <h2 class="container-caption">Search terms</h2>
-                <ff-suggest-item type="searchTerm">
-                    <span>{{{name}}}</span>
-                </ff-suggest-item>
-            </div>
-
-            <div data-container="category">
-                <h2 class="container-caption">Categories</h2>
-                <ff-suggest-item type="category">
-                    <span>{{{name}}}</span>
-                </ff-suggest-item>
-            </div>
-
-            <div data-container="brand">
-                <h2 class="container-caption">Brands</h2>
-                <ff-suggest-item type="brand">
-                    <span>{{{name}}}</span>
-                </ff-suggest-item>
-            </div>
-        </section>
-
-        <section id="productContainer" class="products-container">
-            <div data-container="productName">
-                <h2 class="container-caption">Products</h2>
-                <div class="suggest-images">
-                    <ff-suggest-item type="productName">
-                        <div class="product-image">
-                            <img data-image>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-name">{{{name}}}</div>
-                        </div>
+        <template data-role="suggestions">
+            <section id="searchContainer" class="search-terms-container">
+                <div data-container="searchTerm">
+                    <h2 class="container-caption">Search terms</h2>
+                    <ff-suggest-item type="searchTerm">
+                        <span>{{{name}}}</span>
                     </ff-suggest-item>
                 </div>
-            </div>
-            <div class="all-results-container">
-                <ff-searchbutton>
-                    <button>Show all results</button>
-                </ff-searchbutton>
-            </div>
-        </section>
+
+                <div data-container="category">
+                    <h2 class="container-caption">Categories</h2>
+                    <ff-suggest-item type="category">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+
+                <div data-container="brand">
+                    <h2 class="container-caption">Brands</h2>
+                    <ff-suggest-item type="brand">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+            </section>
+
+            <section id="productContainer" class="products-container">
+                <div data-container="productName">
+                    <h2 class="container-caption">Products</h2>
+                    <div class="suggest-images">
+                        <ff-suggest-item type="productName">
+                            <div class="product-image">
+                                <img data-image>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name">{{{name}}}</div>
+                            </div>
+                        </ff-suggest-item>
+                    </div>
+                </div>
+                <div class="all-results-container">
+                    <ff-searchbutton>
+                        <button>Show all results</button>
+                    </ff-searchbutton>
+                </div>
+            </section>
+        </template>
     </ff-suggest>
 </div>
 
