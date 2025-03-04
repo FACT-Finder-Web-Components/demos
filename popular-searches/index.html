@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popular Searches Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        .popular-searches-container .caption {
+            font-weight: bold;
+            font-size: 1.25em;
+            margin-bottom: 12px;
+        }
+        .popular-searches-container [data-template] {
+            margin-top: 4px;
+        }
+        .popular-searches-container [data-template]:hover {
+            cursor: pointer;
+            background-color: #ced4da;
+        }
+    </style>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            factfinder.request.before.search(requestInfoSearch => {
+                if (requestInfoSearch.searchOptions.requestOptions.origin?.tagName === `FF-SEARCHBOX`) {
+                    console.log(`In this demo we want to see ff-suggest. Therefore, we block searches that come through the search box.`);
+                    return false;
+                }
+            });
+
+            factfinder.routing.setNavigateListener((url, origin) => {
+                alert(`At this point, because the clicked item has a 'deeplink' field, Web Components would navigate to '${url}'.`);
+
+                // But we cancel here because it is just a demo.
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+
+<div class="searchbar">
+    <p>Click into search box to summon Popular Searches. Type to see regular suggestions.</p>
+
+    <ff-searchbox popular-searches>
+        <input placeholder="Find what you are looking for..." />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+
+
+    <ff-suggest layout="block" unresolved>
+        <template data-role="popularSearches">
+            <div class="popular-searches-container">
+                <div class="caption">Current Popular Searches</div>
+                <div data-template>{{name}}</div>
+            </div>
+        </template>
+
+        <template data-role="suggestions">
+            <section id="searchContainer" class="search-terms-container">
+                <div data-container="searchTerm">
+                    <h2 class="container-caption">Search terms</h2>
+                    <ff-suggest-item type="searchTerm">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+
+                <div data-container="category">
+                    <h2 class="container-caption">Categories</h2>
+                    <ff-suggest-item type="category">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+
+                <div data-container="brand">
+                    <h2 class="container-caption">Brands</h2>
+                    <ff-suggest-item type="brand">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+            </section>
+
+            <section id="productContainer" class="products-container">
+                <div data-container="productName">
+                    <h2 class="container-caption">Products</h2>
+                    <div class="suggest-images">
+                        <ff-suggest-item type="productName">
+                            <div class="product-image">
+                                <img data-image>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name">{{{name}}}</div>
+                            </div>
+                        </ff-suggest-item>
+                    </div>
+                </div>
+                <div class="all-results-container">
+                    <ff-searchbutton>
+                        <button>Show all results</button>
+                    </ff-searchbutton>
+                </div>
+            </section>
+        </template>
+    </ff-suggest>
+</div>
+
+<ff-record-list unresolved>
+    <template data-role="record">
+        <ff-record>
+            <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                <div class="record-img">
+                    <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                </div>
+                <div class="record-product-info">
+                    <h3 class="record-product-name">
+                        {{variantValues.0.Title}}
+                    </h3>
+                    <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                    <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                </div>
+            </a>
+        </ff-record>
+    </template>
+</ff-record-list>
+</body>
+</html>
