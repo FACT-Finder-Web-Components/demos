@@ -3,32 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Vue Carousel</title>
-    <script src="../../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../../node_modules/ff-web-components/dist/bundle.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.min.js"></script>
+
     <script defer src="carousel.js"></script>
     <link rel="stylesheet" href="../carousel.css">
+    <script>
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                    dataBindingTags: [`[[`, `]]`],
+                },
+            });
+
+            initialSearch({ query: `jacket` });
+        });
+    </script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  mustache-delimiters="[[,]]"
-                  default-query="jacket"
-                  search-immediate
-></ff-communication>
 <div id="app">
     <ffc-carousel query="hat" class="hats-carousel"></ffc-carousel>
     <ff-record-list>
-        <ff-record>
-            <a href="[[record.Deeplink]]" class="product">
-                <img data-image="[[record.ImageURL]]" alt="[[record.Title]]">
-                <div class="title">[[record.Title]]</div>
-                <div class="price">[[record.Price]] €</div>
-            </a>
-        </ff-record>
+        <div data-compat-template-role="record">
+            <!--
+            <ff-record>
+                <a data-anchor="https://www.your.webshop[[variantValues.0.Deeplink]]"
+                   data-redirect="https://www.your.webshop[[variantValues.0.Deeplink]]"
+                   data-redirect-target="_blank"
+                   class="product">
+                    <img data-image="[[variantValues.0.ImageURL]]" alt="[[variantValues.0.Title]]">
+                    <div class="title">[[variantValues.0.Title]]</div>
+                    <div class="price">[[$ variantValues.0.Price]]</div>
+                </a>
+            </ff-record>
+            -->
+        </div>
     </ff-record-list>
     <ffc-carousel query="shoe" class="shoes-carousel"></ffc-carousel>
 </div>
@@ -47,7 +68,7 @@
         <div :style="transformStyles" class="carousel">
             <ffc-product v-for="record in records"
                          :key="record.id"
-                         :record="record">
+                         :record="record.variantValues[0]">
             </ffc-product>
         </div>
         <div class="button next-button" @click="next">&#10095</div>
