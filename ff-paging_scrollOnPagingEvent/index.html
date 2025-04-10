@@ -3,67 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <title>Scroll On Paging Demo</title>
-    <link rel="stylesheet" href="../demo-styles.css" />
+    <link rel="stylesheet" href="../assets/demo-styles.css" />
 
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
-    <script>
-        document.addEventListener("ffReady", function(event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.subscribe("paging", function (resultData, event) {
-                window.scrollTo(0, 0); // or get and scroll a specific scrollbar
-            });
-        })
-    </script>
-
     <style>
-        [unresolved] {
-            display: none;
-        }
-
         ff-paging {
             border: 1px solid black;
             padding: 0.5em;
         }
+        ff-paging-item {
+            padding: 4px 8px;
+            cursor: pointer;
+        }
     </style>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            const scrollToTop = () => window.scrollTo({ top: 0, left: window.scrollX, behavior: `smooth` });
+
+            factfinder.response.subscribeSearch((result, requestInfoSearch) => {
+                // If required, only scroll to top on requests issues by ff-paging.
+                if (requestInfoSearch.searchOptions.requestOptions.origin?.tagName !== `FF-PAGING`) return;
+                scrollToTop();
+            });
+
+            // On category pages you subscribe to the `/navigation` endpoint.
+            // Watch out for the different requestInfo structure compared to `subscribeSearch`.
+            factfinder.response.subscribeNavigation((result, requestInfoNavigation) => {
+                if (requestInfoNavigation.navigationOptions.requestOptions.origin?.tagName !== `FF-PAGING`) return;
+                scrollToTop();
+            });
+
+            initialSearch({ query: `t-shirts` });
+        });
+    </script>
 </head>
 <body>
-    <!-- basic connection configuration-->
-    <ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                      version="ng"
-                      api="v5"
-                      channel="demo-bergfreunde-en"
-                      default-query="trousers"
-                      search-immediate="true"
-    ></ff-communication>
 
+<div class="searchbar">
     <ff-searchbox use-suggest="false">
-        <input placeholder="Search..."/>
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
     </ff-searchbox>
+</div>
 
-
-    <ff-record-list unresolved>
+<ff-record-list unresolved>
+    <template data-role="record">
         <ff-record>
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
+            <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                <div class="record-img">
+                    <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}"
+                         alt="{{variantValues.0.Title}}">
+                </div>
+                <div class="record-product-info">
+                    <h3 class="record-product-name">
+                        {{variantValues.0.Title}}
+                    </h3>
+                    <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                    <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                </div>
             </a>
-
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-            </div>
         </ff-record>
-    </ff-record-list>
+    </template>
+</ff-record-list>
 
-    <ff-paging id="paging1" unresolved>
-        Page:
-        <ff-paging-item type="currentLink -2">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink -1">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink" style="font-weight: bold;">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink +1">{{caption}}</ff-paging-item>
-        <ff-paging-item type="currentLink +2">{{caption}}</ff-paging-item>
-    </ff-paging>
+<ff-paging unresolved>
+    Page:
+    <ff-paging-item type="currentLink -2">{{page}}</ff-paging-item>
+    <ff-paging-item type="currentLink -1">{{page}}</ff-paging-item>
+    <ff-paging-item type="currentLink" style="font-weight: bold;">{{page}}</ff-paging-item>
+    <ff-paging-item type="currentLink +1">{{page}}</ff-paging-item>
+    <ff-paging-item type="currentLink +2">{{page}}</ff-paging-item>
+</ff-paging>
+
 </body>
 </html>
