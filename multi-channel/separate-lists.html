@@ -3,102 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <title>Parallel Channel Demo - Separate Lists</title>
-    <link rel="stylesheet" href="../demo-styles.css">
+    <link rel="stylesheet" href="../assets/demo-styles.css">
 
-    <script>
-        document.addEventListener(`ffReady`, function ({ eventAggregator, resultDispatcher }) {
-            const parallelChannelTopic = `search:parallelChannel`;
-
-            resultDispatcher.subscribe(parallelChannelTopic, response => {
-                document.querySelector(`#right-list`).records = response.searchResult.records;
-            });
-
-            document.querySelector(`#search-controls`)
-                .addEventListener(`before-search`, event => requestToParallelChannel(event.detail.query));
-
-            eventAggregator.addBeforeDispatchingCallback(event => {
-                if (event.searchImmediate === `true`) {
-                    requestToParallelChannel(event.query);
-                }
-            });
-
-
-            function requestToParallelChannel(query) {
-                eventAggregator.addFFEvent({
-                    type: `search`,
-                    query,
-                    channel: `Bergfreunde-de`,
-                    topics: () => [parallelChannelTopic]
-                });
-            }
-        });
-    </script>
-
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
     <style>
-        body {
-            width: 1000px;
-        }
-        #main {
+        main {
             display: flex;
             justify-content: space-between;
         }
-        #main > div {
+        main > div {
             flex-grow: 0;
             flex-shrink: 0;
             width: 46%;
             box-sizing: border-box;
         }
+        .record-sizes span {
+            margin-right: .25em;
+        }
     </style>
-</head>
 
+    <script>
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-rCJ5fQU3.U9CLWqZX4iVphCT0JEL9OsvduPJLe9`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            // In order to duplicate the request to the primary channel, we listen to the pipeline for search requests.
+            factfinder.request.before.search(requestInfoSearch => {
+                const secondarySearchOptions = {
+                    ...requestInfoSearch.searchOptions,
+                    searchControlParams: {
+                        ...requestInfoSearch.searchOptions.searchControlParams,
+
+                        // Some optimizations to reduce the workload on FactFinder, to minimize bandwidth usage, and to eventually improve response time.
+                        useAsn: false,
+                        useCampaigns: false,
+                    },
+                    requestOptions: {
+                        ...requestInfoSearch.searchOptions.requestOptions,
+                        channel: `magento2-factfinder`,
+
+                        // The response from the secondary channel shall not go through the regular response pipeline.
+                        // Otherwise, it would get dispatched to all data outlets in the page (including the primary record-list).
+                        requestOnly: true,
+
+                        // The request to the secondary channel is issued from a before-handler (the one we are currently in).
+                        // These before-handler must not be called again, or we create an infinite loop.
+                        skipBeforeHandlers: true,
+
+                        // Alternatively, if you have other before-handlers in place that must get invoked, you can specify a custom `origin`
+                        // and define a guard clause checking the origin at the beginning of this before-handler and return early to avoid endlessly reissuing the request.
+                        // origin: `secondary`,
+                    },
+                };
+
+                factfinder.request.search(requestInfoSearch.searchParams, secondarySearchOptions).then(result => {
+                    // Directly supply the relevant data to the secondary record-list.
+                    document.querySelector(`#secondary-list`).records = result.hits;
+                });
+            });
+
+            initialSearch({ query: `shirt` });
+        });
+    </script>
+</head>
 <body>
 
-
-<ff-communication url="https://showcase.ff-labs.de/fact-finder"
-                  version="ng"
-                  api="v4"
-                  channel="Bergfreunde-en"
-                  default-query="shirt"
-                  search-immediate>
-</ff-communication>
-
-
-<div id="search-controls">
+<div class="searchbar">
     <ff-searchbox use-suggest="false">
-        <input placeholder="Search..." autofocus>
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
     </ff-searchbox>
-
-    <ff-searchbutton>
-        <button>Search</button>
-    </ff-searchbutton>
 </div>
 
-<div id="main">
-    <div id="left">
-        <ff-record-list>
-            <ff-record>
-                <div><img data-image></div>
-                <div>{{record.Title}}</div>
-                <div>{{record.Price}}</div>
-            </ff-record>
+<p>This demo sends a search query to two separate channels and displays their results in two separate lists.</p>
+
+<main>
+
+    <div>
+        <h2>Primary channel</h2>
+        <ff-record-list unresolved>
+            <template data-role="record">
+                <ff-record>
+                    <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                       data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                        <div class="record-img">
+                            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}"
+                                 alt="{{variantValues.0.Title}}">
+                        </div>
+                        <div class="record-product-info">
+                            <h3 class="record-product-name">
+                                {{variantValues.0.Title}}
+                            </h3>
+                            <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                            <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                        </div>
+                    </a>
+                </ff-record>
+            </template>
         </ff-record-list>
     </div>
-    <div id="right">
-        <ff-record-list id="right-list" subscribe="false">
-            <ff-record>
-                <div><img data-image></div>
-                <div>{{record.Title}}</div>
-                <div>{{record.Price}}</div>
-            </ff-record>
+
+    <div>
+        <h2>Secondary channel</h2>
+        <ff-record-list id="secondary-list" subscribe="false" unresolved>
+            <template data-role="record">
+                <ff-record>
+                    <div class="record-product-info">
+                        <h3 class="record-product-name">
+                            {{masterValues.Name}}
+                        </h3>
+                        <div class="record-sizes">Sizes: {{#each masterValues.Size}}<span>{{this}}</span>{{/each}}</div>
+                        <div class="record-product-price">{{$ masterValues.Price}}</div>
+                    </div>
+                </ff-record>
+            </template>
         </ff-record-list>
     </div>
-</div>
-
-
+</main>
 
 </body>
 </html>
