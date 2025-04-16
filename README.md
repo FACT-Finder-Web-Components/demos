@@ -1,7 +1,11 @@
-# FACT-Finder Web Components Demos
+# FactFinder Web Components Demos
 
-These demos showcase the usage of FACT-Finder Web Components.
+These demos showcase the usage of FactFinder Web Components.
 You will also find several special use cases with a custom implementation.
+
+**CAUTION**:
+These are **not** plug-and-play solutions.
+The purpose of these demos is to provide you with a source to draw inspiration from to build your own individual solution.
 
 ## Installation
 
