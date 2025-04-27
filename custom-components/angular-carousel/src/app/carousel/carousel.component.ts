@@ -1,12 +1,7 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 import {ProductComponent} from '../product/product.component';
 import {Record} from '../record.interface';
-
-let UID: number = 0;
-function newId() {
-    return UID++;
-}
 
 @Component({
     selector: 'ffc-carousel',
@@ -20,7 +15,7 @@ function newId() {
     `,
     styles: []
 })
-export class CarouselComponent implements OnInit, OnDestroy {
+export class CarouselComponent implements OnInit {
     records: Record[] = [];
 
     @Input()
@@ -30,36 +25,15 @@ export class CarouselComponent implements OnInit, OnDestroy {
     private productComponents: QueryList<ElementRef>;
 
     private subscriptionKey: string;
-    private uid: number = newId();
     private offset: number = 0;
 
     constructor(private el: ElementRef) {
     }
 
-    ngOnInit(): void {
-        awaitFactfinder((resultDispatcher, eventAggregator) => {
-            setTimeout(() => {
-                // trigger search on a dedicated topic
-                eventAggregator.addFFEvent({
-                    type: 'search',
-                    query: this.query,
-                    topics: () => [`carousel-${this.uid}`]
-                });
-            });
-
-            // update component's data when FACT-Finder response comes
-            this.subscriptionKey = resultDispatcher.subscribe(`carousel-${this.uid}`, response => {
-                this.records = response.searchResult.records.map(record => record.record);
-            });
-        });
-    }
-
-    ngOnDestroy(): void {
-        awaitFactfinder(resultDispatcher => {
-            if (this.subscriptionKey) {
-                resultDispatcher.unsubscribe(`carousel-${this.uid}`, this.subscriptionKey);
-            }
-        });
+    async ngOnInit(): Promise<void> {
+        const {request} = await getFactfinder();
+        const {hits} = await request.search({query: this.query}, {requestOptions: {requestOnly: true}});
+        this.records = hits.map(h => h.variantValues[0]);
     }
 
     next(): void {
@@ -85,12 +59,15 @@ export class CarouselComponent implements OnInit, OnDestroy {
     }
 }
 
-function awaitFactfinder(callback) {
+async function getFactfinder() {
     const factfinder = (<any>window).factfinder;
-    if (factfinder) {
-        callback(factfinder.communication.ResultDispatcher, factfinder.communication.EventAggregator);
-    } else {
-        // @ts-ignore
-        document.addEventListener('ffReady', ({resultDispatcher, eventAggregator}) => callback(resultDispatcher, eventAggregator));
+    if (typeof factfinder !== `undefined`) {
+        return factfinder;
     }
+
+    return new Promise(resolve => {
+        document.addEventListener(`ffCoreReady`, (event : any) => {
+            resolve(event.factfinder);
+        });
+    });
 }

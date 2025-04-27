@@ -1,15 +1,36 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Angular Carousel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <script src="ffwebcomponents/vendor/custom-elements-es5-adapter.js"></script>
-  <script src="ffwebcomponents/vendor/webcomponents-loader.js"></script>
-  <script src="ffwebcomponents/bundle.js" defer></script>
+    <meta charset="utf-8">
+    <title>Angular Carousel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="ffwebcomponents/bundle.js" defer></script>
+    <script>
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                    dataBindingTags: [`[[`, `]]`],
+                },
+            });
+
+            initialSearch({query: `jacket`});
+        });
+    </script>
 </head>
 <body>
-  <ffc-root></ffc-root>
+    <ffc-root></ffc-root>
 </body>
 </html>
