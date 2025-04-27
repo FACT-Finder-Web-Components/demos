@@ -1,61 +1,52 @@
 const template =
-    '<div class="record">' +
-    '    <img src="{{ImageURL}}" alt="{{Title}}" class="product-image">' +
-    '    <div class="manufacturer">{{Manufacturer}}</div>' +
-    '    <div class="title">{{Title}}</div>' +
-    '    <div class="price">{{Price}} €</div>' +
-    '    <a href="{{Deeplink}}" class="details-link">Details</a>' +
-    '</div>';
+    `<div class="record">
+         <img src="{{ImageURL}}" alt="{{Title}}" class="product-image">
+         <div class="manufacturer">{{Manufacturer}}</div>
+         <div class="title">{{Title}}</div>
+         <div class="price">{{Price}} €</div>
+         <a href="{{Deeplink}}" class="details-link">Details</a>
+    </div>`;
 
 // Custom Element definition without ES6 class
 function CustomRecordList() {
-    // this way of instantiating HTMLElement on browsers with native Web Components support only works thanks to custom-elements-es5-adapter.js
-    const element = HTMLElement.call(this);
+    const element = Reflect.construct(HTMLElement, [], CustomRecordList);
     element._subscriptionKey = undefined;
     return element;
 }
 CustomRecordList.prototype = Object.create(HTMLElement.prototype);
 CustomRecordList.prototype.constructor = CustomRecordList;
 
-// subscribe to 'records' topic when the element is attached to DOM
-CustomRecordList.prototype.connectedCallback = function() {
-    const element = this;
-    awaitResultDispatcher(function (resultDispatcher) {
-        element._subscriptionKey = resultDispatcher.subscribe('records', handleRecords(element));
-    });
+CustomRecordList.prototype.connectedCallback = async function() {
+    const {response} = await getFactfinder();
+    this._subscriptionKey = response.subscribeSearch(result =>
+        this.innerHTML = result.hits.map(renderRecord).join(``)
+    );
 };
 
-// unsubscribe when the element is detached from DOM
-CustomRecordList.prototype.disconnectedCallback = function() {
+CustomRecordList.prototype.disconnectedCallback = async function() {
     if (this._subscriptionKey) {
-        const element = this;
-        awaitResultDispatcher(function (resultDispatcher) {
-            resultDispatcher.unsubscribe('records', element._subscriptionKey);
-        });
+        const {response} = await getFactfinder();
+        response.unsubscribe(this._subscriptionKey);
     }
 };
 
-customElements.define('custom-record-list', CustomRecordList);
+customElements.define(`custom-record-list`, CustomRecordList);
 
-function awaitResultDispatcher(callback) {
-    if (typeof factfinder !== 'undefined') {
-        callback(factfinder.communication.ResultDispatcher);
-    } else {
-        document.addEventListener('ffReady', function (event) {
-            callback(event.resultDispatcher);
-        });
+async function getFactfinder() {
+    if (typeof factfinder !== `undefined`) {
+        return factfinder;
     }
+
+    return new Promise(resolve => {
+        document.addEventListener(`ffCoreReady`, ({factfinder}) => {
+            resolve(factfinder);
+        });
+    });
 }
 
-// render new records every time they are dispatched
-function handleRecords(element) {
-    return function(records) {
-        element.innerHTML = records.map(renderRecord).join('');
-    };
-}
 function renderRecord(record) {
     // naive templating engine implementation
-    return Object.keys(record.record).reduce(function (html, property) {
-        return html.replace(new RegExp('{{\s*' + property + '\s*}}', 'g'), record.record[property]);
+    return Object.keys(record.variantValues[0]).reduce((html, property) => {
+        return html.replace(new RegExp(`{{\\s*${property}\\s*}}`, `g`), record.variantValues[0][property]);
     }, template);
 }
