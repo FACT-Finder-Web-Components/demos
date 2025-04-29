@@ -8,8 +8,6 @@
   <script type="module" src="../scripts/star-rating.js"></script>
   <script type="module" src="../scripts/color-facet.js"></script>
 
-  <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-  <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
   <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 
   <style>
@@ -37,96 +35,175 @@
     const difference = (a, b) => a.filter(x => !b.includes(x));
     const symmetricDifference = (a, b) => difference(a, b).concat(difference(b, a));
 
+
+    document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+      init({
+        ff: {
+          url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+          channel: `demo-bergfreunde-en`,
+          apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+        },
+        appConfig: {
+          formatting: {
+            locale: `de-DE`,
+            formatOptions: {
+              style: `currency`,
+              currency: `EUR`,
+            },
+          },
+        },
+      });
+
+      factfinder.response.subscribeSearch((result, { searchOptions }) => {
+        // Just some logging to visualize a request's origin.
+        console.log(`Request origin:`, searchOptions.requestOptions.origin);
+      });
+
+
+      // We keep track of the last search result in order to be able to get a list of the currently selected filter values at any time.
+      let lastSearchResult;
+
+      factfinder.response.subscribeSearch(result => {
+        lastSearchResult = result;
+      });
+
+      const currentFilterValues = filterName => {
+        const values = lastSearchResult?.filters.find(f => f.name === filterName)?.values ?? [];
+        return values.map(v => v.value);
+      };
+
+
+      // This adds the "Apply filters" button to an ASN group defined within the `addButton` function.
+      document.querySelector(`ff-asn`).addEventListener(`dom-updated`, addButton);
+
+      initialSearch({ query: `shirt` });
+
+
+      function addButton(e) {
+        const asnGroupBrand = e.target.querySelector(`ff-asn-group[for-group="Manufacturer"]`);
+        const linksContainer = asnGroupBrand && asnGroupBrand.querySelector(`[data-container="detailedLinks"]`);
+
+        if (!linksContainer) return;
+
+        const button = createButton();
+
+        button.onclick = applyFilters(asnGroupBrand, button);
+        button.disable();
+        linksContainer.parentNode.append(button);
+
+        // Take care to unsubscribe `addButton` again, or each follow-up request will add another button.
+        document.querySelector(`ff-asn`).removeEventListener(`dom-updated`, addButton);
+
+        factfinder.request.before.search(requestInfoSearch => {
+          const { searchOptions } = requestInfoSearch;
+
+          const origin = searchOptions.requestOptions.origin;
+
+          if (origin.tagName !== `FF-ASN-GROUP-ELEMENT` || origin.group.associatedFieldName !== `Manufacturer`) {
+            // Always disable the button to ensure it is not left active unintentionally.
+            // For example when the user changes the Brand filters without applying them and then picks a filter from a different facet.
+            // Or when the facet's "Reset filter" button is clicked, which has the `ff-asn-group` element issue the request and therefore `origin` will be different.
+            button.disable();
+            return;
+          }
+
+          if (hasPending(asnGroupBrand)) {
+            button.enable();
+          } else {
+            button.disable();
+          }
+
+          // Each click on a facet element triggers a search request which we have to prevent by returning `false`.
+          // Only a click on the "Apply filters" button may go through to FactFinder.
+          return false;
+        });
+      }
+
+      function hasPending(asnGroup) {
+        const pending = selectedGroupElements(asnGroup).map(grp => grp.element.text);
+        const currentValues = currentFilterValues(`Manufacturer`);
+        return symmetricDifference(pending, currentValues).length > 0;
+      }
+    });
+
+
     function createButton() {
-      const button = document.createElement('button');
-      button.textContent = 'Apply filters';
-      button.classList.add('btn');
+      const button = document.createElement(`button`);
+      button.textContent = `Apply filters`;
+      button.classList.add(`btn`);
       button.enable = () => {
         button.disabled = false;
-        button.classList.add('btn--pending');
-      }
+        button.classList.add(`btn--pending`);
+      };
       button.disable = () => {
         button.disabled = true;
-        button.classList.remove('btn--pending');
-      }
+        button.classList.remove(`btn--pending`);
+      };
       return button;
     }
 
-    const currentSelection = eventAggregator => filter => {
-      const values = eventAggregator.currentSearchResult.filters.find(f => f.name === filter) || {valueList: []};
-      return values.valueList.map(v => v.value);
+    function selectedGroupElements(asnGroup) {
+      return Array.from(asnGroup.querySelectorAll(`ff-asn-group-element`)).filter(g => g.selected);
     }
 
-    const pendingSelection = grp => {
-      return Array.from(grp.querySelectorAll('ff-asn-group-element')).filter(g => g.selected).map(g => g.element);
-    }
 
-    const hasPending = (group, currentSelection) => {
-      const pending = pendingSelection(group).map(e => e.name);
-      const current = currentSelection('Manufacturer');
-      return symmetricDifference(pending, current).length > 0;
-    }
+    function applyFilters(asnGroup, button) {
+      return () => {
+        // These are the ff-asn-group-element elements from the DOM that are currently selected (but not necessarily committed).
+        // We use them later to create an updated list of filters.
+        const groupElements = selectedGroupElements(asnGroup);
 
-    const applyFilters = (group, button, eventAggregator) => () => {
-      const selected = pendingSelection(group);
+        // Grabbing the facet name for convenience.
+        const facetName = asnGroup.group.associatedFieldName;
 
-      if (selected.length) {
-        const groupName = selected[0].associatedFieldName;
-        const params = factfinder.common.parameterStringToDict(location.search.substr(1));
+        // The next step is to find a SearchParams object that has the current asnGroup (facet) in its `filters` property.
+        // We will use this object as a template to build our own SearchParams object.
 
-        eventAggregator.addFFEvent({
-          ...params,
-          type: 'search',
-          filter: Array.from(new Set([
-            ...(params.filter || []).map(f => decodeURIComponent(f)).filter(f => !f.startsWith(`${groupName}:`)),
-            ...selected.map(e => `${e.associatedFieldName}:${e.name}`),
-          ])),
-          success: () => button.disable(),
-        });
-      } else {
-        eventAggregator.addFFEvent({
-          type: 'filter',
-          groupName: group.group.name,
-          removeAll: true,
-          success: () => button.disable(),
-        });
-      }
-    }
+        // The `elements` list has unselected items (unless your FactFinder is customized), which means their SearchParams will have the required filter.
+        // This is the most reliable source, but it may still be empty. In that case we search the `selectedElements` list.
 
-    document.addEventListener('ffReady', function (event) {
-      const eventAggregator = event.eventAggregator;
+        const facetElement = asnGroup.group.elements[0] || asnGroup.group.selectedElements.find(el => el.searchParams.filters?.some(fil => fil.name === facetName));
+        // Clone to avoid manipulating existing data.
+        const searchParams = JSON.parse(JSON.stringify(facetElement.searchParams));
 
-      function addButton(e) {
-        const brand = e.target.querySelector('ff-asn-group[for-group="Manufacturer"]');
-        const links = brand && brand.querySelector('[data-container="detailedLinks"]');
+        // This is the filter object for our facet. There may be other filters, but they must remain unchanged.
+        const filter = searchParams.filters.find(fil => fil.name === facetName);
 
-        if (links) {
-          // Add "Apply filters" button
-          const button = createButton();
-          button.onclick = applyFilters(brand, button, eventAggregator);
-          button.disable();
-          links.parentNode.append(button);
+        if (groupElements.length) {
+          // Using an existing FilterValue object as a template is helpful as it has some other parameters that we want to keep.
+          // See your FactFinder API documentation for details.
+          const filterValueTemplate = filter.values[0];
 
-          document.querySelector('ff-asn').removeEventListener('dom-updated', addButton);
+          // The group element's `text` field will be the new FilterValue's `value`.
+          const filterValues = groupElements.map(el => el.element.text);
 
-          // Deactivate regular behavior (Filter on click)
-          eventAggregator.addBeforeDispatchingCallback(function (event) {
-            if (event.type === 'filter' && event.groupName === encodeURIComponent('Brand')) {
-              if (event.filterName) {
-                event.cancel();
-                hasPending(brand, currentSelection(eventAggregator)) ? button.enable() : button.disable();
-              } else {
-                // Reset filter
-                event.success = () => button.disable();
-              }
-
-            }
-          })
+          filter.values = filterValues.map(value => ({
+            ...filterValueTemplate,
+            value,
+          }));
+        } else {
+          // In case there are no `groupElements` and all filters have been removed manually, we simply remove the filter of our facet.
+          searchParams.filters = searchParams.filters.filter(fil => fil.name !== filter.name);
         }
-      }
 
-      document.querySelector('ff-asn').addEventListener('dom-updated', addButton);
-    });
+        factfinder.request.search(searchParams, {
+          requestOptions: {
+            // `origin` is a value that you define yourself. It can be anything. It is not critical as such, and it is not required for this demo.
+            // However, it is generally good to provide an `origin`. What you supply it with depends entirely on how you process requests.
+            // This demo has a pipeline hook that logs each request's origin. Go see it in the browser's console.
+            origin: {
+              msg: `via apply-filters button`,
+              domElement: asnGroup
+            }
+          }
+        }).then(() => {
+          // Depending on your setup you might want to disable the button after the request returns.
+          // In this demo the `factfinder.request.before.search` handler is set up to deal with it so we don't need it here.
+
+          // button.disable();
+        });
+      };
+    }
   </script>
 </head>
 <body>
@@ -149,16 +226,6 @@
   <!-- use with viewBox="2 2 12 12" -->
   <path id="icon-check" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
 </svg>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  currency-code="EUR"
-                  currency-country-code="de-DE"
-                  default-query="boots"
-                  search-immediate
-                  only-search-params
-></ff-communication>
 
 <div class="searchbar">
   <ff-searchbox use-suggest="false">
@@ -171,9 +238,12 @@
   </ff-searchbox>
 </div>
 
+<p>This demo adds an "Apply filters" button to the "Brand" facet. It lets you select/unselect brand filters without immediately sending a request to FactFinder. Press the button to commit the filter selection.</p>
+
 <main>
   <div class="filters">
-    <ff-asn-remove-all-filter>Reset all filters</ff-asn-remove-all-filter>
+    <ff-asn-remove-all-filters>Reset all filters</ff-asn-remove-all-filters>
+
     <ff-asn searchable-from="11" unresolved>
 
       <ff-asn-group for-group="all">
@@ -184,16 +254,16 @@
 
         <ff-asn-group-element>
           <div slot="selected">
-                        <span class="checkbox">
-                            <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
-                        </span>
-            {{{element.name}}}&nbsp;{{group.unit}}
+            <span class="checkbox">
+                <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
+            </span>
+            {{{$facetElement}}}
           </div>
 
           <div slot="unselected">
             <span class="checkbox"></span>
-            <span>{{{element.name}}}&nbsp;{{group.unit}}</span>
-            <span>({{element.recordCount}})</span>
+            <span>{{{$facetElement}}}</span>
+            <span>({{element.totalHits}})</span>
           </div>
         </ff-asn-group-element>
 
@@ -224,10 +294,9 @@
 
       <ff-asn-group filter-style="TREE" collapsible="false" not-searchable opened>
         <ff-asn-group-element>
-          <div slot="selected">{{{element.name}}}&nbsp;{{group.unit}}</div>
+          <div slot="selected">{{{$facetElement}}}</div>
           <div slot="unselected">
-            <p>{{{element.name}}}&nbsp;{{group.unit}} <span class="count">({{element.recordCount}})</span>
-            </p>
+            <p>{{{$facetElement}}} <span class="count">({{element.totalHits}})</span></p>
           </div>
         </ff-asn-group-element>
 
@@ -247,6 +316,7 @@
           <span>Reset Filter</span>
         </div>
       </ff-asn-group>
+
       <ff-asn-group filter-style="DEFAULT">
         <div slot="filterSearch">
           <input placeholder="Search group...">
@@ -255,13 +325,13 @@
 
         <ff-asn-group-element>
           <div slot="selected">
-            <span class="circle"></span> {{{element.name}}}&nbsp;{{group.unit}}
+            <span class="circle"></span> {{{$facetElement}}}
           </div>
 
           <div slot="unselected">
             <span class="circle"></span>
-            <span>{{{element.name}}}&nbsp;{{group.unit}}</span>
-            <span>({{element.recordCount}})</span>
+            <span>{{{$facetElement}}}</span>
+            <span>({{element.totalHits}})</span>
           </div>
         </ff-asn-group-element>
 
@@ -289,19 +359,19 @@
         </div>
       </ff-asn-group>
 
-      <ff-asn-group for-group="Manufacturer" not-searchable>
+      <ff-asn-group for-group="Manufacturer" not-searchable opened>
         <ff-asn-group-element>
           <div slot="selected">
-                        <span class="checkbox">
-                            <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
-                        </span>
-            {{{element.name}}}&nbsp;{{group.unit}}
+            <span class="checkbox">
+              <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
+            </span>
+            {{{$facetElement}}}
           </div>
 
           <div slot="unselected">
             <span class="checkbox"></span>
-            <span>{{{element.name}}}&nbsp;{{group.unit}}</span>
-            <span>({{element.recordCount}})</span>
+            <span>{{{$facetElement}}}</span>
+            <span>({{element.totalHits}})</span>
           </div>
         </ff-asn-group-element>
 
@@ -337,16 +407,16 @@
                 <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
             </span>
             <span class="stars">
-                {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
+                {{#each element._stars}}<span class="{{class}}">★</span>{{/each}}
             </span>
           </div>
 
           <div slot="unselected">
             <span class="checkbox"></span>
             <span class="stars">
-                {{#element._stars}}<span class="{{class}}">★</span>{{/element._stars}}
+                {{#each element._stars}}<span class="{{class}}">★</span>{{/each}}
             </span>
-            <span class="count">({{element.recordCount}})</span>
+            <span class="count">({{element.totalHits}})</span>
           </div>
         </ff-asn-group-element>
 
@@ -369,18 +439,18 @@
       <ff-asn-group for-group="BaseColor" not-searchable>
         <ff-asn-group-element>
           <div slot="selected">
-                        <span class="checkbox">
-                            <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
-                        </span>
+            <span class="checkbox">
+              <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
+            </span>
             <span class="color-circle" style="background-color: {{element._color}}"> </span>
-            {{{element.name}}}
+            {{{$facetElement}}}
           </div>
 
           <div slot="unselected">
             <span class="checkbox"></span>
             <span class="color-circle" style="background-color: {{element._color}}"> </span>
-            <span>{{{element.name}}}</span>
-            <span>({{element.recordCount}})</span>
+            <span>{{{$facetElement}}}</span>
+            <span>({{element.totalHits}})</span>
           </div>
         </ff-asn-group-element>
 
@@ -400,7 +470,7 @@
         </div>
       </ff-asn-group>
 
-      <ff-asn-group-slider for-group="Price" class="one-touch-slider" opened>
+      <ff-asn-group-slider for-group="Price" class="one-touch-slider">
         <div slot="groupCaption" class="expand-arrow"><div>{{group.name}}</div></div>
 
         <div data-container="removeFilter">
@@ -410,11 +480,11 @@
 
         <ff-slider-control submit-on-input="true">
           <div class="slider-inputs">
-            <input data-control='1'>
-            <input data-control='2'>
+            <input data-control="min">
+            <input data-control="max">
           </div>
 
-          <ff-slider-one-touch></ff-slider-one-touch>
+          <ff-slider one-touch></ff-slider>
         </ff-slider-control>
       </ff-asn-group-slider>
 
@@ -427,9 +497,9 @@
         </div>
 
         <ff-slider-control submit-on-input="true">
-          <input data-control='1'
+          <input data-control="min"
                  style="position: absolute; left: 15px;top:12px;">
-          <input data-control='2'
+          <input data-control="max"
                  style="position: absolute; right: 15px;top:12px;">
 
           <ff-slider current-min-value="0">
@@ -441,26 +511,29 @@
 
     </ff-asn>
   </div>
+
   <div class="products-listing">
     <ff-record-list unresolved>
-      <ff-record>
-        <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-           data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-          <div class="record-img">
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
+      <template data-role="record">
+        <ff-record>
+          <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+             data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+            <div class="record-img">
+              <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+            </div>
+            <div class="record-product-info">
+              <h3 class="record-product-name">
+                {{variantValues.0.Title}}
+              </h3>
+              <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+              <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+            </div>
+          </a>
+          <div class="record-product-add-to-cart">
+            <button>Add to Cart</button>
           </div>
-          <div class="record-product-info">
-            <h3 class="record-product-name">
-              {{record.Title}}
-            </h3>
-            <div class="record-product-brand">{{record.Manufacturer}}</div>
-            <div class="record-product-price">{{record.Price}}</div>
-          </div>
-        </a>
-        <div class="record-product-add-to-cart">
-          <button>Add to Cart</button>
-        </div>
-      </ff-record>
+        </ff-record>
+      </template>
     </ff-record-list>
   </div>
 </main>
