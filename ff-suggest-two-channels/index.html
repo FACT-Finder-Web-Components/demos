@@ -28,22 +28,34 @@
                 },
             });
 
-            initialSearch({ query: `wome` });
+            // initialSearch({ query: `wome` });
 
             let secondarySuggestPromise; // each ff-suggest-triggered request sets secondary suggest result promise
+
             factfinder.request.before.suggest(async ({suggestParams, requestOptions}) => {
+                console.log(`before`, requestOptions);
+
                 if (requestOptions.origin !== secondarySuggestOrigin) {
-                    secondarySuggestPromise = factfinder.request.suggest({query: suggestParams.query}, {channel: cmsChannel, origin: secondarySuggestOrigin});
+                    secondarySuggestPromise = factfinder.request.suggest({query: suggestParams.query}, {
+                        channel: cmsChannel,
+                        requestOnly: true,
+                        origin: secondarySuggestOrigin,
+                    });
                 }
             });
 
             // after dispatching the main suggestions, wait for CMS suggestions and re-dispatch them combined
             factfinder.response.subscribeSuggest(async (suggestionResult, requestInfo) => {
+                console.log(`subscr`, suggestionResult, requestInfo?.requestOptions);
+
                 if (requestInfo && requestInfo.requestOptions.origin !== secondarySuggestOrigin) {
+                    console.log(`same subscr: primary`);
+
                     const cmsSuggestions = await secondarySuggestPromise;
                     cmsSuggestions.suggestions.forEach(s => s.type = `content`);
                     suggestionResult.suggestions = suggestionResult.suggestions.concat(cmsSuggestions.suggestions);
-                    factfinder.response.dispatch.suggest(suggestionResult);
+                    // factfinder.response.dispatch.suggest(suggestionResult);
+                    document.querySelector(`ff-suggest`).suggestItems = suggestionResult.suggestions;
                 }
             });
         });
@@ -52,7 +64,7 @@
 <body>
 <div class="searchbar">
     <ff-searchbox>
-        <input placeholder="Search..."/>
+        <input placeholder="Search..." value="jac" autofocus />
         <ff-searchbutton>
             <button>
                 <span class="icon-search"></span>
