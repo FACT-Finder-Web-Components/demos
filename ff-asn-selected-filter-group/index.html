@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>ASN Selected Filter Group Demo</title>
-    <link rel="stylesheet" href="../demo-styles.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/demo-styles.css">
 
     <style>
+        main {
+            display: flex;
+            padding: 0 10px;
+        }
+        .filters {
+            flex: 0 0;
+            width: 240px;
+            margin-right: 10px;
+        }
+        .products-listing {
+            flex: 1 0;
+        }
+        ff-record-list {
+            margin-right: -10px;
+        }
+
         [for-group="Selected Filters"] ff-asn-group-element,
         [for-group="Selected Filters"] .groupCaption {
             color: #0b97c4;
@@ -19,180 +34,192 @@
     </style>
 
     <script>
-        document.addEventListener("ffReady", function (event) {
-            const resultDispatcher = event.resultDispatcher;
-            resultDispatcher.addCallback("asn", function (groups) {
-                const selectedElements = getAllSelectedFilterElements(groups);
-                if (selectedElements.length !== 0)
-                    groups.splice(1, 0, createGroup(selectedElements));
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    }},
             });
 
-            function getAllSelectedFilterElements(groups) {
-                let selectedFilters = [];
-                groups.forEach(function (group) {
-                    selectedFilters = selectedFilters.concat(group.selectedElements.slice());
-                });
-                return selectedFilters;
-            }
+            initialSearch({ query: `trousers` });
 
-            function createGroup(selectedElements) {
-                return {
-                    associatedFieldName: "Selected Filters",
+            factfinder.response.transformSearch(result => {
+                const selectedElements = result.facets.map(facet => facet.selectedElements).flat();
+                result.facets.unshift({
+                    associatedFieldName: `Selected Filters`,
                     detailedLinks: 99,
                     elements: [],
-                    filterStyle: "DEFAULT",
-                    groupOrder: 1,
-                    name: "Selected Filters",
+                    filterStyle: `DEFAULT`,
+                    name: `Selected Filters`,
                     selectedElements,
-                    selectionType: "singleHideUnselected",
+                    selectionType: `singleHideUnselected`,
                     showPreviewImages: false,
-                    type: "text",
-                    unit: ""
-                }
-            }
+                    type: `text`,
+                    unit: ``
+                })
+                return result;
+            });
+
         });
     </script>
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 </head>
 <body>
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-                  default-query="trousers"
-                  search-immediate="true"
-></ff-communication>
-
 <header>
-    <ff-searchbox use-suggest="false">
-        <input placeholder="Search..."/>
-    </ff-searchbox>
-    <ff-searchbutton>
-        <button>Search</button>
-    </ff-searchbutton>
+    <div class="searchbar">
+        <p>This demo creates a dummy ASN group out of all selected filters and puts it as the first group of <code>ff-asn</code>.</p>
+        <p>Its final functionality is similar to <code>ff-filter-cloud</code>.</p>
+        <p>Taking this approach instead of using the built-in component can be considered when implementing designs where the selected filters should be rendered as a part of ASN to simplify styling</p>
+        <ff-searchbox use-suggest="false">
+            <input placeholder="Search..." autofocus />
+            <ff-searchbutton>
+                <button>
+                    <span class="icon-search"></span>
+                </button>
+            </ff-searchbutton>
+        </ff-searchbox>
+    </div>
 
     <div class="bctContainer">
-        You are searching for:
-        <ff-breadcrumb-trail unresolved></ff-breadcrumb-trail>
+        You are searching for: <ff-breadcrumb-trail unresolved></ff-breadcrumb-trail>
     </div>
 </header>
 <main>
-    <ff-asn align="vertical" unresolved>
+    <div class="filters">
+        <ff-asn unresolved>
+            <ff-asn-group for-group="Selected Filters" class="cursor">
+                <ff-asn-group-element>
+                    <div slot="selected">
+                        <input type="checkbox" checked>
+                        <span class="filterName">{{element.text}}</span>
+                    </div>
+                    <div slot="unselected">
+                        <input type="checkbox">
+                        <span class="filterName">{{element.text}}</span>
+                    </div>
+                </ff-asn-group-element>
 
-        <ff-asn-group for-group="Selected Filters" class="cursor">
-            <ff-asn-group-element>
-                <div slot="selected">
-                    <input type="checkbox" checked>
-                    <span class="filterName">{{element.name}}</span>
+                <div slot="groupCaption" class="groupCaption">
+                    {{group.name}}<span class="filterArrowDown">&nbsp;</span>
                 </div>
-                <div slot="unselected">
-                    <input type="checkbox">
-                    <span class="filterName">{{element.name}}</span>
+
+                <div opened data-container="detailedLinks">
+                    <!--all links which should be displayed immediately appear inside this element-->
+                    <div data-content="detailedLinks"></div>
                 </div>
-            </ff-asn-group-element>
+            </ff-asn-group>
 
-            <div slot="groupCaption" class="groupCaption">
-                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
-            </div>
+            <!--use this as a default template for all groups-->
+            <ff-asn-group for-group="all" class="cursor">
+                <ff-asn-group-element>
+                    <div slot="selected">
+                        <input type="checkbox" checked>
+                        <span class="filterName">{{element.text}}</span>
+                    </div>
+                    <div slot="unselected">
+                        <input type="checkbox">
+                        <span class="filterName">{{element.text}}</span>
+                    </div>
+                </ff-asn-group-element>
 
-            <div opened data-container="detailedLinks">
-                <!--all links which should be displayed immediately appear inside this element-->
-                <div data-content="detailedLinks"></div>
-            </div>
-        </ff-asn-group>
-
-        <!--use this as a default template for all groups-->
-        <ff-asn-group for-group="all" class="cursor">
-            <ff-asn-group-element>
-                <div slot="selected">
-                    <input type="checkbox" checked>
-                    <span class="filterName">{{element.name}}</span>
+                <div slot="groupCaption" class="groupCaption">
+                    {{group.name}}<span class="filterArrowDown">&nbsp;</span>
                 </div>
-                <div slot="unselected">
-                    <input type="checkbox">
-                    <span class="filterName">{{element.name}}</span>
+
+                <div opened data-container="detailedLinks">
+                    <!--all links which should be displayed immediately appear inside this element-->
+                    <div data-content="detailedLinks"></div>
                 </div>
-            </ff-asn-group-element>
 
-            <div slot="groupCaption" class="groupCaption">
-                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
-            </div>
-
-            <div opened data-container="detailedLinks">
-                <!--all links which should be displayed immediately appear inside this element-->
-                <div data-content="detailedLinks"></div>
-            </div>
-
-            <!--use this container for automatically showing the hiddenLinks container on tap-->
-            <div data-container="showMore">
-                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
-                <span class="text">Show More</span>
-            </div>
-
-            <div data-container="hiddenLinks">
-                <!--all links which should NOT be displayed immediately appear inside this element-->
-                <div data-content="hiddenLinks"></div>
-            </div>
-
-            <!--use this container for automatically hiding the hiddenLinks container on tap-->
-            <div data-container="showLess">
-                <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
-                <span class="text">Show Less</span>
-            </div>
-        </ff-asn-group>
-
-        <!--style all groups with filter style TREE-->
-        <ff-asn-group filter-style="TREE" opened class="cursor">
-            <ff-asn-group-element>
-                <div slot="selected">
-                    &nbsp;&nbsp;<span class="filterName"><b>{{element.name}}</b></span>
+                <!--use this container for automatically showing the hiddenLinks container on tap-->
+                <div data-container="showMore">
+                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                    <span class="text">Show More</span>
                 </div>
-                <div slot="unselected">
-                    &nbsp;<span class="filterArrowRight"></span>&nbsp;<span class="filterName">{{element.name}}</span>
+
+                <div data-container="hiddenLinks">
+                    <!--all links which should NOT be displayed immediately appear inside this element-->
+                    <div data-content="hiddenLinks"></div>
                 </div>
-            </ff-asn-group-element>
-            <div slot="groupCaption" class="groupCaption">
-                {{group.name}} <span class="filterArrowDown">&nbsp;</span>
-            </div>
-            <div opened data-container="detailedLinks">
-                <div data-content="detailedLinks"></div>
-            </div>
-        </ff-asn-group>
 
-        <!--style slider groups-->
-        <ff-asn-group-slider>
-            <div slot="groupCaption" class="groupCaption">
-                {{group.name}}<span class="filterArrowDown">&nbsp;</span>
-            </div>
-            <div data-container="removeFilter">Remove Filter</div>
-            <ff-slider-control submit-on-input="true">
-                <input data-control='1'
-                       style="position: absolute; width: 60px;left: 15px;top:12px;">
-                <input
-                        data-control='2' style="position: absolute; width: 60px;right: 15px;top:12px;">
+                <!--use this container for automatically hiding the hiddenLinks container on tap-->
+                <div data-container="showLess">
+                    <!-- set the padding on an inner element so we don't suffer from height 0 + padding issues-->
+                    <span class="text">Show Less</span>
+                </div>
+            </ff-asn-group>
 
-                <ff-slider current-min-value="0" style="width: 150px;margin-top: 30px;">
-                    <div slot="slider1" id="slider1" class="sliderBtn"></div>
-                    <div slot="slider2" id="slider2" class="sliderBtn"></div>
-                </ff-slider>
-            </ff-slider-control>
-        </ff-asn-group-slider>
-    </ff-asn>
+            <!--style all groups with filter style TREE-->
+            <ff-asn-group filter-style="TREE" opened class="cursor">
+                <ff-asn-group-element>
+                    <div slot="selected">
+                        &nbsp;&nbsp;<span class="filterName"><b>{{element.text}}</b></span>
+                    </div>
+                    <div slot="unselected">
+                        &nbsp;<span class="filterArrowRight"></span>&nbsp;<span class="filterName">{{element.text}}</span>
+                    </div>
+                </ff-asn-group-element>
+                <div slot="groupCaption" class="groupCaption">
+                    {{group.name}} <span class="filterArrowDown">&nbsp;</span>
+                </div>
+                <div opened data-container="detailedLinks">
+                    <div data-content="detailedLinks"></div>
+                </div>
+            </ff-asn-group>
 
-    <ff-record-list unresolved>
-        <ff-record>
-            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{record.ImageName}}">
-            <a data-anchor="https://www.alpinetrek.co.uk{{record.Deeplink}}"
-               data-redirect="https://www.alpinetrek.co.uk{{record.Deeplink}}" data-redirect-target="_blank">
-                {{record.Title}}
-            </a>
+            <!--style slider groups-->
+            <ff-asn-group-slider>
+                <div slot="groupCaption" class="groupCaption">
+                    {{group.name}}<span class="filterArrowDown">&nbsp;</span>
+                </div>
+                <div data-container="removeFilter">Remove Filter</div>
+                <ff-slider-control submit-on-input="true">
+                    <input data-control='min' style="position: absolute; width: 60px;left: 15px;top:12px;">
+                    <input data-control='max' style="position: absolute; width: 60px;right: 15px;top:12px;">
 
-            <div class="priceContainer"><span class="brand">{{record.Manufacturer}}</span> <span class="price">{{record.Price}} €</span>
-            </div>
-        </ff-record>
-    </ff-record-list>
+                    <ff-slider current-min-value="0" style="width: 150px;margin-top: 30px;">
+                        <div slot="slider1" id="slider1" class="sliderBtn"></div>
+                        <div slot="slider2" id="slider2" class="sliderBtn"></div>
+                    </ff-slider>
+                </ff-slider-control>
+            </ff-asn-group-slider>
+        </ff-asn>
+    </div>
+
+    <div class="products-listing">
+        <ff-record-list unresolved>
+            <template data-role="record">
+                <ff-record>
+                    <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+                       data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                        <div class="record-img">
+                            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                        </div>
+                        <div class="record-product-info">
+                            <h3 class="record-product-name">
+                                {{variantValues.0.Title}}
+                            </h3>
+                            <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                            <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                        </div>
+                    </a>
+                    <div class="record-product-add-to-cart">
+                        <button>Add to Cart</button>
+                    </div>
+                </ff-record>
+        </ff-record-list>
+        </template>
+    </div>
 </main>
 </body>
 </html>
