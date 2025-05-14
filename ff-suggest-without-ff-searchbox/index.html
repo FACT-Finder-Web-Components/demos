@@ -2,103 +2,183 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Suggest Without Searchbox Demo</title>
-    <link rel="stylesheet" href="../demo-styles.css">
-    <link rel="stylesheet" href="styles.css">
+    <title>Suggest Without ff-searchbox Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <style>
+        .product-price {
+            font-weight: bold;
+        }
+
+        input#searchbox {
+            width: 100%;
+            border: 1px solid #ced4da;
+            box-sizing: border-box;
+
+            padding: .5rem 1rem;
+            font-size: 1.25rem;
+            line-height: 2rem;
+            color: #495057;
+        }
+    </style>
 
     <script>
-        function raiseSuggestEvent(e) {
-            const inputValue = e.value;
+        // At a later point in this demo we access a suggested product's article number.
+        // We use the field roles to reliably find the article number's field name. Otherwise, we would have to hard-code it.
+        // We capture the field roles with the Suggest response.
+        let fieldRoles;
+
+
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            const searchBox = document.querySelector(`input#searchbox`);
+
+            factfinder.notifications.addSuggestClickListener(origin => {
+                const ffSuggestItem = origin;
+                const suggestion = ffSuggestItem.suggestion;
+
+                if (suggestion.type === `productName`) {
+                    // In this demo, we don't want the default auto-navigation when there is a deeplink in the data.
+                    // Deleting the deeplink field prevents the navigation event from firing.
+                    delete suggestion.attributes[fieldRoles.deeplink];
+
+                    // Manually syncing the product number to the search box.
+                    searchBox.value = suggestion.attributes[fieldRoles.productNumber];
+                    // The `productName` suggestion type does not automatically trigger a search request as it usually navigates to the product detail page.
+                    // In this demo, we want to stay on the same page and do an article number search.
+                    // We could trigger the request here, but for demonstration purposes we will do it in the dedicated `suggestDetailListener`.
+                } else {
+                    // We manually sync the clicked term to the search box. With ff-searchbox this would happen automatically.
+                    // No need to trigger a search request. This is done by ff-suggest.
+                    // See the Suggest pipeline diagram for the flow of events.
+                    searchBox.value = suggestion.name;
+                }
+            });
+
+            factfinder.notifications.setSuggestDetailListener(origin => {
+                // This listener is invoked when a suggestion was clicked that should navigate to a detail page.
+                // For the sake of this demo we stay on the page and only invoke a search request with the product number that was synced to the search box during the previous pipeline hook.
+                // Consult the Suggest pipeline diagram to see in which order pipeline hooks are invoked.
+                factfinder.request.search({ query: searchBox.value });
+            });
+        });
+
+
+        function triggerSuggest(inputElement) {
+            const inputValue = inputElement.value;
+
+            // In this demo, the Suggest shall only trigger when the search term is two characters or longer.
             if (inputValue && inputValue.length >= 2) {
-                // this value is set to indicate if the current input value belongs to the received suggest response
-                // e.g. suggest request takes 100ms while the user is deleting all chars in the input field
-                // input field is empty but suggest data is now arriving.
-                // The suggest needs to know if this data belong to the current input value (which is currently
-                // empty string and therefore does not)
-                factfinder.communication.globalElementValues.currentFFSearchBoxValue = inputValue;
-                factfinder.communication.EventAggregator.addFFEvent({
-                    type: "suggest",
-                    query: inputValue
+
+                // We must set the `origin` of our request to the `input` element (or any object that has a `value` property).
+                // ff-suggest is usually coupled with ff-searchbox which we have to emulate here. If `origin` is not set, ff-suggest will not respond.
+                factfinder.request.suggest({ query: inputValue }, { origin: inputElement }).then(suggestionResult => {
+                    fieldRoles = suggestionResult.fieldRoles;
                 });
             } else {
-                hideSuggest();
+                document.querySelector(`ff-suggest`).hideSelf();
             }
         }
-
-        function hideSuggest() {
-            factfinder.communication.ResultDispatcher.dispatchSuggest(undefined);
-        }
-
-        // Changes the term within the search box to the selected suggest item.
-        function changeSearchTerm(e) {
-            const searchInput = e.suggestion.attributes.id;
-            document.querySelector("input").value = searchInput;
-        }
     </script>
-
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
-    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
 </head>
 <body>
 
-<!-- Configure the connection to the FF-Search backend and a default query-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-></ff-communication>
+<div class="searchbar">
+    <p>
+        This is a native <code>input</code> element that triggers <code>ff-suggest</code>.<br>
+        Click on a suggested search term or brand to copy the term into the search box and issue a search request.
+    </p>
+    <input placeholder="Search..."
+           id="searchbox"
+           value="bac"
+           oninput="triggerSuggest(this)"
+    />
+</div>
 
-<input placeholder="Search..."
-       value="trou"
-       oninput="raiseSuggestEvent(this)"
-       onblur="hideSuggest()"/>
-
-
-<ff-suggest unresolved layout="list">
-    <section id="searchContainer" class="searchTermContainer">
-        <div data-container="searchTerm">
-            <p class="containerCaption">Search terms</p>
-            <ff-suggest-item type="searchTerm">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-
-        <div data-container="category">
-            <p class="containerCaption">Categories</p>
-            <ff-suggest-item type="category">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-
-        <div data-container="brand">
-            <p class="containerCaption">Brands</p>
-            <ff-suggest-item type="brand">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-    </section>
-
-    <section id="productContainer" class="productsContainer">
-        <div data-container="productName">
-            <p class="containerCaption">Products</p>
-            <div>
-                <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
-                    <img data-image>
-                    <div class="product-center">
-                        <div class="product-name">{{{name}}}</div>
-                        <div>Shipping</div>
-                        <div>Rating</div>
-                    </div>
-                    <!-- Price and availability-->
-                    <div class="product-right">
-                        <div class="product-price">{{attributes.Price}}</div>
-                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
-                    </div>
+<ff-suggest layout="block" unresolved>
+    <template data-role="suggestions">
+        <section id="searchContainer" class="search-terms-container">
+            <div data-container="searchTerm">
+                <h2 class="container-caption">Search terms</h2>
+                <ff-suggest-item type="searchTerm">
+                    <span>{{{name}}}</span>
                 </ff-suggest-item>
             </div>
-        </div>
-    </section>
+
+            <div data-container="category">
+                <h2 class="container-caption">Categories</h2>
+                <ff-suggest-item type="category">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+
+            <div data-container="brand">
+                <h2 class="container-caption">Brands</h2>
+                <ff-suggest-item type="brand">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+        </section>
+
+        <section id="productContainer" class="products-container">
+            <div data-container="productName">
+                <h2 class="container-caption">Products</h2>
+                <p>Click on a product to change the search term to its product number.</p>
+                <div class="suggest-images">
+                    <ff-suggest-item type="productName">
+                        <div class="product-image">
+                            <img data-image>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">{{{name}}}</div>
+                            <div class="product-price">{{$ attributes.Price}}</div>
+                            {{#if attributes.Rating}}
+                            <div>Rating: {{$dec attributes.Rating 1}}</div>
+                            {{/if}}
+                        </div>
+                    </ff-suggest-item>
+                </div>
+            </div>
+        </section>
+    </template>
 </ff-suggest>
+
+<ff-record-list unresolved>
+    <template data-role="record">
+        <ff-record>
+            <a>
+                <div class="record-img">
+                    <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                </div>
+                <div class="record-product-info">
+                    <h3 class="record-product-name">
+                        {{variantValues.0.Title}}
+                    </h3>
+                    <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                    <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                </div>
+            </a>
+        </ff-record>
+    </template>
+</ff-record-list>
+
 </body>
 </html>
