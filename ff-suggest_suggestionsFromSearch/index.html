@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suggestions from Search endpoint Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+
+            factfinder.request.before.suggest(requestInfoSuggest => {
+                const { suggestParams, requestOptions } = requestInfoSuggest;
+
+                factfinder.request.search({ query: suggestParams.query }, {
+                    searchControlParams: {
+                        // Some example optimizations. Try to exclude as many features from this request as possible to minimize FactFinder compute and response times.
+                        useAsn: false,
+                        useCampaigns: false,
+                    },
+
+                    requestOptions: {
+                        ...requestOptions,
+                        // Skip the response pipeline because we need to reroute the response to the Suggest component.
+                        requestOnly: true,
+                    },
+                }).then(result => {
+                    const fieldRoles = result.fieldRoles;
+
+                    // Search result and Suggestion result have a different data format, therefore it must be converted here.
+                    // Provide all the attributes and other fields as you require.
+                    // Working with fieldRoles protects you against changes to your data feed.
+                    // See your FactFinder REST API documentation about which fields are guaranteed to appear in a Suggest response.
+                    const suggestions = result.hits.map(hit => ({
+                        attributes: {
+                            [fieldRoles.deeplink]: hit.variantValues[0][fieldRoles.deeplink],
+                            [fieldRoles.price]: hit.variantValues[0][fieldRoles.price],
+                        },
+                        image: hit.variantValues[0][fieldRoles.imageUrl],
+                        name: hit.variantValues[0][fieldRoles.productName],
+
+                        type: `productName`,
+                    }));
+
+                    // We only define the fields that the REST API defines as always present in the response.
+                    // You have to evaluate yourself whether you need the other fields.
+                    const suggestionResult = {
+                        // `articleNumberSearchAllowed` is defined as a guaranteed field therefore we include it even though we are likely not going to need it.
+                        articleNumberSearchAllowed: true,
+
+                        fieldRoles: result.fieldRoles,
+                        suggestions,
+                    };
+
+                    // Dispatch the suggestionResult together with the original requestInfo.
+                    // Doing so will have the response pipeline behave as if the original Suggest request completed without interference.
+                    factfinder.response.dispatch.suggest(suggestionResult, requestInfoSuggest);
+                });
+
+                // Return `false` to cancel the original Suggest request.
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+
+<p>This demo uses FactFinder's <code>/search</code> endpoint to provide suggestions instead of the specialized <code>/suggest</code> endpoint.</p>
+<p><strong>CAUTION!</strong> This approach is significantly more compute intensive and therefore slower. Also, increased requests to the <code>/search</code> endpoint might affect your FactFinder license.</p>
+<p>We strongly recommend to consult with us before you implement this approach.</p>
+
+<div class="searchbar">
+    <ff-searchbox>
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+
+    <ff-suggest layout="block" unresolved>
+        <template data-role="suggestions">
+            <section id="searchContainer" class="search-terms-container">
+                <div data-container="searchTerm">
+                    <h2 class="container-caption">Search terms</h2>
+                    <ff-suggest-item type="searchTerm">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+
+                <div data-container="category">
+                    <h2 class="container-caption">Categories</h2>
+                    <ff-suggest-item type="category">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+
+                <div data-container="brand">
+                    <h2 class="container-caption">Brands</h2>
+                    <ff-suggest-item type="brand">
+                        <span>{{{name}}}</span>
+                    </ff-suggest-item>
+                </div>
+            </section>
+
+            <section id="productContainer" class="products-container">
+                <div data-container="productName">
+                    <h2 class="container-caption">Products</h2>
+                    <div class="suggest-images">
+                        <ff-suggest-item type="productName">
+                            <div class="product-image">
+                                <img data-image>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name">{{{name}}}</div>
+                                <div class="product-price">{{$ attributes.Price}}</div>
+                            </div>
+                        </ff-suggest-item>
+                    </div>
+                </div>
+            </section>
+        </template>
+    </ff-suggest>
+</div>
+
+</body>
+</html>
