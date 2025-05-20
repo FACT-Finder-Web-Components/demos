@@ -3,92 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <title>WebComponents Redirect Demo</title>
-    <link rel="stylesheet" href="../ff-suggest_suggestToSearch/styles.css">
+    <link rel="stylesheet" href="../assets/demo-styles.css">
 
-    <script src="../node_modules/ff-web-components/dist/vendor/custom-elements-es5-adapter.js"></script>
-    <script src="../node_modules/ff-web-components/dist/vendor/webcomponents-loader.js"></script>
     <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
-    <link rel="stylesheet" href="../demo-styles.css">
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+
+            factfinder.request.before.search(requestInfoSearch => {
+                // Here we handle the search request pipeline that was invoked by ff-searchbox.
+                // Technically, clicks on items in the Suggest component do also trigger search requests that pass by here.
+                // However, we are going to set up a dedicated handler for all Suggest clicks that will interrupt the pipeline earlier.
+
+                const { searchParams } = requestInfoSearch;
+
+                // A common method to pass search parameters to the next page is via URL parameters. If you do, make sure to handle URL encoding.
+                window.location.href = `search_result.html?query=${searchParams.query}`;
+
+                // Cancel the search request because we don't need it here as we are navigating away from this page.
+                // The search request will be reissued on the search result page.
+                return false;
+            });
+
+            factfinder.notifications.addSuggestClickListener(origin => {
+                // With this listener we can respond to all clicks to the ff-suggest component.
+
+                console.log(`Clicked on:`, origin);
+
+                const ffSuggestItem = origin;
+
+                // Product suggestions of the demo data have a deeplink and will be handled automatically.
+                // We do NOT return `false` as the pipeline shall continue as normal and eventually trigger the navigation to the deeplink.
+                if (ffSuggestItem.type === `productName`) return;
+
+                const { searchParams } = ffSuggestItem.suggestion;
+
+                // Parameters `userInput` and `queryFromSuggest` are not strictly required for a successful request, but they assist your FactFinder Analytics.
+                const userInput = document.querySelector(`ff-searchbox`).value;
+
+                if (ffSuggestItem.type === `searchTerm`) {
+                    // To avoid encoding issues it is best to use the native URLSearchParams API. Although in simple cases, regular string concatenation should suffice.
+                    const params = new URLSearchParams();
+
+                    params.set(`query`, searchParams.query);
+                    params.set(`queryFromSuggest`, `true`);
+                    params.set(`userInput`, userInput);
+
+                    window.location.href = `search_result.html?` + params.toString();
+                }
+                else if (ffSuggestItem.type === `brand`) {
+
+                    // Brand involves filters that we must pass via URL. To avoid encoding issues it is best to use the native URLSearchParams API.
+                    const params = new URLSearchParams();
+
+                    // The parameter string must be built in a format that is understood by the search result page.
+                    // The result page in this demo uses Web Components' default parsing options.
+                    // Simple filter stringification is sufficient here. Category filters and other parameters need more attention.
+
+                    // There is no `query` parameter here. Brand suggestions only use a filter.
+                    searchParams.filters.forEach(filter => params.set(`filter`, `${filter.name}:${filter.values[0].value}`));
+                    params.set(`queryFromSuggest`, `true`);
+                    params.set(`userInput`, userInput);
+
+                    window.location.href = `search_result.html?` + params.toString();
+                }
+                else {
+                    console.error(`Handling of suggestion type "${ffSuggestItem.suggestion.type}" not implemented!`);
+                }
+
+                // Cancel pipeline to prevent search requests before navigation to search result page is complete.
+                return false;
+            });
+        });
+    </script>
 </head>
 <body>
-<!-- basic connection configuration-->
-<ff-communication url="https://ng-search-web-components.fact-finder.de/fact-finder"
-                  version="ng"
-                  api="v5"
-                  channel="demo-bergfreunde-en"
-></ff-communication>
 
-<h1>Page without the Product Visualization but with Suggest etc.</h1>
+<h2>Home page <em>with</em> FactFinder Web Components.</h2>
+
 <p>
-    This page will redirect to a page implemented with Web Components and will trigger a search for the value in the
-    input field.
+    This page offers two methods to navigate to the search result page which is also implemented with FactFinder Web Components.
+    <br>
+    By submitting a search term through the <code>ff-searchbox</code> component or by clicking on a suggested search term or brand in the <code>ff-suggest</code> component.
 </p>
-<ff-searchbox>
-    <input type="text" id="searchbox" placeholder="Search...">
-</ff-searchbox>
-<ff-searchbutton><button>Search</button></ff-searchbutton>
+<p>
+    Search term and filters will be written to the URL for the result page to read and automatically invoke a search request.
+</p>
 
-<ff-suggest layout="list">
-    <section id="searchContainer" class="searchTermContainer">
-        <div data-container="searchTerm">
-            <p class="containerCaption">Search terms</p>
-            <ff-suggest-item type="searchTerm">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
+<div class="searchbar">
+    <ff-searchbox>
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+</div>
 
-        <div data-container="category">
-            <p class="containerCaption">Categories</p>
-            <ff-suggest-item type="category">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-
-        <div data-container="brand">
-            <p class="containerCaption">Brands</p>
-            <ff-suggest-item type="brand">
-                <span>{{{name}}}</span>
-            </ff-suggest-item>
-        </div>
-    </section>
-
-    <section id="productContainer" class="productsContainer">
-        <div data-container="productName">
-            <p class="containerCaption">Products</p>
-            <div>
-                <ff-suggest-item type="productName" onclick="changeSearchTerm(this)">
-                    <img data-image>
-                    <div class="product-center">
-                        <div class="product-name">{{{name}}}</div>
-                        <div>Shipping</div>
-                        <div>Rating</div>
-                    </div>
-                    <!-- Price and availability-->
-                    <div class="product-right">
-                        <div class="product-price">{{attributes.Price}}€</div>
-                        <div class="product-availabilitytext">{{attributes.availabilitytext}}</div>
-                    </div>
+<ff-suggest layout="block" unresolved>
+    <template data-role="suggestions">
+        <section id="searchContainer" class="search-terms-container">
+            <div data-container="searchTerm">
+                <h2 class="container-caption">Search terms</h2>
+                <ff-suggest-item type="searchTerm">
+                    <span>{{{name}}}</span>
                 </ff-suggest-item>
             </div>
-        </div>
-    </section>
+
+            <div data-container="category">
+                <h2 class="container-caption">Categories</h2>
+                <ff-suggest-item type="category">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+
+            <div data-container="brand">
+                <h2 class="container-caption">Brands</h2>
+                <ff-suggest-item type="brand">
+                    <span>{{{name}}}</span>
+                </ff-suggest-item>
+            </div>
+        </section>
+
+        <section id="productContainer" class="products-container">
+            <div data-container="productName">
+                <h2 class="container-caption">Products</h2>
+                <div class="suggest-images">
+                    <ff-suggest-item type="productName">
+                        <div class="product-image">
+                            <img data-image>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">{{{name}}}</div>
+                            <div class="product-price">{{$ attributes.Price}}</div>
+                        </div>
+                    </ff-suggest-item>
+                </div>
+            </div>
+            <div class="all-results-container">
+                <ff-searchbutton>
+                    <button>Show all results</button>
+                </ff-searchbutton>
+            </div>
+        </section>
+    </template>
 </ff-suggest>
 
-<script>
-    document.querySelector("ff-searchbox").addEventListener("before-search", function (event) {
-        event.preventDefault();
-        window.location = "search.html?query=" + event.target.value;
-    });
-
-    document.querySelector("ff-suggest").addEventListener("suggest-item-clicked", function (event) {
-        if (event.detail.type === "searchTerm" || event.detail.type === "category") {
-            let searchParams = event.detail.suggestion.searchParams.split("?")[1];
-            searchParams += "&queryFromSuggest=true";
-            searchParams += "&userInput=" + factfinder.communication.globalElementValues.currentFFSearchBoxValue;
-            event.target.ffPreventDefault = true;
-            window.location = "search.html?" + searchParams;
-        }
-    });
-</script>
 </body>
 </html>

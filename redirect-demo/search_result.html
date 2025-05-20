@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PLP - Web Components Redirect Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({ factfinder, init, initialSearch }) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            // Reading the searchParams from the URL which were provided by the landing page.
+            // Without specifying parameters, the default configuration is applied. See the Web Components documentation for available customization options.
+            const searchParams = factfinder.utils.env.searchParamsFromUrl();
+
+            const params = new URLSearchParams(window.location.search);
+
+            // Handling parameters `queryFromSuggest` and `userInput` are not required for a successful search request, but they assist your FactFinder Analytics.
+            const queryFromSuggest = params.get(`queryFromSuggest`) === `true`;
+            const userInput = params.get(`userInput`);
+
+            if (queryFromSuggest) {
+                searchParams.customParameters = [{
+                    cacheIrrelevant: true,
+                    name: `queryFromSuggest`,
+                    values: [`true`],
+                }];
+            }
+
+            const searchOptions = {};
+
+            if (userInput) {
+                searchOptions.userInput = userInput;
+            }
+
+            initialSearch(searchParams, searchOptions);
+        });
+    </script>
+</head>
+<body>
+
+<h2>Search result page built with FactFinder Web Components</h2>
+
+<div class="searchbar">
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+</div>
+
+<ff-record-list unresolved>
+    <template data-role="record">
+        <ff-record>
+            <a data-anchor="https://www.your.webshop{{variantValues.0.Deeplink}}"
+               data-redirect="https://www.your.webshop{{variantValues.0.Deeplink}}" data-redirect-target="_blank">
+                <div class="record-img">
+                    <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                </div>
+                <div class="record-product-info">
+                    <h3 class="record-product-name">
+                        {{variantValues.0.Title}}
+                    </h3>
+                    <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                    <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                </div>
+            </a>
+        </ff-record>
+    </template>
+</ff-record-list>
+</body>
+</html>
