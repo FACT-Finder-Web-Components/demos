@@ -5,7 +5,7 @@
   "description": "A collection of samples demonstrating the usage of FactFinder Web Components",
   "main": "start.js",
   "keywords": [
-    "FACT-Finder",
+    "FactFinder",
     "Demo"
   ],
   "dependencies": {
