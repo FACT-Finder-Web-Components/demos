@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Components Redirect Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+    <script>
+        function redirectToSearch(event) {
+            event.preventDefault();
+
+            // One way to pass the search term to the next page is via URL. The search result page will be set up to read the query from there.
+            // In a live setup, you would additionally have to consider URL encoding.
+            window.location.href = `search_result.html?query=${event.target.searchbox.value}`;
+
+            // Other options to pass the search term could be via localStorage.
+            // You have to evaluate the most suitable solution for your individual environment.
+        }
+    </script>
+</head>
+<body>
+
+<h2>Home page <em>without</em> FactFinder Web Components</h2>
+
+<p>
+    Submitting a search term will redirect to a search result page that is implemented with FactFinder Web Components.
+    There, a FactFinder search will be automatically triggered with the search query that you specified here.
+</p>
+<form action="" onsubmit="redirectToSearch(event)">
+    <input type="text" id="searchbox" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>
+</body>
+</html>
