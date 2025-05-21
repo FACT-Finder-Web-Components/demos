@@ -29,9 +29,7 @@
 
             let secondarySuggestPromise; // each ff-suggest-triggered request sets secondary suggest result promise
 
-            factfinder.request.before.suggest(async ({suggestParams, requestOptions}) => {
-                console.log(`before`, requestOptions);
-
+            factfinder.request.before.suggest(({suggestParams, requestOptions}) => {
                 secondarySuggestPromise = factfinder.request.suggest({query: suggestParams.query}, {
                     channel: cmsChannel,
                     requestOnly: true,
@@ -40,9 +38,8 @@
             });
 
             // after dispatching the main suggestions, wait for CMS suggestions, merge them and pass them to ff-suggest
+            // async in the subscriber function is used purely for syntactic sugar. The subscriber's return value is ignored by FactFinder Web Components
             factfinder.response.subscribeSuggest(async (suggestionResult, requestInfo) => {
-                console.log(`subscr`, suggestionResult, requestInfo?.requestOptions);
-
                 const cmsSuggestions = await secondarySuggestPromise;
                 cmsSuggestions.suggestions.forEach(s => s.type = `content`);
                 document.querySelector(`ff-suggest`).suggestItems = suggestionResult.suggestions.concat(cmsSuggestions.suggestions);
@@ -52,6 +49,7 @@
 </head>
 <body>
 <div class="searchbar">
+    <p>This demo shows how to merge suggestions from two FactFinder channels — a main product channel and a secondary CMS channel — into a unified ff-suggest.</p>
     <ff-searchbox>
         <input placeholder="Search..." value="jac" autofocus />
         <ff-searchbutton>
