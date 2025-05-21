@@ -60,7 +60,7 @@ function getFactfinder() {
     if (typeof window.factfinder !== `undefined`) {
       resolve(window.factfinder);
     } else {
-      document.addEventListener(`ffReady`, ({factfinder}) => resolve(factfinder));
+      document.addEventListener(`ffCoreReady`, ({factfinder}) => resolve(factfinder));
     }
   });
 }
