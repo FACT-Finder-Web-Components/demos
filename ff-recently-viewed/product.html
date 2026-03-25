@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recently Viewed Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, async ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            factfinder.request.before.search(requestInfoSearch => {
+                window.location.href = `search.html?query=${requestInfoSearch.searchParams.query}`;
+                return false;
+            });
+
+
+            // Get product data and populate the page for this demo.
+            // Your setup will likely look very different.
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get(`id`);
+
+            const response = await factfinder.request.records({ productNumber: [id] });
+            const productData = response.records[0];
+
+            document.querySelector(`#productDetails`).recordData = productData;
+
+            // Here we add the page's product data to the Recently Viewed history.
+            // The item will not appear in the list while we are on its product page.
+            factfinder.components.recentlyViewed.addEntry(productData);
+        });
+    </script>
+</head>
+<body>
+
+<div class="searchbar">
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+</div>
+
+<h2>Product page</h2>
+
+<p>
+    <a href="index.html"><< Home</a>
+</p>
+
+<article>
+    <ff-record id="productDetails" unresolved>
+        <div class="record-img">
+            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{ImageName}}">
+        </div>
+        <div class="record-product-info">
+            <h3 class="record-product-name">{{Title}}</h3>
+            <div class="record-product-brand">{{Manufacturer}}</div>
+            <div class="record-product-price">{{$ Price}}</div>
+        </div>
+    </ff-record>
+</article>
+
+<div>
+    <p>Recently Viewed component appears below if available.</p>
+
+    <!-- On the product page we add the viewed product to the history, and we must therefore use [wait-for-update]. -->
+    <ff-recently-viewed wait-for-update unresolved>
+        <h3>Recently viewed (up to 4 items):</h3>
+        <ff-record-list>
+            <template data-role="record">
+                <ff-record>
+                    <a data-anchor="product.html?id={{ArticleNumber}}"
+                       data-redirect-target="_self">
+                        <div class="record-img">
+                            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{ImageName}}">
+                        </div>
+                        <div class="record-product-info">
+                            <h3 class="record-product-name">{{Title}}</h3>
+                            <div class="record-product-brand">{{Manufacturer}}</div>
+                            <div class="record-product-price">{{$ Price}}</div>
+                        </div>
+                    </a>
+                </ff-record>
+            </template>
+        </ff-record-list>
+    </ff-recently-viewed>
+</div>
+
+</body>
+</html>

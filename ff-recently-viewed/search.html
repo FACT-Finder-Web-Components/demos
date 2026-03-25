@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recently Viewed Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            factfinder.request.before.search(requestInfoSearch => {
+                if (requestInfoSearch.searchOptions.initial) return;
+
+                window.location.href = `search.html?query=${requestInfoSearch.searchParams.query}`;
+                return false;
+            });
+
+            const searchParams = factfinder.utils.env.searchParamsFromUrl();
+
+            initialSearch(searchParams);
+        });
+    </script>
+</head>
+<body>
+
+<div class="searchbar">
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+</div>
+
+<h2>Search result page</h2>
+
+<p>
+    <a href="index.html"><< Home</a>
+</p>
+
+<div class="products-listing">
+    <ff-record-list unresolved>
+        <template data-role="record">
+            <ff-record>
+                <a data-anchor="product.html?id={{variantValues.0.ArticleNumber}}"
+                   data-redirect-target="_self">
+                    <div class="record-img">
+                        <img data-image="https://showcase.ff-labs.de/demoshop-images/{{variantValues.0.ImageName}}">
+                    </div>
+                    <div class="record-product-info">
+                        <h3 class="record-product-name">{{variantValues.0.Title}}</h3>
+                        <div class="record-product-brand">{{variantValues.0.Manufacturer}}</div>
+                        <div class="record-product-price">{{$ variantValues.0.Price}}</div>
+                    </div>
+                </a>
+            </ff-record>
+        </template>
+    </ff-record-list>
+</div>
+
+</body>
+</html>

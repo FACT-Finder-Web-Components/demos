@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recently Viewed Demo</title>
+    <link rel="stylesheet" href="../assets/demo-styles.css">
+
+    <script defer src="../node_modules/ff-web-components/dist/bundle.js"></script>
+
+    <script>
+        document.addEventListener(`ffCoreReady`, ({factfinder, init, initialSearch}) => {
+            init({
+                ff: {
+                    url: `https://ng-search-web-components.fact-finder.de/fact-finder`,
+                    channel: `demo-bergfreunde-en`,
+                    apiKey: `ffng-BWelwbv3.ieETzxJkOtmNCRQ3VBr0POJngqDEyZ`,
+                },
+                appConfig: {
+                    formatting: {
+                        locale: `de-DE`,
+                        formatOptions: {
+                            style: `currency`,
+                            currency: `EUR`,
+                        },
+                    },
+                },
+            });
+
+            factfinder.request.before.search(requestInfoSearch => {
+                window.location.href = `search.html?query=${requestInfoSearch.searchParams.query}`;
+                return false;
+            });
+        });
+
+        function clearRecentlyViewed(e) {
+            e.preventDefault();
+
+            factfinder.components.recentlyViewed.clear();
+            e.target.closest(`ff-recently-viewed`)?.getRecentlyViewed();
+        }
+    </script>
+
+    <style>
+        ff-recently-viewed > h3 {
+            display: inline-block;
+            margin-top: 0;
+            margin-right: .5rem;
+        }
+        ff-recently-viewed > a {
+            vertical-align: super;
+        }
+    </style>
+</head>
+<body>
+
+<div class="searchbar">
+    <ff-searchbox use-suggest="false">
+        <input placeholder="Search..." autofocus />
+        <ff-searchbutton>
+            <button>
+                <span class="icon-search"></span>
+            </button>
+        </ff-searchbutton>
+    </ff-searchbox>
+</div>
+
+<h2>Home page</h2>
+
+<p>Search for something, visit several products, and come back to the home page to see them in the Recently Viewed history below.</p>
+
+<div>
+    <p>Recently Viewed component appears below if available.</p>
+
+    <ff-recently-viewed max-results="6" unresolved>
+        <h3>Recently viewed (up to 6 items):</h3>
+        <a href="#" onclick="clearRecentlyViewed(event)">(Clear)</a>
+        <ff-record-list>
+            <template data-role="record">
+                <ff-record>
+                    <a data-anchor="product.html?id={{ArticleNumber}}"
+                       data-redirect-target="_self">
+                        <div class="record-img">
+                            <img data-image="https://showcase.ff-labs.de/demoshop-images/{{ImageName}}">
+                        </div>
+                        <div class="record-product-info">
+                            <h3 class="record-product-name">{{Title}}</h3>
+                            <div class="record-product-brand">{{Manufacturer}}</div>
+                            <div class="record-product-price">{{$ Price}}</div>
+                        </div>
+                    </a>
+                </ff-record>
+            </template>
+        </ff-record-list>
+    </ff-recently-viewed>
+</div>
+
+</body>
+</html>
