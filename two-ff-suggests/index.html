@@ -44,28 +44,28 @@
     <input placeholder="Search box 2" value="climbing" />
 </ff-searchbox>
 
-<ff-suggest id="suggest1" for-searchbox="searchbox1" layout="list" unresolved>
+<ff-suggest id="suggest1" for-searchbox="searchbox1" layout="list" no-auto-highlight unresolved>
     <template data-role="suggestions">
         <!-- You can define different elements which are displayed in the suggest box -->
         <section class="searchTermContainer">
             <div data-container="searchTerm">
                 <p class="containerCaption">Search terms</p>
                 <ff-suggest-item type="searchTerm">
-                    <span>{{{name}}}</span>
+                    <span>{{{ff-hitHighlight name}}}</span>
                 </ff-suggest-item>
             </div>
 
             <div data-container="category">
                 <p class="containerCaption">Categories</p>
                 <ff-suggest-item type="category">
-                    <span>{{{name}}}</span>
+                    <span>{{{ff-hitHighlight name}}}</span>
                 </ff-suggest-item>
             </div>
 
             <div data-container="brand">
                 <p class="containerCaption">Brands</p>
                 <ff-suggest-item type="brand">
-                    <span>{{{name}}}</span>
+                    <span>{{{ff-hitHighlight name}}}</span>
                 </ff-suggest-item>
             </div>
         </section>
@@ -77,7 +77,7 @@
                     <ff-suggest-item type="productName">
                         <img data-image>
                         <div class="product-center">
-                            <div class="product-name">{{{name}}}</div>
+                            <div class="product-name">{{{ff-hitHighlight name}}}</div>
                             <div>Shipping</div>
                             <div>Rating</div>
                         </div>
@@ -93,28 +93,28 @@
     </template>
 </ff-suggest>
 
-<ff-suggest id="suggest2" for-searchbox="searchbox2" layout="list" unresolved>
+<ff-suggest id="suggest2" for-searchbox="searchbox2" layout="list" no-auto-highlight unresolved>
     <template data-role="suggestions">
         <!-- You can define different elements which are displayed in the suggest box -->
         <section class="searchTermContainer">
             <div data-container="searchTerm">
                 <p class="containerCaption">Search terms</p>
                 <ff-suggest-item type="searchTerm">
-                    <span>{{{name}}}</span>
+                    <span>{{{ff-hitHighlight name}}}</span>
                 </ff-suggest-item>
             </div>
 
             <div data-container="category">
                 <p class="containerCaption">Categories</p>
                 <ff-suggest-item type="category">
-                    <span>{{{name}}}</span>
+                    <span>{{{ff-hitHighlight name}}}</span>
                 </ff-suggest-item>
             </div>
 
             <div data-container="brand">
                 <p class="containerCaption">Brands</p>
                 <ff-suggest-item type="brand">
-                    <span>{{{name}}}</span>
+                    <span>{{{ff-hitHighlight name}}}</span>
                 </ff-suggest-item>
             </div>
         </section>
@@ -126,7 +126,7 @@
                     <ff-suggest-item type="productName">
                         <img data-image>
                         <div class="product-center">
-                            <div class="product-name">{{{name}}}</div>
+                            <div class="product-name">{{{ff-hitHighlight name}}}</div>
                             <div>Shipping</div>
                             <div>Rating</div>
                         </div>

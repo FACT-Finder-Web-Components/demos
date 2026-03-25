@@ -86,7 +86,7 @@
 <main>
     <div class="filters">
         <ff-asn-remove-all-filters>Reset all filters</ff-asn-remove-all-filters>
-        <ff-asn searchable-from="11" unresolved>
+        <ff-asn searchable-from="11" no-auto-highlight unresolved>
 
             <ff-asn-group for-group="all">
                 <div slot="filterSearch">
@@ -99,12 +99,12 @@
                         <span class="checkbox">
                             <svg viewBox="2 2 12 12"><use xlink:href="#icon-check"></use></svg>
                         </span>
-                        {{{$facetElement}}}
+                        {{{ff-hitHighlight ($facetElement)}}}
                     </div>
 
                     <div slot="unselected">
                         <span class="checkbox"></span>
-                        <span>{{{$facetElement}}}</span>
+                        <span>{{{ff-hitHighlight ($facetElement)}}}</span>
                         <span>({{element.totalHits}})</span>
                     </div>
                 </ff-asn-group-element>
@@ -167,12 +167,12 @@
 
                 <ff-asn-group-element>
                     <div slot="selected">
-                        <span class="circle"></span> {{{$facetElement}}}
+                        <span class="circle"></span> {{{ff-hitHighlight ($facetElement)}}}
                     </div>
 
                     <div slot="unselected">
                         <span class="circle"></span>
-                        <span>{{{$facetElement}}}</span>
+                        <span>{{{ff-hitHighlight ($facetElement)}}}</span>
                         <span>({{element.totalHits}})</span>
                     </div>
                 </ff-asn-group-element>
